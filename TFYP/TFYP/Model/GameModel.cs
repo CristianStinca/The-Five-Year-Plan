@@ -10,11 +10,13 @@ namespace TFYP.Model
 {
     internal class GameModel
     {
+        public static readonly int MAP_H = 20;
+        public static readonly int MAP_W = 20;
         public Buildable[,] map {  get; private set; }
 
         public GameModel()
         {
-            map = new Buildable[20, 20];
+            map = new Buildable[MAP_H, MAP_W];
 
             for (int i = 0; i < map.GetLength(0); i++)
                 for (int j = 0; j < map.GetLength(1); j++)

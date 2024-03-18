@@ -13,20 +13,27 @@ namespace TFYP.View.Windows
 {
     internal sealed class GameWindow : Window
     {
+        public static readonly int TILE_W = 30;
+
+        public static readonly int TILE_H = 20;
+
+        public static readonly int SCALE = 10;
+
         private Sprite[,] map;
         private bool mapIsInit;
+
         private Vector2 focusCoord;
-        private Vector2 tileSize;
-        private bool isTileSizeInit;
+        private Vector2 initPos;
+
+
         List<IRenderable> mapRend = new List<IRenderable>();
 
         public GameWindow() : base()
         {
             mapIsInit = false;
             focusCoord = new Vector2(0, 0);
-            tileSize = new Vector2(0, 0);
-            isTileSizeInit = false;
             mapRend = new();
+            initPos = new Vector2(-TILE_W / 2, -TILE_H / 2);
 
             //Sprite sprite_back = new Sprite(Globals.Content.Load<Texture2D>("back2"));
             //SpritesInWindow.Add(sprite_back);
@@ -37,46 +44,35 @@ namespace TFYP.View.Windows
             map = new Sprite[_map.GetLength(0), _map.GetLength(1)];
             this.mapRend.Clear();
 
-            //if (!isTileSizeInit)
-            //{
-            //    Texture2D texture = Globals.Content.Load<Texture2D>(_map[0,0].name);
-            //    tileSize.X = texture.Width;
-            //    tileSize.Y = texture.Height;
-            //    texture.Dispose();
-            //    isTileSizeInit = true;
-            //}
-
             for (int i = 0; i < _map.GetLength(0); i++)
             {
                 for (int j = 0; j < _map.GetLength(1); j++)
                 {
                     var _vo = _map[i, j];
-                    Texture2D texture = Globals.Content.Load<Texture2D>(_vo.name);
-                    float deviation = (i % 2 == 1) ? (texture.Width * _vo.scale / 2f) : 0f;
+                    float deviation = (i % 2 == 1) ? (TILE_W * SCALE / 2f) : 0f;
+
+
                     Sprite sprite = new Sprite(
                         Globals.Content.Load<Texture2D>(_vo.name),
                         new Microsoft.Xna.Framework.Vector2(
-                            deviation + _vo.x + (j * texture.Width * _vo.scale),
-                            _vo.y + (i * texture.Height * _vo.scale / 2f)
+                            initPos.X * SCALE + focusCoord.X + deviation + _vo.x + (j * TILE_W * SCALE),
+                            initPos.Y * SCALE + focusCoord.Y + _vo.y + (i * TILE_H * SCALE / 2f)
                         ),
-                        //new Microsoft.Xna.Framework.Vector2(_vo.x, _vo.y),
-                        _vo.scale
+                        SCALE
                     );
 
                     map[i, j] = sprite;
-                    //renderables.Add(sprite);
+
                     mapRend.Add(sprite);
                 }
             }
 
             this.mapIsInit = true;
-
-            //this.SpritesInWindow.Add(map[0, 0]);
         }
 
         public void SetFocusCoord(Vector2 vec)
         {
-            //focusCoord = vec;
+            focusCoord = vec;
         }
 
         public override void Update()

@@ -18,6 +18,7 @@ namespace TFYP.Controller.WindowsControllers
     internal class GameWindowController : WindowController
     {
         private Vector2 focusCoord;
+        private Vector4 screenLimits;
         public GameWindowController(InputHandler inputHandler, View.View _view, GameModel _gameModel) : base(inputHandler, _view, _gameModel)
         {
             focusCoord = new();
@@ -26,8 +27,22 @@ namespace TFYP.Controller.WindowsControllers
             {
                 _view.CurrentWindow = GameWindow.Instance;
             }
+
             //_view.CurrentWindow.SendViewObject(new ViewObject("back2"));
-            //_view.CurrentWindow.SendViewObject(new ViewObject(TypesConverison.GetVal(EBuildable.Stadium.ToString()), 0, 0, 10));\\
+            //_view.CurrentWindow.SendViewObject(new ViewObject(TypesConverison.GetVal(EBuildable.Stadium.ToString()), 0, 0, 10));
+
+            screenLimits = new Vector4(
+                0, 0,
+                -(((GameModel.MAP_H / 2) - 1) * GameWindow.TILE_H * GameWindow.SCALE) + Globals.Graphics.PreferredBackBufferHeight,
+                - (((GameModel.MAP_W / 2) - 1) * GameWindow.TILE_W * GameWindow.SCALE) + Globals.Graphics.PreferredBackBufferWidth
+            );
+
+            _gameModel.Build(3, 4, EBuildable.Stadium);
+        }
+
+        public override void Update()
+        {
+            base.Update();
 
             var map = gameModel.map;
             ViewObject[,] out_map = new ViewObject[map.GetLength(0), map.GetLength(1)];
@@ -39,27 +54,24 @@ namespace TFYP.Controller.WindowsControllers
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    out_map[i, j] = new ViewObject(TypesConverison.GetVal(map[i, j].type.ToString()), 0, 0, 10);
+                    out_map[i, j] = new ViewObject(TypesConverison.GetVal(map[i, j].type.ToString()));
                 }
             }
 
-            // sending the new array to the View
+            GameWindow gw_view = null;
             if (view.CurrentWindow.GetType().Name.CompareTo(typeof(GameWindow).Name) == 0)
             {
-                Debug.WriteLine("game map sent!");
-                ((GameWindow)view.CurrentWindow).SendGameMap(out_map);
+                gw_view = (GameWindow)view.CurrentWindow;
             }
             else
             {
                 throw new TypeLoadException("GameWindowController (set_map)");
             }
-        }
 
-        public override void Update()
-        {
-            base.Update();
+            // sending the new array to the View
+            gw_view.SendGameMap(out_map);
 
-            
+            int speed = 20;
 
             // reading the keys
             foreach (KeyboardButtonState key in inputHandler.ActiveKeys) 
@@ -72,63 +84,38 @@ namespace TFYP.Controller.WindowsControllers
                 {
                     Debug.WriteLine("Stadium Invoked (Click)");
                 }
-                //else if (key.Button == Keys.Up && key.ButtonState == Utils.KeyState.Held)
-                //{
-                //    Vector2 up = new(1, 0);
-                //    focusCoord += up;
+                else if (key.Button == Keys.Up && key.ButtonState == Utils.KeyState.Held)
+                {
+                    ExecuteFocusMove(new Vector2(0, speed));
+                }
+                else if (key.Button == Keys.Down && key.ButtonState == Utils.KeyState.Held)
+                {
+                    ExecuteFocusMove(new Vector2(0, -speed));
+                }
+                else if (key.Button == Keys.Left && key.ButtonState == Utils.KeyState.Held)
+                {
+                    ExecuteFocusMove(new Vector2(speed, 0));
+                }
+                else if (key.Button == Keys.Right && key.ButtonState == Utils.KeyState.Held)
+                {
+                    ExecuteFocusMove(new Vector2(-speed, 0));
+                }
 
-                //    if (view.CurrentWindow.GetType().Name.CompareTo(typeof(GameWindow).Name) == 0)
-                //    {
-                //        ((GameWindow)view.CurrentWindow).SetFocusCoord(focusCoord);
-                //    }
-                //    else
-                //    {
-                //        throw new TypeLoadException("GameWindowController (constructor)");
-                //    }
-                //}
-                //else if (key.Button == Keys.Down && key.ButtonState == Utils.KeyState.Held)
-                //{
-                //    Vector2 down = new(-1, 0);
-                //    focusCoord += down;
-
-                //    if (view.CurrentWindow.GetType().Name.CompareTo(typeof(GameWindow).Name) == 0)
-                //    {
-                //        ((GameWindow)view.CurrentWindow).SetFocusCoord(focusCoord);
-                //    }
-                //    else
-                //    {
-                //        throw new TypeLoadException("GameWindowController (constructor)");
-                //    }
-                //}
-                //else if (key.Button == Keys.Left && key.ButtonState == Utils.KeyState.Held)
-                //{
-                //    Vector2 left = new(0, -1);
-                //    focusCoord += left;
-
-                //    if (view.CurrentWindow.GetType().Name.CompareTo(typeof(GameWindow).Name) == 0)
-                //    {
-                //        ((GameWindow)view.CurrentWindow).SetFocusCoord(focusCoord);
-                //    }
-                //    else
-                //    {
-                //        throw new TypeLoadException("GameWindowController (constructor)");
-                //    }
-                //}
-                //else if (key.Button == Keys.Right && key.ButtonState == Utils.KeyState.Held)
-                //{
-                //    Vector2 right = new(0, 1);
-                //    focusCoord += right;
-
-                //    if (view.CurrentWindow.GetType().Name.CompareTo(typeof(GameWindow).Name) == 0)
-                //    {
-                //        ((GameWindow)view.CurrentWindow).SetFocusCoord(focusCoord);
-                //    }
-                //    else
-                //    {
-                //        throw new TypeLoadException("GameWindowController (constructor)");
-                //    }
-                //}
+                gw_view.SetFocusCoord(focusCoord);
             }
+        }
+
+        private bool ExecuteFocusMove(Vector2 direction)
+        {
+            Vector2 result = focusCoord + direction;
+
+            if (result.X <= screenLimits.X && result.Y <= screenLimits.Y && result.Y >= screenLimits.Z && result.X >= screenLimits.W)
+            {
+                focusCoord = result;
+                return true;
+            }
+
+            return false;
         }
     }
 }
