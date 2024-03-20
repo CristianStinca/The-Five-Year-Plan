@@ -10,6 +10,7 @@ using TFYP.View.Renders;
 using TFYP.View.Windows;
 using TFYP.Controller.WindowsControllers;
 using TFYP.Model;
+using TFYP.View.UIElements;
 
 namespace TFYP.Controller
 {
@@ -20,6 +21,7 @@ namespace TFYP.Controller
         private MonoGameRenderer _renderer;
         private InputHandler _inputHandler;
         private Controller _controller;
+        private IUIElements _uiTextures;
 
         public TFYP()
         {
@@ -45,9 +47,10 @@ namespace TFYP.Controller
             _renderer = new MonoGameRenderer();
             _inputHandler = new InputHandler();
 
-            _view = new View.View();
+            _uiTextures = new UIObjects();
+            _view = new View.View(_uiTextures);
             _gameModel = new GameModel();
-            _controller = new Controller(_inputHandler, _view, _gameModel);
+            _controller = new Controller(_inputHandler, _view, _uiTextures, _gameModel);
 
             base.Initialize();
         }
@@ -61,11 +64,6 @@ namespace TFYP.Controller
 
         protected override void Update(GameTime gameTime)
         {
-            //if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            //{
-            //    Exit();
-            //}
-
             // TODO: Add your update logic here
             // The Update method is called multiple times per second, and it is used to update your game state
             // (checking for collisions, gathering input, playing audio, etc.).

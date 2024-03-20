@@ -11,6 +11,8 @@ using TFYP.Model;
 using TFYP.Model.GameObjects;
 using TFYP.Utils;
 using TFYP.View;
+using TFYP.View.Renders;
+using TFYP.View.UIElements;
 using TFYP.View.Windows;
 
 namespace TFYP.Controller.WindowsControllers
@@ -19,17 +21,18 @@ namespace TFYP.Controller.WindowsControllers
     {
         private Vector2 focusCoord;
         private Vector4 screenLimits;
-        public GameWindowController(InputHandler inputHandler, View.View _view, GameModel _gameModel) : base(inputHandler, _view, _gameModel)
+        public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
+            : base(inputHandler, _view, _uiTextures, _gameModel)
         {
+            _view.changeToGameWindow();
+
             focusCoord = new();
+            InitiateConverionDict();
 
-            if (_view.CurrentWindow.GetType().Name.CompareTo(typeof(GameWindow).Name) != 0)
-            {
-                _view.CurrentWindow = GameWindow.Instance;
-            }
-
-            //_view.CurrentWindow.SendViewObject(new ViewObject("back2"));
-            //_view.CurrentWindow.SendViewObject(new ViewObject(TypesConverison.GetVal(EBuildable.Stadium.ToString()), 0, 0, 10));
+            //if (_view.CurrentWindow.GetType().Name.CompareTo(typeof(GameWindow).Name) != 0)
+            //{
+            //    _view.CurrentWindow = new GameWindow();
+            //}
 
             screenLimits = new Vector4(
                 0, 0,
@@ -45,7 +48,7 @@ namespace TFYP.Controller.WindowsControllers
             base.Update();
 
             var map = gameModel.map;
-            ViewObject[,] out_map = new ViewObject[map.GetLength(0), map.GetLength(1)];
+            IRenderable[,] out_map = new IRenderable[map.GetLength(0), map.GetLength(1)];
 
             // TODO: add an event/obs collection to model to avoid re-drawing of the matrix
 
@@ -54,7 +57,7 @@ namespace TFYP.Controller.WindowsControllers
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    out_map[i, j] = new ViewObject(TypesConverison.GetVal(map[i, j].type.ToString()));
+                    out_map[i, j] = this.CreateUIElement(map[i, j].type);
                 }
             }
 
@@ -116,6 +119,26 @@ namespace TFYP.Controller.WindowsControllers
             }
 
             return false;
+        }
+
+        private Dictionary<EBuildable, IRenderable> conversionDict;
+        private void InitiateConverionDict()
+        {
+            conversionDict = new()
+            {
+                { EBuildable.None, uiTextures.EmptyTile },
+                { EBuildable.Stadium, uiTextures.StadiumTile }
+            };
+        }
+
+        private IRenderable CreateUIElement(EBuildable from)
+        {
+            if (!conversionDict.ContainsKey(from))
+            {
+                throw new ArgumentException(from.ToString());
+            }
+
+            return conversionDict[from];
         }
     }
 }

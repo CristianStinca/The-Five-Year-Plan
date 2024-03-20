@@ -38,42 +38,42 @@ namespace TFYP.Model.GameObjects
         Stadium
     }
 
-    public static class TypesConverison
-    {
-        private static bool isInit = false;
-        private static Dictionary<string, string> dict = null; // can be converted into <str, List<str>> to potentially get random imgs
+    //public static class TypesConverison
+    //{
+    //    private static bool isInit = false;
+    //    private static Dictionary<string, string> dict = null; // can be converted into <str, List<str>> to potentially get random imgs
 
-        private static void Init()
-        {
-            dict = new()
-            {
-                { EBuildable.None.ToString(), "empty_tile" },
-                { EBuildable.Stadium.ToString(), "stadium_tile" }
-            };
-        }
+    //    private static void Init()
+    //    {
+    //        dict = new()
+    //        {
+    //            { EBuildable.None.ToString(), "empty_tile" },
+    //            { EBuildable.Stadium.ToString(), "stadium_tile" }
+    //        };
+    //    }
 
-        private static void CheckInit()
-        {
-            if (!isInit)
-            {
-                Init();
-                isInit = true;
-            }
-        }
+    //    private static void CheckInit()
+    //    {
+    //        if (!isInit)
+    //        {
+    //            Init();
+    //            isInit = true;
+    //        }
+    //    }
 
-        public static Dictionary<string, string> GetDict()
-        {
-            CheckInit();
-            return dict;
-        }
+    //    public static Dictionary<string, string> GetDict()
+    //    {
+    //        CheckInit();
+    //        return dict;
+    //    }
 
-        public static string? GetVal(string key)
-        {
-            CheckInit();
-            string val = null;
-            dict.TryGetValue(key, out val);
+    //    public static string? GetVal(string key)
+    //    {
+    //        CheckInit();
+    //        string val = null;
+    //        dict.TryGetValue(key, out val);
 
-            return val;
-        }
-    }
+    //        return val;
+    //    }
+    //}
 }
