@@ -35,5 +35,9 @@ namespace TFYP.View.UIElements
         public Sprite(Texture2D texture, Vector2 position) : this(texture, position, 1f)
         {
         }
+
+        public Sprite(Texture2D texture, float scale) : this(texture, Vector2.Zero, 1f)
+        {
+        }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using TFYP.Utils;
@@ -18,7 +18,7 @@ namespace TFYP.View.Windows
 
         public static readonly int TILE_H = 20;
 
-        public static readonly int SCALE = 10;
+        public static readonly int SCALE = 5;
 
         //private Sprite[,] map;
         private bool mapIsInit;
@@ -50,7 +50,6 @@ namespace TFYP.View.Windows
                 {
                     IRenderable _vo = _map[i, j];
                     float deviation = (i % 2 == 1) ? (TILE_W * SCALE / 2f) : 0f;
-
 
                     Sprite sprite = new Sprite(
                         _vo.Texture,

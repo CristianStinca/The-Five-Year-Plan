@@ -12,13 +12,13 @@
 
     public class KeyboardButtonState
     {
+        public Keys Button { get; set; }
+        public KeyState ButtonState { get; set; }
+
         public KeyboardButtonState(Keys button)
         {
             Button = button;
             ButtonState = KeyState.Clicked;
         }
-
-        public Keys Button { get; set; }
-        public KeyState ButtonState { get; set; }
     }
 }
