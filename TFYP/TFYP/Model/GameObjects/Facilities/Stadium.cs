@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,10 +10,8 @@ namespace TFYP.Model.GameObjects.Facilities
 {
     internal class Stadium : Facility
     {
-        public Stadium(Coordinate _coor, Dimension _dimension, EBuildable _type) : base(_coor, _dimension, _type) {
-            Console.WriteLine("Stadium built");
+        public Stadium(Vector2 _coor, EBuildable _type) : base(_coor, _type) 
+        {
         }
-
-        
     }
 }

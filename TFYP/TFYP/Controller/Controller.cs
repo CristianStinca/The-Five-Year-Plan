@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TFYP.Controller.WindowsControllers;
 using TFYP.Model;
 using TFYP.Utils;
+using TFYP.View.UIElements;
 
 namespace TFYP.Controller
 {
@@ -15,9 +16,9 @@ namespace TFYP.Controller
 
         public WindowController CurrentController { get; set; }
 
-        public Controller(InputHandler _inputHandler, View.View _view, GameModel _gameModel)
+        public Controller(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
         {
-            this.CurrentController = new GameWindowController(_inputHandler, _view, _gameModel);
+            this.CurrentController = new GameWindowController(_inputHandler, _view, _uiTextures, _gameModel);
             this.NextController = this.CurrentController;
         }
 

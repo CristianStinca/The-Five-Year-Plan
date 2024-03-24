@@ -4,8 +4,10 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TFYP.Controller.WindowsControllers;
 using TFYP.Utils;
 using TFYP.View.Renders;
+using TFYP.View.UIElements;
 using TFYP.View.Windows;
 
 namespace TFYP.View
@@ -14,16 +16,30 @@ namespace TFYP.View
     {
         public Window CurrentWindow { get; set; }
 
-        //public Dictionary<string, string> objectsFileNames { get; set; }
+        protected IUIElements _UIElements;
 
-        public View() 
+        protected InputHandler _inputHandler;
+
+        public View(IUIElements UIElements, InputHandler inputHandler) 
         {
-            this.CurrentWindow = GameWindow.Instance; // to be changed to MenuWindow();
+            //this.CurrentWindow = new GameWindow(UIElements); // to be changed to MenuWindow.Instance;
+            this._UIElements = UIElements;
+            this._inputHandler = inputHandler;
+        }
+
+        public void changeToGameWindow()
+        {
+            this.CurrentWindow = new GameWindow(_UIElements, _inputHandler);
+        }
+
+        public void changeToMenuWindow()
+        {
+            this.CurrentWindow = new MenuWindow(_UIElements, _inputHandler);
         }
 
         public void Update()
         {
-            this.CurrentWindow.Update(); // 
+            this.CurrentWindow.Update();
         }
 
         public void Draw(IRenderer renderer)

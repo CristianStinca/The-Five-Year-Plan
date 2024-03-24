@@ -1,51 +1,76 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using TFYP.Model;
 using TFYP.Model.GameObjects;
 using TFYP.Utils;
 using TFYP.View;
+using TFYP.View.Renders;
+using TFYP.View.UIElements;
 using TFYP.View.Windows;
 
 namespace TFYP.Controller.WindowsControllers
 {
     internal class GameWindowController : WindowController
     {
-        private Vector2 focusCoord;
-        private Vector4 screenLimits;
-        public GameWindowController(InputHandler inputHandler, View.View _view, GameModel _gameModel) : base(inputHandler, _view, _gameModel)
+        private Vector2 _focusCoord; 
+        private Vector4 _screenLimits;
+
+        View.Windows.GameWindow _gw_view;
+
+        public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
+            : base(inputHandler, _view, _uiTextures, _gameModel)
         {
-            focusCoord = new();
+            _view.changeToGameWindow();
 
-            if (_view.CurrentWindow.GetType().Name.CompareTo(typeof(GameWindow).Name) != 0)
-            {
-                _view.CurrentWindow = GameWindow.Instance;
-            }
+            _focusCoord = new();
+            InitiateConverionDict();
 
-            //_view.CurrentWindow.SendViewObject(new ViewObject("back2"));
-            //_view.CurrentWindow.SendViewObject(new ViewObject(TypesConverison.GetVal(EBuildable.Stadium.ToString()), 0, 0, 10));
-
-            screenLimits = new Vector4(
+            _screenLimits = new Vector4(
                 0, 0,
-                -(((GameModel.MAP_H / 2) - 1) * GameWindow.TILE_H * GameWindow.SCALE) + Globals.Graphics.PreferredBackBufferHeight,
-                - (((GameModel.MAP_W / 2) - 1) * GameWindow.TILE_W * GameWindow.SCALE) + Globals.Graphics.PreferredBackBufferWidth
+                -(((GameModel.MAP_H / 2) - 1) * View.Windows.GameWindow.TILE_H * View.Windows.GameWindow.SCALE) + Globals.Graphics.PreferredBackBufferHeight,
+                - (((GameModel.MAP_W / 2) - 1) * View.Windows.GameWindow.TILE_W * View.Windows.GameWindow.SCALE) + Globals.Graphics.PreferredBackBufferWidth
             );
 
-            _gameModel.Build(3, 4, EBuildable.Stadium);
+            if (base._view.CurrentWindow.GetType().Name.CompareTo(typeof(View.Windows.GameWindow).Name) == 0)
+            {
+                _gw_view = (View.Windows.GameWindow)base._view.CurrentWindow;
+            }
+            else
+            {
+                throw new TypeLoadException("GameWindowController (set_map)");
+            }
+
+            _gw_view.TileButtonPressedInWindow += ClickInButton;
+        }
+
+        public void ClickInButton(int x, int y, string btn)
+        {
+            //Debug.WriteLine($"Clicked on X: {x}, Y: {y}");
+            switch (btn)
+            {
+                case "L":
+                    _gameModel.Build(y, x, EBuildable.Stadium);
+                    break;
+
+                case "R":
+                    _gameModel.Build(y, x, EBuildable.None);
+                    break;
+            }
         }
 
         public override void Update()
         {
             base.Update();
 
-            var map = gameModel.map;
-            ViewObject[,] out_map = new ViewObject[map.GetLength(0), map.GetLength(1)];
+            var map = _gameModel.map;
+            IRenderable[,] out_map = new IRenderable[map.GetLength(0), map.GetLength(1)];
 
             // TODO: add an event/obs collection to model to avoid re-drawing of the matrix
 
@@ -54,35 +79,21 @@ namespace TFYP.Controller.WindowsControllers
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    out_map[i, j] = new ViewObject(TypesConverison.GetVal(map[i, j].type.ToString()));
+                    out_map[i, j] = this.CreateUIElement(map[i, j].type);
                 }
             }
 
-            GameWindow gw_view = null;
-            if (view.CurrentWindow.GetType().Name.CompareTo(typeof(GameWindow).Name) == 0)
-            {
-                gw_view = (GameWindow)view.CurrentWindow;
-            }
-            else
-            {
-                throw new TypeLoadException("GameWindowController (set_map)");
-            }
-
             // sending the new array to the View
-            gw_view.SendGameMap(out_map);
+            _gw_view.SendGameMap(out_map);
 
             int speed = 20;
 
             // reading the keys
-            foreach (KeyboardButtonState key in inputHandler.ActiveKeys) 
+            foreach (KeyboardButtonState key in _inputHandler.ActiveKeys) 
             {
                 if (key.Button == Keys.Escape && key.ButtonState == Utils.KeyState.Clicked)
                 {
                     OnExitPressed();
-                }
-                else if (key.Button == Keys.S && key.ButtonState == Utils.KeyState.Clicked)
-                {
-                    Debug.WriteLine("Stadium Invoked (Click)");
                 }
                 else if (key.Button == Keys.Up && key.ButtonState == Utils.KeyState.Held)
                 {
@@ -101,21 +112,45 @@ namespace TFYP.Controller.WindowsControllers
                     ExecuteFocusMove(new Vector2(-speed, 0));
                 }
 
-                gw_view.SetFocusCoord(focusCoord);
+                _gw_view.SetFocusCoord(_focusCoord);
             }
         }
 
         private bool ExecuteFocusMove(Vector2 direction)
         {
-            Vector2 result = focusCoord + direction;
+            Vector2 result = _focusCoord + direction;
 
-            if (result.X <= screenLimits.X && result.Y <= screenLimits.Y && result.Y >= screenLimits.Z && result.X >= screenLimits.W)
+            if (result.X <= _screenLimits.X && result.Y <= _screenLimits.Y && result.Y >= _screenLimits.Z && result.X >= _screenLimits.W)
             {
-                focusCoord = result;
+                _focusCoord = result;
                 return true;
             }
 
             return false;
         }
+
+        #region MODEL_TO_VIEW_TYPE_CONVERSIONS
+
+        private Dictionary<EBuildable, IRenderable> conversionDict;
+        private void InitiateConverionDict()
+        {
+            conversionDict = new()
+            {
+                { EBuildable.None, _uiTextures.EmptyTile },
+                { EBuildable.Stadium, _uiTextures.StadiumTile }
+            };
+        }
+
+        private IRenderable CreateUIElement(EBuildable from)
+        {
+            if (!conversionDict.ContainsKey(from))
+            {
+                throw new ArgumentException(from.ToString());
+            }
+
+            return conversionDict[from];
+        }
+        
+        #endregion
     }
 }

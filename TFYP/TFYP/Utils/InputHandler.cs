@@ -16,12 +16,23 @@
         public List<KeyboardButtonState> ActiveKeys { get; set; }
 
         public Keys KeyToCheck { get; set; }
+        
+        public MouseState CurrentMouseState { get; set; }
+        public MouseState PreviousMouseState { get; set; }
+
+        public KeyState LeftButton { get; set; }
+        public KeyState RightButton { get; set; }
+        public KeyState MiddleButton { get; set; }
 
         public void Update()
         {
             PreviousKeyboardState = CurrentKeyboardState;
             CurrentKeyboardState = Keyboard.GetState();
             CheckKey();
+
+            PreviousMouseState = CurrentMouseState;
+            CurrentMouseState = Mouse.GetState();
+            CheckMouseButton();
         }
 
         public void CheckKey()
@@ -29,7 +40,7 @@
             for (int i = 0; i < CurrentKeyboardState.GetPressedKeys().Length; i++)
             {
                 KeyToCheck = CurrentKeyboardState.GetPressedKeys()[i];
-                // Proverqvame minaliq state za daden buton
+
                 if (PreviousKeyboardState.IsKeyUp(KeyToCheck) &&
                     CurrentKeyboardState.IsKeyDown(KeyToCheck))
                 {
@@ -43,6 +54,17 @@
                         if (key.Button == KeyToCheck)
                         {
                             key.ButtonState = KeyState.Held;
+                        }
+                    }
+                }
+                else if (PreviousKeyboardState.IsKeyDown(KeyToCheck) &&
+                    CurrentKeyboardState.IsKeyUp(KeyToCheck))
+                {
+                    foreach (KeyboardButtonState key in ActiveKeys)
+                    {
+                        if (key.Button == KeyToCheck)
+                        {
+                            key.ButtonState = KeyState.Released;
                         }
                     }
                 }
@@ -62,6 +84,31 @@
             {
                 ActiveKeys.Remove(new KeyboardButtonState(Keys.None));
             }
+        }
+
+        public void CheckMouseButton()
+        {
+            LeftButton = SetMouseButtonState(PreviousMouseState.LeftButton, CurrentMouseState.LeftButton);
+            RightButton = SetMouseButtonState(PreviousMouseState.RightButton, CurrentMouseState.RightButton);
+            MiddleButton = SetMouseButtonState(PreviousMouseState.MiddleButton, CurrentMouseState.MiddleButton);
+        }
+
+        private KeyState SetMouseButtonState(ButtonState prev_state, ButtonState curr_state)
+        {
+            if (prev_state == ButtonState.Released && curr_state == ButtonState.Pressed)
+            {
+                return KeyState.Clicked;
+            }
+            else if (prev_state == ButtonState.Pressed && curr_state == ButtonState.Pressed)
+            {
+                return KeyState.Held;
+            }
+            else if (prev_state == ButtonState.Pressed && curr_state == ButtonState.Released)
+            {
+                return KeyState.Released;
+            }
+
+            return KeyState.None ;
         }
     }
 }

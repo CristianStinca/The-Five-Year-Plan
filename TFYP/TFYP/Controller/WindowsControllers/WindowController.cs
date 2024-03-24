@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TFYP.Model;
 using TFYP.Utils;
+using TFYP.View.UIElements;
 
 namespace TFYP.Controller.WindowsControllers
 {
@@ -13,20 +14,22 @@ namespace TFYP.Controller.WindowsControllers
         public delegate void ExitHandler();
         public static event ExitHandler ExitPressed;
 
-        protected InputHandler inputHandler;
-        protected View.View view;
-        protected GameModel gameModel;
+        protected InputHandler _inputHandler;
+        protected View.View _view;
+        protected GameModel _gameModel;
+        protected IUIElements _uiTextures;
 
-        public WindowController(InputHandler _inputHandler, View.View _view, GameModel _gameModel)
+        public WindowController(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
         {
-            this.inputHandler = _inputHandler;
-            this.view = _view;
-            this.gameModel = _gameModel;
+            this._inputHandler = _inputHandler;
+            this._view = _view;
+            this._gameModel = _gameModel;
+            this._uiTextures = _uiTextures;
         }
 
         public virtual void Update()
         {
-            this.inputHandler.Update();
+            this._inputHandler.Update();
         }
 
         protected virtual void OnExitPressed()
