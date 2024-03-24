@@ -14,22 +14,22 @@ namespace TFYP.Controller.WindowsControllers
         public delegate void ExitHandler();
         public static event ExitHandler ExitPressed;
 
-        protected InputHandler inputHandler;
-        protected View.View view;
-        protected GameModel gameModel;
-        protected IUIElements uiTextures;
+        protected InputHandler _inputHandler;
+        protected View.View _view;
+        protected GameModel _gameModel;
+        protected IUIElements _uiTextures;
 
         public WindowController(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
         {
-            this.inputHandler = _inputHandler;
-            this.view = _view;
-            this.gameModel = _gameModel;
-            this.uiTextures = _uiTextures;
+            this._inputHandler = _inputHandler;
+            this._view = _view;
+            this._gameModel = _gameModel;
+            this._uiTextures = _uiTextures;
         }
 
         public virtual void Update()
         {
-            this.inputHandler.Update();
+            this._inputHandler.Update();
         }
 
         protected virtual void OnExitPressed()

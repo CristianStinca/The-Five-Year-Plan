@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,8 @@ namespace TFYP.Model.GameObjects.Facilities
 {
     internal abstract class Facility : Buildable
     {
-        public Facility(Coordinate _coor, Dimension _dimension, EBuildable _type) : base(_coor, _dimension, _type) {}
+        public Facility(Vector2 _coor, EBuildable _type) : base(_coor, _type)
+        {
+        }
     }
 }

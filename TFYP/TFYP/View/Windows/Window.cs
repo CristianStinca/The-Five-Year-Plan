@@ -16,11 +16,13 @@ namespace TFYP.View.Windows
     {
         protected List<IRenderable> SpritesInWindow { get; set; } // list of all the sprites that need to be rendered on the scnene
         private IUIElements _UIElements;
+        protected InputHandler _inputHandler;
 
-        protected Window(IUIElements UIElements) 
+        protected Window(IUIElements UIElements, InputHandler inputHandler) 
         {
             this.SpritesInWindow = new();
-            _UIElements = UIElements;
+            this._UIElements = UIElements;
+            this._inputHandler = inputHandler;
         }
 
         public virtual void Update()

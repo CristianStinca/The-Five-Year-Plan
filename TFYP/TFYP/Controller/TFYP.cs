@@ -48,7 +48,7 @@ namespace TFYP.Controller
             _inputHandler = new InputHandler();
 
             _uiTextures = new UIObjects();
-            _view = new View.View(_uiTextures);
+            _view = new View.View(_uiTextures, _inputHandler);
             _gameModel = new GameModel();
             _controller = new Controller(_inputHandler, _view, _uiTextures, _gameModel);
 

@@ -9,45 +9,40 @@ using System.Text;
 using System.Threading.Tasks;
 using TFYP.Utils;
 using TFYP.View.Renders;
-using TFYP.View.UIElements;
 using TFYP.View.Windows;
 
-namespace TFYP.Controller
+namespace TFYP.View.UIElements.ClickableElements
 {
     internal class TileButton : Button
     {
-        public delegate void TileButtonPressedHandler();
-        public event ButtonPressedHandler TileButtonPressed;
+        public delegate void TileButtonPressedHandler(int x, int y, string btn);
+        public event TileButtonPressedHandler TileButtonPressed;
 
         private Vector2[] _vertecies;
-        private Vector2 pos;
 
-        public TileButton(Sprite sprite, Texture2D hoverImage, Texture2D normalImage, InputHandler inputHandler, Vector2 pos)
-            : base(sprite, hoverImage, normalImage, inputHandler)
+        private int _x;
+        private int _y;
+
+        public TileButton(Sprite sprite, InputHandler inputHandler, int x, int y)
+            : base(sprite, inputHandler)
         {
-            int width = View.Windows.GameWindow.TILE_W * View.Windows.GameWindow.SCALE;
-            int height = View.Windows.GameWindow.TILE_H * View.Windows.GameWindow.SCALE;
+            int width = Windows.GameWindow.TILE_W * Windows.GameWindow.SCALE;
+            int height = Windows.GameWindow.TILE_H * Windows.GameWindow.SCALE;
+            this._x = x;
+            this._y = y;
 
             _vertecies = new Vector2[]
             {
-                new (width / 2, 0),
-                new (width, height / 2),
-                new (width / 2, height),
-                new (0, height / 2)
+                new ((width / 2) + sprite.Position.X, sprite.Position.Y),
+                new ((width) + sprite.Position.X, (height / 2) + sprite.Position.Y),
+                new ((width / 2) + sprite.Position.X, height + sprite.Position.Y),
+                new (sprite.Position.X, (height / 2) + sprite.Position.Y)
             };
-
-            for (int i = 0; i < _vertecies.Length; i++)
-            {
-                Debug.WriteLine($"V.X: {_vertecies[i].X}, V.Y: {_vertecies[i].Y}");
-            }
-            Vector2 vec = new Vector2(width / 2, height / 2);
-            Debug.WriteLine($"NV.X: {vec.X}, NV.Y: {vec.Y}");
-            Debug.WriteLine(IsPointOverButton(vec));
         }
 
-        public override bool IsMouseOverButton()
+        public override bool IsMouseOverButton(MouseState mouse_state)
         {
-            Vector2 q_point = Mouse.GetState().Position.ToVector2() - this.pos;
+            Vector2 q_point = mouse_state.Position.ToVector2();
             return IsPointOverButton(q_point);
         }
 
@@ -76,14 +71,14 @@ namespace TFYP.Controller
         {
             MouseState mouse_state = Mouse.GetState();
 
-            if (IsMouseOverButton())
+            if (IsMouseOverButton(mouse_state) && _inputHandler.LeftButton == Utils.KeyState.Clicked)
             {
-                //Debug.WriteLine("Mouse_Over");
+                TileButtonPressed.Invoke(this._x, this._y, "L");
             }
 
-            if (IsMouseOverButton() && _inputHandler.LeftButton == Utils.KeyState.Clicked)
+            if (IsMouseOverButton(mouse_state) && _inputHandler.RightButton == Utils.KeyState.Clicked)
             {
-                TileButtonPressed.Invoke();
+                TileButtonPressed.Invoke(this._x, this._y, "R");
             }
         }
     }

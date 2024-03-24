@@ -9,18 +9,23 @@ using System.Threading.Tasks;
 using TFYP.Utils;
 using TFYP.View.Renders;
 using TFYP.View.UIElements;
+using TFYP.View.UIElements.ClickableElements;
+using static TFYP.View.UIElements.ClickableElements.Button;
 
 namespace TFYP.View.Windows
 {
     internal sealed class GameWindow : Window
     {
+        public delegate void TilePressedInWindowHandler(int i, int j, string btn);
+        public event TilePressedInWindowHandler TileButtonPressedInWindow;
+
         public static readonly int TILE_W = 30;
 
         public static readonly int TILE_H = 20;
 
         public static readonly int SCALE = 5;
 
-        //private Sprite[,] map;
+        private TileButton[,] map;
         private bool mapIsInit;
 
         private Vector2 focusCoord;
@@ -28,20 +33,22 @@ namespace TFYP.View.Windows
 
         List<IRenderable> mapRend = new List<IRenderable>();
 
-        public GameWindow(IUIElements UIElements) : base(UIElements)
+        public GameWindow(IUIElements UIElements, InputHandler inputHandler) : base(UIElements, inputHandler)
         {
             mapIsInit = false;
             focusCoord = new Vector2(0, 0);
             mapRend = new();
             initPos = new Vector2(-TILE_W / 2, -TILE_H / 2);
-
-            //Sprite sprite_back = new Sprite(Globals.Content.Load<Texture2D>("back2"));
-            //SpritesInWindow.Add(sprite_back);
+            map = null;
         }
 
         public void SendGameMap(IRenderable[,] _map)
         {
-            //map = new Sprite[_map.GetLength(0), _map.GetLength(1)];
+            if (map == null)
+            {
+                map = new TileButton[_map.GetLength(0), _map.GetLength(1)];
+            }
+
             this.mapRend.Clear();
 
             for (int i = 0; i < _map.GetLength(0); i++)
@@ -60,7 +67,10 @@ namespace TFYP.View.Windows
                         SCALE
                     );
 
-                    //map[i, j] = sprite;
+                    TileButton tile = new TileButton(sprite, _inputHandler, j, i);
+                    tile.TileButtonPressed += OnTilePressed;
+
+                    map[i, j] = tile;
 
                     mapRend.Add(sprite);
                 }
@@ -69,9 +79,27 @@ namespace TFYP.View.Windows
             this.mapIsInit = true;
         }
 
+        public void OnTilePressed(int x, int y, string btn)
+        {
+            TileButtonPressedInWindow.Invoke(x, y, btn); // TODO: Refactor the events so that the controller gets it more directly? (now we create an event for every tile and that's sad :( )
+        }
+
         public void SetFocusCoord(Vector2 vec)
         {
             focusCoord = vec;
+        }
+
+        public override void Update()
+        {
+            base.Update();
+
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+                    map[i, j].Update();
+                }
+            }
         }
 
         public override void Draw(IRenderer renderer)

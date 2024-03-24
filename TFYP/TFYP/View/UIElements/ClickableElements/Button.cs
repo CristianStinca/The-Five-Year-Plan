@@ -9,9 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using TFYP.Utils;
 using TFYP.View.Renders;
-using TFYP.View.UIElements;
 
-namespace TFYP.Controller
+namespace TFYP.View.UIElements.ClickableElements
 {
     internal class Button
     {
@@ -20,17 +19,11 @@ namespace TFYP.Controller
 
         public Sprite _sprite { get; set; }
 
-        protected Texture2D _hoverImage { get; set; }
-
-        protected Texture2D _normalImage { get; set; }
-
         protected InputHandler _inputHandler { get; }
 
-        public Button(Sprite sprite, Texture2D hoverImage, Texture2D normalImage, InputHandler inputHandler)
+        public Button(Sprite sprite, InputHandler inputHandler)
         {
             _sprite = sprite;
-            _hoverImage = hoverImage;
-            _normalImage = normalImage;
             _inputHandler = inputHandler;
         }
 
@@ -38,30 +31,20 @@ namespace TFYP.Controller
         {
             MouseState mouse_state = Mouse.GetState();
 
-            if (IsMouseOverButton())
+            if (IsMouseOverButton(mouse_state))
             {
                 Debug.WriteLine("Mouse_Over_BUTTON");
             }
 
-            if (IsMouseOverButton() && _inputHandler.LeftButton == Utils.KeyState.Clicked)
+            if (IsMouseOverButton(mouse_state) && _inputHandler.LeftButton == Utils.KeyState.Clicked)
             {
                 ButtonPressed.Invoke();
             }
         }
 
-        public void ChangeToHoverImage()
+        public virtual bool IsMouseOverButton(MouseState mouse_state)
         {
-            _sprite.Texture = _hoverImage;
-        }
-
-        public void ChangeToNormalImage()
-        {
-            _sprite.Texture = _normalImage;
-        }
-
-        public virtual bool IsMouseOverButton()
-        {
-            return _sprite.CollisionRectangle.Contains(Mouse.GetState().Position);
+            return _sprite.CollisionRectangle.Contains(mouse_state.Position);
         }
     }
 }

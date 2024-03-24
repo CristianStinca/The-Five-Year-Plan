@@ -10,7 +10,7 @@ namespace TFYP.View.Windows
 {
     internal sealed class MenuWindow : Window
     {
-        public MenuWindow(IUIElements UIElements) : base(UIElements)
+        public MenuWindow(IUIElements UIElements, InputHandler inputHandler) : base(UIElements, inputHandler)
         {
             
         }

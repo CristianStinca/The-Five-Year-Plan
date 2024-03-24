@@ -19,44 +19,57 @@ namespace TFYP.Controller.WindowsControllers
 {
     internal class GameWindowController : WindowController
     {
-        private Vector2 focusCoord; 
-        private Vector4 screenLimits;
-        private TileButton t_button;
-        private Button button;
+        private Vector2 _focusCoord; 
+        private Vector4 _screenLimits;
+
+        View.Windows.GameWindow _gw_view;
+
         public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
             : base(inputHandler, _view, _uiTextures, _gameModel)
         {
             _view.changeToGameWindow();
 
-            focusCoord = new();
+            _focusCoord = new();
             InitiateConverionDict();
 
-            screenLimits = new Vector4(
+            _screenLimits = new Vector4(
                 0, 0,
                 -(((GameModel.MAP_H / 2) - 1) * View.Windows.GameWindow.TILE_H * View.Windows.GameWindow.SCALE) + Globals.Graphics.PreferredBackBufferHeight,
                 - (((GameModel.MAP_W / 2) - 1) * View.Windows.GameWindow.TILE_W * View.Windows.GameWindow.SCALE) + Globals.Graphics.PreferredBackBufferWidth
             );
 
-            _gameModel.Build(3, 4, EBuildable.Stadium);
-            _gameModel.Build(2, 2, EBuildable.Stadium);
+            if (base._view.CurrentWindow.GetType().Name.CompareTo(typeof(View.Windows.GameWindow).Name) == 0)
+            {
+                _gw_view = (View.Windows.GameWindow)base._view.CurrentWindow;
+            }
+            else
+            {
+                throw new TypeLoadException("GameWindowController (set_map)");
+            }
 
-            Texture2D texture = uiTextures.StadiumTile.Texture;
-
-            t_button = new TileButton(new Sprite(texture, (float)View.Windows.GameWindow.SCALE), texture, texture, inputHandler, focusCoord);
-            //button = new Button(new Sprite(texture, (float)View.Windows.GameWindow.SCALE), texture, texture, inputHandler);
-            t_button.TileButtonPressed += ClickInButton;
+            _gw_view.TileButtonPressedInWindow += ClickInButton;
         }
 
-        public void ClickInButton()
+        public void ClickInButton(int x, int y, string btn)
         {
-            Debug.WriteLine("Clicked!!!");
+            //Debug.WriteLine($"Clicked on X: {x}, Y: {y}");
+            switch (btn)
+            {
+                case "L":
+                    _gameModel.Build(y, x, EBuildable.Stadium);
+                    break;
+
+                case "R":
+                    _gameModel.Build(y, x, EBuildable.None);
+                    break;
+            }
         }
 
         public override void Update()
         {
             base.Update();
 
-            var map = gameModel.map;
+            var map = _gameModel.map;
             IRenderable[,] out_map = new IRenderable[map.GetLength(0), map.GetLength(1)];
 
             // TODO: add an event/obs collection to model to avoid re-drawing of the matrix
@@ -70,31 +83,17 @@ namespace TFYP.Controller.WindowsControllers
                 }
             }
 
-            View.Windows.GameWindow gw_view = null;
-            if (view.CurrentWindow.GetType().Name.CompareTo(typeof(View.Windows.GameWindow).Name) == 0)
-            {
-                gw_view = (View.Windows.GameWindow)view.CurrentWindow;
-            }
-            else
-            {
-                throw new TypeLoadException("GameWindowController (set_map)");
-            }
-
             // sending the new array to the View
-            gw_view.SendGameMap(out_map);
+            _gw_view.SendGameMap(out_map);
 
             int speed = 20;
 
             // reading the keys
-            foreach (KeyboardButtonState key in inputHandler.ActiveKeys) 
+            foreach (KeyboardButtonState key in _inputHandler.ActiveKeys) 
             {
                 if (key.Button == Keys.Escape && key.ButtonState == Utils.KeyState.Clicked)
                 {
                     OnExitPressed();
-                }
-                else if (key.Button == Keys.S && key.ButtonState == Utils.KeyState.Clicked)
-                {
-                    Debug.WriteLine("Stadium Invoked (Click)");
                 }
                 else if (key.Button == Keys.Up && key.ButtonState == Utils.KeyState.Held)
                 {
@@ -113,43 +112,32 @@ namespace TFYP.Controller.WindowsControllers
                     ExecuteFocusMove(new Vector2(-speed, 0));
                 }
 
-                gw_view.SetFocusCoord(focusCoord);
+                _gw_view.SetFocusCoord(_focusCoord);
             }
-
-            if (inputHandler.LeftButton == Utils.KeyState.Clicked)
-            {
-                //MouseState ms = Mouse.GetState();
-                //Debug.WriteLine($"X: {ms.X}, Y: {ms.Y}");
-            }
-            else if (inputHandler.RightButton == Utils.KeyState.Clicked)
-            {
-                Vector2 ms = Mouse.GetState().Position.ToVector2() - this.focusCoord;
-                Debug.WriteLine($"X: {ms.X}, Y: {ms.Y}");
-            }
-
-            t_button.Update();
         }
 
         private bool ExecuteFocusMove(Vector2 direction)
         {
-            Vector2 result = focusCoord + direction;
+            Vector2 result = _focusCoord + direction;
 
-            //if (result.X <= screenLimits.X && result.Y <= screenLimits.Y && result.Y >= screenLimits.Z && result.X >= screenLimits.W)
+            if (result.X <= _screenLimits.X && result.Y <= _screenLimits.Y && result.Y >= _screenLimits.Z && result.X >= _screenLimits.W)
             {
-                focusCoord = result;
+                _focusCoord = result;
                 return true;
             }
 
             return false;
         }
 
+        #region MODEL_TO_VIEW_TYPE_CONVERSIONS
+
         private Dictionary<EBuildable, IRenderable> conversionDict;
         private void InitiateConverionDict()
         {
             conversionDict = new()
             {
-                { EBuildable.None, uiTextures.EmptyTile },
-                { EBuildable.Stadium, uiTextures.StadiumTile }
+                { EBuildable.None, _uiTextures.EmptyTile },
+                { EBuildable.Stadium, _uiTextures.StadiumTile }
             };
         }
 
@@ -162,5 +150,7 @@ namespace TFYP.Controller.WindowsControllers
 
             return conversionDict[from];
         }
+        
+        #endregion
     }
 }

@@ -18,20 +18,23 @@ namespace TFYP.View
 
         protected IUIElements _UIElements;
 
-        public View(IUIElements UIElements) 
+        protected InputHandler _inputHandler;
+
+        public View(IUIElements UIElements, InputHandler inputHandler) 
         {
             //this.CurrentWindow = new GameWindow(UIElements); // to be changed to MenuWindow.Instance;
             this._UIElements = UIElements;
+            this._inputHandler = inputHandler;
         }
 
         public void changeToGameWindow()
         {
-            this.CurrentWindow = new GameWindow(_UIElements);
+            this.CurrentWindow = new GameWindow(_UIElements, _inputHandler);
         }
 
         public void changeToMenuWindow()
         {
-            this.CurrentWindow = new MenuWindow(_UIElements);
+            this.CurrentWindow = new MenuWindow(_UIElements, _inputHandler);
         }
 
         public void Update()
