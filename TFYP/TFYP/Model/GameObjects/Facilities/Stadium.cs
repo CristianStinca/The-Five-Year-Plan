@@ -10,7 +10,13 @@ namespace TFYP.Model.GameObjects.Facilities
 {
     internal class Stadium : Facility
     {
-        public Stadium(Vector2 _coor, EBuildable _type) : base(_coor, _type) 
+        public int InfluenceRadius { get; private set; } = 2;
+        public int HappinessBoost { get; private set; } = 5; // this will be changed later
+        public Stadium(Vector2 _coor, EBuildable _type) : base(_coor, _type)
+        {
+        }
+        public Stadium(Vector2 coor, int constructionCost, int capacity, TimeSpan constructionTime)
+            : base(coor, EBuildable.Stadium, constructionCost, capacity, constructionTime)
         {
         }
     }

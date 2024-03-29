@@ -9,6 +9,9 @@ namespace TFYP.Model.GameObjects
     enum EBuildable
     {
         None,
-        Stadium
+        Stadium,
+        School,
+        University,
+        PoliceStation
     }
 }
