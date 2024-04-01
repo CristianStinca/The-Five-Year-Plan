@@ -15,8 +15,8 @@ namespace TFYP.Model.GameObjects.Facilities
         public Stadium(Vector2 _coor, EBuildable _type) : base(_coor, _type)
         {
         }
-        public Stadium(Vector2 coor, int constructionCost, int capacity, TimeSpan constructionTime)
-            : base(coor, EBuildable.Stadium, constructionCost, capacity, constructionTime)
+        public Stadium(Vector2 coor, int constructionCost, int capacity, int maintenanceCost, TimeSpan constructionTime)
+            : base(coor, EBuildable.Stadium, constructionCost, capacity, maintenanceCost,constructionTime)
         {
         }
     }

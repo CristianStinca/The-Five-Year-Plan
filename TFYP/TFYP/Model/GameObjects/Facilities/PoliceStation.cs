@@ -16,8 +16,8 @@ namespace TFYP.Model.GameObjects.Facilities
         public PoliceStation(Vector2 _coor, EBuildable _type) : base(_coor, _type)
         {
         }
-        public PoliceStation(Vector2 coor, int constructionCost, int capacity, TimeSpan constructionTime)
-            : base(coor, EBuildable.PoliceStation, constructionCost, capacity, constructionTime)
+        public PoliceStation(Vector2 coor, int constructionCost, int maintenanceCost, int capacity, TimeSpan constructionTime)
+            : base(coor, EBuildable.PoliceStation, constructionCost, maintenanceCost, capacity, constructionTime)
         {
         }
 
