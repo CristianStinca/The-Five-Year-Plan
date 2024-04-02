@@ -11,7 +11,7 @@ using TFYP.Model.Zones;
 
 namespace TFYP.Model.Facilities
 {
-    internal class Stadium : Facility
+    public class Stadium : Facility
     {
         public int InfluenceRadius { get; private set; } = 2;
         public int HappinessBoost { get; private set; } = 5; // this will be changed later

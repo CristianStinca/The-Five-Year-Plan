@@ -11,7 +11,7 @@ using TFYP.Model.Zones;
 
 namespace TFYP.Model.Facilities
 {
-    internal class PoliceStation : Facility
+    public class PoliceStation : Facility
     {
         public int InfluenceRadius { get; private set; } = 2; // influence area for safety
         public int SafetyIncrease { get; private set; } = 10; // safety impact

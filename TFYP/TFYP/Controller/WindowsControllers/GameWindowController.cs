@@ -55,15 +55,18 @@ namespace TFYP.Controller.WindowsControllers
 
         public void ClickInButton(int x, int y, string btn)
         {
+            Zone zone1 = new Zone(EBuildable.Stadium);
+            Zone zone2 = new Zone(EBuildable.None);
+
             //Debug.WriteLine($"Clicked on X: {x}, Y: {y}");
             switch (btn)
             {
                 case "L":
-                    _gameModel.Build(y, x, EBuildable.Stadium);
+                    _gameModel.AddZone(y, x, zone1);
                     break;
 
                 case "R":
-                    _gameModel.Build(y, x, EBuildable.None);
+                    _gameModel.AddZone(y, x, zone2);
                     break;
             }
         }
