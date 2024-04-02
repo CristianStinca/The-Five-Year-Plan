@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TFYP.Model.Facilities;
+using TFYP.Model.Common;
+using TFYP.Model.City;
 
-namespace TFYP.Model.GameObjects.Zones
+namespace TFYP.Model.Zones
 {
     internal class Zone
     {

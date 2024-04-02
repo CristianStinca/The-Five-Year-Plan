@@ -49,7 +49,7 @@ namespace TFYP.Controller
 
             _uiTextures = new UIObjects();
             _view = new View.View(_uiTextures, _inputHandler);
-            _gameModel = new GameModel();
+            _gameModel = new GameModel(20,20);//initialized map with size here (Kristi)
             _controller = new Controller(_inputHandler, _view, _uiTextures, _gameModel);
 
             base.Initialize();

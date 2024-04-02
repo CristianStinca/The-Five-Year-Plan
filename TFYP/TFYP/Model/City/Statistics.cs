@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TFYP.Model.Facilities;
+using TFYP.Model.Common;
+using TFYP.Model.Zones;
 
-namespace TFYP.Model
+namespace TFYP.Model.City
 {
     internal class Statistics
     {
