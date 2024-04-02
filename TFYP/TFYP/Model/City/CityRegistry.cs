@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TFYP.Model.GameObjects;
-using TFYP.Model.GameObjects.Facilities;
-using TFYP.Model.GameObjects.Zones;
+using TFYP.Model.Facilities;
+using TFYP.Model.Zones;
+using TFYP.Model.Common;
 
-namespace TFYP.Model
+namespace TFYP.Model.City
 {
     internal class CityRegistry
     {

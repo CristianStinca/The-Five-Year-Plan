@@ -5,8 +5,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TFYP.Model.Common;
+using TFYP.Model.City;
+using TFYP.Model.Zones;
 
-namespace TFYP.Model.GameObjects.Facilities
+namespace TFYP.Model.Facilities
 {
     internal class Stadium : Facility
     {
