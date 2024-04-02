@@ -10,14 +10,14 @@ using TFYP.Model.Common;
 
 namespace TFYP.Model.City
 {
-    internal class CityRegistry
+    public class CityRegistry
     {
         public double TaxRate { get; private set; }
         public double AverageIncome { get; private set; } = 1;
         public Budget budget;
         public Statistics Statistics { get; private set; }
-        private ConcurrentDictionary<Type, ConcurrentBag<Buildable>> registry;
-        private ConcurrentBag<Citizen> citizens;
+        public ConcurrentDictionary<Type, ConcurrentBag<Buildable>> registry;
+        public ConcurrentBag<Citizen> citizens;
 
         private ConcurrentDictionary<int, Zone> zones;
         private int nextZoneId; // to generate unique ID for zones if necessary

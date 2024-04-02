@@ -10,11 +10,11 @@ using TFYP.Model.Zones;
 
 namespace TFYP.Model.City
 {
-    internal class Statistics
+    public class Statistics
     {
-        private int population;
-        private int satisfaction;
-        private int capacity;
+        public int population;
+        public int satisfaction;
+        public int capacity;
 
         // Volatile is used for concurrency
         public int Population

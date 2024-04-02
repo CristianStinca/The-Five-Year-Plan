@@ -10,7 +10,7 @@ using TFYP.Model.Zones;
 
 namespace TFYP.Model.Facilities
 {
-    internal abstract class Facility : Buildable
+    public abstract class Facility : Buildable
     {
         public int MaxCapacity { get; set; }
         public int CurrentCapacity { get; set; }

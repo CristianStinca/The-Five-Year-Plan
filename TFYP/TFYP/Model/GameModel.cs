@@ -17,15 +17,15 @@ namespace TFYP.Model
     /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
     
     [Serializable]
-    internal class GameModel
+    public class GameModel
     {
         
 
         
         private static int _mapH, _mapW;
         public Buildable[,] map;
-        public CityRegistry cityRegistry;
-        public Statistics statistics;
+        //public CityRegistry cityRegistry;
+        //public Statistics statistics;
         public DateTime dateOfWorld; // DateTime built-in in c#
       
 
@@ -57,39 +57,40 @@ namespace TFYP.Model
         }
 
         
-        public void Build(int _x, int _y, EBuildable _type)
+
+        //Adds the zone to the city
+        
+        
+        public void AddZone(int _x, int _y, Zone zone)
         {
-            switch (_type)
+            // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
+            
+            AddToMap(_x, _y, zone);
+            //cityRegistry.AddZone(zone);
+            //cityRegistry.UpdateBalance(-zone.GetOneTimeCost(), GetCurrentDate());
+        }
+        
+        
+        
+        private void AddToMap(int _x, int _y, Zone zone) {
+
+            //left as x and y for now, can be changed to coordinate later
+
+            //map[_x, _y] = new Buildable(new Vector2(_x, _y), zone.type);
+
+            switch (zone.type)
             {
                 case EBuildable.Stadium:
-                    map[_x, _y] = new Stadium(new Vector2(_x, _y), _type);
+                    map[_x, _y] = new Stadium(new Vector2(_x, _y), zone.type);
                     break;
 
                 case EBuildable.None:
-                    map[_x, _y] = new Buildable(new Vector2(_x, _y), _type);
+                    map[_x, _y] = new Buildable(new Vector2(_x, _y), zone.type);
                     break;
             }
         }
 
-
-
-
-        //Adds the zone to the city
-        /*
-        public void AddZone(Zone zone)
-        {
-            
-            AddToMap(zone);
-            cityRegistry.AddZone(zone);
-            cityRegistry.UpdateBalance(-zone.GetOneTimeCost(), GetCurrentDate());
-        }
-        */
-
         
-        //private void AddToMap(Zone zone) { /* Implementation */ }
-
-
-        //private DateTime GetCurrentDate() { return DateTime.Now; /* Implementation might differ */ }
 
 
 

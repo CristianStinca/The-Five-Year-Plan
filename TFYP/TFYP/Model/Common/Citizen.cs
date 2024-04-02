@@ -15,7 +15,7 @@ namespace TFYP.Model.Common
         School,
         University
     }
-    internal class Citizen
+    public class Citizen
     {
         public int Satisfaction { get; private set; }
         public EducationLevel Education { get; private set; }
