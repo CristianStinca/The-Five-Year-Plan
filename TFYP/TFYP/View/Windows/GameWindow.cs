@@ -65,8 +65,8 @@ namespace TFYP.View.Windows
                     Sprite sprite = new Sprite(
                         _vo.Texture,
                         new Microsoft.Xna.Framework.Vector2(
-                            initPos.X * SCALE + focusCoord.X + deviation + _vo.Position.X + (j * TILE_W * SCALE),
-                            initPos.Y * SCALE + focusCoord.Y + _vo.Position.Y + (i * TILE_H * SCALE / 2) - ((_vo.SourceRectangle.Height - TILE_H) * SCALE)
+                            (initPos.X * SCALE) + focusCoord.X + deviation + _vo.Position.X + (j * TILE_W * SCALE),
+                            (initPos.Y * SCALE) + focusCoord.Y + _vo.Position.Y + (i * TILE_H * SCALE / 2) - ((_vo.Texture.Height - TILE_H) * (SCALE - 1))
                         ),
                         SCALE
                     );
@@ -85,6 +85,11 @@ namespace TFYP.View.Windows
 
         public void OnTilePressed(int x, int y, string btn)
         {
+            if (btn == "L")
+            {
+                Debug.WriteLine(map[2, 2]._sprite.Position.X);
+            }
+
             TileButtonPressedInWindow.Invoke(x, y, btn); // TODO: Refactor the events so that the controller gets it more directly? (now we create an event for every tile and that's sad :( )
         }
 

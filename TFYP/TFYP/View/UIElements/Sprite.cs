@@ -29,7 +29,7 @@ namespace TFYP.View.UIElements
             Tint = Color.White;
         }
 
-        public Sprite(Texture2D texture) : this(texture, new Vector2(0, 0 - (texture.Height - TFYP.View.Windows.GameWindow.TILE_H)), 1f)
+        public Sprite(Texture2D texture) : this(texture, new Vector2(0, 0), 1f)
         {
         }
 
