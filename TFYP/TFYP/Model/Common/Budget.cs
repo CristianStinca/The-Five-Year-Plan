@@ -9,7 +9,7 @@ using TFYP.Model.Zones;
 
 namespace TFYP.Model.Common
 {
-    internal class Budget
+    public class Budget
     {
         public double Balance { get; private set; }
         public double TaxRate { get; private set; }

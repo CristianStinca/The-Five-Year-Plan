@@ -15,7 +15,7 @@ namespace TFYP.Model.Common
         School,
         University
     }
-    internal class Citizen
+    public class Citizen
     {
         public int Satisfaction { get; private set; }
         public int Age { get; private set; }
@@ -33,10 +33,10 @@ namespace TFYP.Model.Common
             Working = working;
         }
 
-        public void SetSatisfaction(GameModel gm)
-        {
-            
-        }
+        //public void SetSatisfaction(GameModel gm)
+        //{
+
+        //}
         public int PayTax(int taxRate)
         {
             return taxRate;

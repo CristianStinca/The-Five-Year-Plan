@@ -17,7 +17,7 @@ namespace TFYP.Model
     /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
     
     [Serializable]
-    internal class GameModel
+    public class GameModel
     {
         
 

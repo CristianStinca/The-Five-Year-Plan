@@ -12,7 +12,7 @@ using TFYP.Model.Zones;
 
 namespace TFYP.Model.Common
 {
-    internal class Buildable
+    public class Buildable
     {
         public Vector2 coor {  get; }
         public EBuildable type { get; }

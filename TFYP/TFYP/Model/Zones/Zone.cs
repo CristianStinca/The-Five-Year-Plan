@@ -9,7 +9,7 @@ using TFYP.Model.City;
 
 namespace TFYP.Model.Zones
 {
-    internal class Zone
+    public class Zone
     {
         private Statistics statistics;
         public int Level { get; private set; }

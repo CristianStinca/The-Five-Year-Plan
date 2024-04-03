@@ -10,9 +10,9 @@ using TFYP.Model.Zones;
 
 namespace TFYP.Model.City
 {
-    internal class Statistics
+    public class Statistics
     {
-        public int Population { get; private set; }
+        public int Population { get; set; }
         public int Capacity { get; private set; }
         private int satisfaction;
         public Budget Budget { get; private set; }
@@ -20,17 +20,24 @@ namespace TFYP.Model.City
         public int CommercialZoneCount { get; private set; }
 
         // Volatile is used for concurrency
+        public Statistics()
+        {
+            Budget = new Budget();
+            IndutstrialZoneCount = 0;
+            CommercialZoneCount = 0;
+            satisfaction = 50; // I think we ust start with avg value
+        }
         public Statistics(Budget budget)
         {
             Budget = budget;
             IndutstrialZoneCount = 0;
-            commercialZoneCount = 0;
+            CommercialZoneCount = 0;
             satisfaction = 50; // I think we ust start with avg value
         }
         public int Satisfaction
         {
             get => Math.Clamp(satisfaction, 0, 100); // Ensure satisfaction is within 0-100
-            private set => satisfaction = value;
+            set => satisfaction = value;
         }
         public void UpdateCityStatistics(CityRegistry cityRegistry)
         {
@@ -44,11 +51,13 @@ namespace TFYP.Model.City
             var currentSatisfaction = GetTaxEffect()
                                     + GetZoneBalance()
                                     + GetBudgetEffect(DateTime.Now);
-            
+
             var zones = cityRegistry.GetAllZones();
             if (zones.Any())
             {
-                currentSatisfaction += zones.Average(z => z.GetZoneSatisfaction());
+                //currentSatisfaction += zones.Average(z => z.GetZoneSatisfaction());
+                // TODO satisfaction logic from zone
+                currentSatisfaction += 0;
             }
             return currentSatisfaction;
         }

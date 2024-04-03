@@ -9,7 +9,7 @@ using TFYP.Model.Zones;
 
 namespace TFYP.Model.Common
 {
-    enum EBuildable
+    public enum EBuildable
     {
         None,
         Stadium,

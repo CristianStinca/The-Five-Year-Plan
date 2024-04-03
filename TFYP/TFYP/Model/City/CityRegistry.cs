@@ -10,7 +10,7 @@ using TFYP.Model.Common;
 
 namespace TFYP.Model.City
 {
-    internal class CityRegistry
+    public class CityRegistry
     {
         public double TaxRate { get; private set; }
         public double AverageIncome { get; private set; } = 1;
@@ -39,7 +39,7 @@ namespace TFYP.Model.City
             TaxRate = newRate;
         }
 
-        public int QueryBudget()
+        public double QueryBudget()
         {
             return budget.Balance; // current balance
         }
