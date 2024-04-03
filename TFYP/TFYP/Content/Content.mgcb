@@ -25,7 +25,7 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/back2.jpg;back2.jpg
 
-#begin ../Resources/Images/back2.jpg
+#begin ../Resources/Images/stadium_tile3.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -35,7 +35,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../Resources/Images/back2.jpg;back2.jpg
+/build:../Resources/Images/stadium_tile3.png;stadium_tile3.png
 
 #begin back2.jpg
 /importer:TextureImporter

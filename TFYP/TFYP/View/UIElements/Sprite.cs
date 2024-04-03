@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TFYP.View.Renders;
+using TFYP.View.Windows;
 
 namespace TFYP.View.UIElements
 {
