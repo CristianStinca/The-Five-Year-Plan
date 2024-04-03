@@ -35,7 +35,10 @@
             CheckMouseButton();
         }
 
-        public void CheckKey()
+        /// <summary>
+        /// Analyzes the current and previous Keyboard state and reflects the changes into ActiveKeys.
+        /// </summary>
+        private void CheckKey()
         {
             for (int i = 0; i < CurrentKeyboardState.GetPressedKeys().Length; i++)
             {
@@ -86,13 +89,22 @@
             }
         }
 
-        public void CheckMouseButton()
+        /// <summary>
+        /// Checks the states of the chosen Mouse Buttons.
+        /// </summary>
+        private void CheckMouseButton()
         {
             LeftButton = SetMouseButtonState(PreviousMouseState.LeftButton, CurrentMouseState.LeftButton);
             RightButton = SetMouseButtonState(PreviousMouseState.RightButton, CurrentMouseState.RightButton);
             MiddleButton = SetMouseButtonState(PreviousMouseState.MiddleButton, CurrentMouseState.MiddleButton);
         }
 
+        /// <summary>
+        /// Decides the state of the given Mouse Button
+        /// </summary>
+        /// <param name="prev_state">Previous Mouse state.</param>
+        /// <param name="curr_state">Current Mouse state.</param>
+        /// <returns>The current key state.</returns>
         private KeyState SetMouseButtonState(ButtonState prev_state, ButtonState curr_state)
         {
             if (prev_state == ButtonState.Released && curr_state == ButtonState.Pressed)

@@ -32,6 +32,9 @@ namespace TFYP.Controller.WindowsControllers
             this._inputHandler.Update();
         }
 
+        /// <summary>
+        /// Raises the event ExitPressed.
+        /// </summary>
         protected virtual void OnExitPressed()
         {
             ExitPressed?.Invoke();

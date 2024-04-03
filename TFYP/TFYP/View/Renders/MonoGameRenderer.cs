@@ -7,6 +7,10 @@ namespace TFYP.View.Renders
 {
     public class MonoGameRenderer : IRenderer
     {
+        /// <summary>
+        /// Render to the screen the given IRenderables.
+        /// </summary>
+        /// <param name="spritesToDraw">The sprites to render.</param>
         public void DrawState(List<IRenderable> spritesToDraw)
         {
             Globals.SpriteBatch.Begin(

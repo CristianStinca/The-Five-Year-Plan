@@ -46,6 +46,11 @@ namespace TFYP.View.UIElements.ClickableElements
             return IsPointOverButton(q_point);
         }
 
+        /// <summary>
+        /// Checks if a pair of coordinates are inside the Button margins.
+        /// </summary>
+        /// <param name="point">The pair of coordinates.</param>
+        /// <returns>True if the point is inside the Button margins.</returns>
         public bool IsPointOverButton(Vector2 point)
         {
             bool result = false;

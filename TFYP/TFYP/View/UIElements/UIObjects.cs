@@ -50,6 +50,11 @@ namespace TFYP.View.UIElements
         //    return newButton;
         //}
 
+        /// <summary>
+        /// Creates a sprite from the given file.
+        /// </summary>
+        /// <param name="fileName">The string of the file name</param>
+        /// <returns>The Sprite object.</returns>
         private static Sprite CreateSprite(string fileName)
         {
             Debug.WriteLine("sprite initialised");

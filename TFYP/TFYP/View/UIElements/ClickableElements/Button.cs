@@ -42,6 +42,11 @@ namespace TFYP.View.UIElements.ClickableElements
             }
         }
 
+        /// <summary>
+        /// Checks if the Mouse coursor is over the Button.
+        /// </summary>
+        /// <param name="mouse_state">The current mouse state</param>
+        /// <returns>True if the coursor is over the Button.</returns>
         public virtual bool IsMouseOverButton(MouseState mouse_state)
         {
             return _sprite.CollisionRectangle.Contains(mouse_state.Position);
