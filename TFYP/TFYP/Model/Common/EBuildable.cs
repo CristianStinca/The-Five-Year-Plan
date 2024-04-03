@@ -15,6 +15,10 @@ namespace TFYP.Model.Common
         Stadium,
         School,
         University,
-        PoliceStation
+        PoliceStation,
+        Residential,
+        Industrial,
+        Service,
+        Road
     }
 }

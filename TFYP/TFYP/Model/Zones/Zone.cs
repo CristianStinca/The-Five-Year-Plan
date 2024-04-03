@@ -9,42 +9,75 @@ using TFYP.Model.City;
 
 namespace TFYP.Model.Zones
 {
-    public class Zone
+    [Serializable]
+    public class Zone : Buildable
     {
-        private Statistics statistics;
-        public int Level { get; private set; }
+        //*removed level
+        //*might be needed to store x and y coordinates of the zone as attributes
+        //*might be needed to store height and width of the zone for dimensions
+
+        public List<Citizen> citizens;// Tracking the citizens within the zone
+        public EBuildable type { get; }
+        public float effectRadius { get; private set; }
         public double TimeToBuild { get; private set; }
         public int Capacity { get; private set; }
-
-        private List<Citizen> citizens; // Tracking the citizens within the zone
         public int MaintenanceCost { get; private set; }
+        public int BuildCost { get; private set; }
+        //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
 
-        public Zone(Statistics stats, int level, double timeToBuild, int capacity, int maintenanceCost)
-        {
-            statistics = stats;
-            Level = level;
+        public Zone(EBuildable type, float effectRadius, double timeToBuild, int capacity, int maintenanceCost, int buildCost)
+        { // Initialize or assign
+            this.citizens = new List<Citizen>();
+            this.type = type;
+            this.effectRadius = effectRadius;
             TimeToBuild = timeToBuild;
             Capacity = capacity;
             MaintenanceCost = maintenanceCost;
-            citizens = new List<Citizen>();
+            BuildCost = buildCost;
         }
 
-        public void AddCitizen(Citizen c)
-        {
-            if (c == null)
-                throw new ArgumentNullException(nameof(c));
+        //This constructor is to use temporarily, will be deleted later!
 
-            if (!c.IsActive)
+        public Zone(EBuildable type)
+        {
+            this.type = type; 
+            this.citizens = new List<Citizen>();
+            this.effectRadius = 0f; 
+            this.TimeToBuild = 0; 
+            this.Capacity = 0; 
+            this.MaintenanceCost = 0; 
+            this.BuildCost = 0; 
+        }
+
+        //TO DO: Need to implement method for finding paths and set Connected for every zone
+
+        public void AddCitizen(Citizen citizen, GameModel _gameModel)
+        {
+            if (citizen == null)
+                throw new ArgumentNullException(nameof(citizen));
+
+            if (!citizen.IsActive)
                 throw new InvalidOperationException("Cannot add an inactive citizen.");
 
             if (citizens.Count >= Capacity)
                 throw new InvalidOperationException("Cannot add new citizen; zone capacity reached.");
 
-            if (citizens.Contains(c))
+            if (citizens.Contains(citizen))
                 throw new InvalidOperationException("Citizen is already in the zone.");
-
-            citizens.Add(c);
+            citizens.Add(citizen);
+            //Statistics.Population += 1;
+            //_gameModel.CityStatistics.SetCitySatisfaction(_gameModel);
         }
+
+        public void RemoveCitizen(Citizen citizen, GameModel _gameModel)
+        {
+            citizens.Remove(citizen);
+            //Statistics.Population -= 1;
+            //_gameModel.CityStatistics.SetCitySatisfaction(_gameModel);
+        }
+
+
+
         public Statistics GetOverallSatisfaction()
         {
             int totalSatisfaction = citizens.Where(c => c.IsActive).Sum(c => c.Satisfaction);
@@ -52,12 +85,16 @@ namespace TFYP.Model.Zones
             int averageSatisfaction = activeCitizenCount > 0 ? totalSatisfaction / activeCitizenCount : 0;
 
             // statistics class can take satisfaction as a constructor parameter
-            return new Statistics { Satisfaction = averageSatisfaction };
+            return new Statistics { Satisfaction = averageSatisfaction };//******************!!!!!!!!!!!!
         }
+
+
         public int GetIncome(int taxRate)
         {
             return citizens.Where(c => c.IsActive).Sum(c => c.PayTax(taxRate));
         }
+
+
         public void IncCapacity(int num)
         {
             if (num < 0)
@@ -66,5 +103,7 @@ namespace TFYP.Model.Zones
             int maxCapacity = 100; // for zone
             Capacity = Math.Min(Capacity + num, maxCapacity);
         }
+
+
     }
 }
