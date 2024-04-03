@@ -27,11 +27,17 @@ namespace TFYP.View.UIElements.ClickableElements
             _normalImage = normalImage;
         }
 
+        /// <summary>
+        /// Chanfes the Button texture to the one designated for hover.
+        /// </summary>
         public void ChangeToHoverImage()
         {
             _sprite.Texture = _hoverImage;
         }
 
+        /// <summary>
+        /// Chanfes the Button texture to the one designated for normal view.
+        /// </summary>
         public void ChangeToNormalImage()
         {
             _sprite.Texture = _normalImage;

@@ -53,6 +53,12 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.TileButtonPressedInWindow += ClickInButton;
         }
 
+        /// <summary>
+        /// Method to manage the event of a button click.
+        /// </summary>
+        /// <param name="x">The x coordinate of the tile.</param>
+        /// <param name="y">The y coordinate of the tile.</param>
+        /// <param name="btn">The name of the mouse button (L/R)</param>
         public void ClickInButton(int x, int y, string btn)
         {
             Zone zone1 = new Zone(EBuildable.Stadium);
@@ -122,6 +128,11 @@ namespace TFYP.Controller.WindowsControllers
             }
         }
 
+        /// <summary>
+        /// Method that tries to move the map.
+        /// </summary>
+        /// <param name="direction">The direction of the move.</param>
+        /// <returns>True if a move will be executed.</returns>
         private bool ExecuteFocusMove(Vector2 direction)
         {
             Vector2 result = _focusCoord + direction;
@@ -138,6 +149,10 @@ namespace TFYP.Controller.WindowsControllers
         #region MODEL_TO_VIEW_TYPE_CONVERSIONS
 
         private Dictionary<EBuildable, IRenderable> conversionDict;
+
+        /// <summary>
+        /// Initiates the dictionary for conversions between EBuildable and UITexture
+        /// </summary>
         private void InitiateConverionDict()
         {
             conversionDict = new()
@@ -147,6 +162,12 @@ namespace TFYP.Controller.WindowsControllers
             };
         }
 
+        /// <summary>
+        /// Just a converter.
+        /// </summary>
+        /// <param name="from">An EBuildable object.</param>
+        /// <returns>A IRenderable object.</returns>
+        /// <exception cref="ArgumentException">Raises exception if the EBuildable is not in the dictionary.</exception>
         private IRenderable CreateUIElement(EBuildable from)
         {
             if (!conversionDict.ContainsKey(from))

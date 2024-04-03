@@ -27,11 +27,17 @@ namespace TFYP.View
             this._inputHandler = inputHandler;
         }
 
+        /// <summary>
+        /// Changes the current window to GameWindow.
+        /// </summary>
         public void changeToGameWindow()
         {
             this.CurrentWindow = new GameWindow(_UIElements, _inputHandler);
         }
 
+        /// <summary>
+        /// Changes the current window to MenuWindow.
+        /// </summary>
         public void changeToMenuWindow()
         {
             this.CurrentWindow = new MenuWindow(_UIElements, _inputHandler);

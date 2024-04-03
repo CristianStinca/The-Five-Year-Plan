@@ -42,6 +42,10 @@ namespace TFYP.View.Windows
             map = null;
         }
 
+        /// <summary>
+        /// Method to update the matrix of IRenderable
+        /// </summary>
+        /// <param name="_map">The IRenderable matrix.</param>
         public void SendGameMap(IRenderable[,] _map)
         {
             if (map == null)
