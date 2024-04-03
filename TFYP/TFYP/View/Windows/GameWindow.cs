@@ -66,7 +66,7 @@ namespace TFYP.View.Windows
                         _vo.Texture,
                         new Microsoft.Xna.Framework.Vector2(
                             initPos.X * SCALE + focusCoord.X + deviation + _vo.Position.X + (j * TILE_W * SCALE),
-                            initPos.Y * SCALE + focusCoord.Y + _vo.Position.Y + (i * TILE_H * SCALE / 2f)
+                            initPos.Y * SCALE + focusCoord.Y + _vo.Position.Y + (i * TILE_H * SCALE / 2) - ((_vo.SourceRectangle.Height - TILE_H) * SCALE)
                         ),
                         SCALE
                     );
