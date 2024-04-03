@@ -37,8 +37,8 @@ namespace TFYP.Controller.WindowsControllers
 
             _screenLimits = new Vector4(
                 0, 0,
-                -(((GameModel.MAP_H / 2) - 1) * View.Windows.GameWindow.TILE_H * View.Windows.GameWindow.SCALE) + Globals.Graphics.PreferredBackBufferHeight,
-                - (((GameModel.MAP_W / 2) - 1) * View.Windows.GameWindow.TILE_W * View.Windows.GameWindow.SCALE) + Globals.Graphics.PreferredBackBufferWidth
+                Globals.Graphics.PreferredBackBufferHeight - (((GameModel.MAP_H - 1) / 2) * View.Windows.GameWindow.TILE_H * View.Windows.GameWindow.SCALE),
+                Globals.Graphics.PreferredBackBufferWidth - (((GameModel.MAP_W - (0.5f))) * View.Windows.GameWindow.TILE_W * View.Windows.GameWindow.SCALE)
             );
 
             if (base._view.CurrentWindow.GetType().Name.CompareTo(typeof(View.Windows.GameWindow).Name) == 0)
@@ -137,7 +137,7 @@ namespace TFYP.Controller.WindowsControllers
         {
             Vector2 result = _focusCoord + direction;
 
-            if (result.X <= _screenLimits.X && result.Y <= _screenLimits.Y && result.Y >= _screenLimits.Z && result.X >= _screenLimits.W)
+            if (result.X <= _screenLimits.X && result.Y <= _screenLimits.Y && result.X >= _screenLimits.W && result.Y >= _screenLimits.Z )
             {
                 _focusCoord = result;
                 return true;
