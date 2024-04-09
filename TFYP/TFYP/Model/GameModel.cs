@@ -31,8 +31,8 @@ namespace TFYP.Model
 
         public GameModel(int _mapH, int _mapW)
         {
-            _mapH = _mapH;
-            _mapW = _mapW;
+            MAP_H = _mapH;
+            MAP_W = _mapW;
             map = new Buildable[_mapH, _mapW]; 
             //statistics = new Statistics(new Budget(Constants.InitialCityBalance, 0.3f));
             //cityRegistry = new CityRegistry(cityStatistics);

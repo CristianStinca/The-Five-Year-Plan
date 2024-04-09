@@ -22,5 +22,15 @@ namespace TFYP.Model.Facilities
             : base(coor, EBuildable.Stadium, constructionCost, capacity, maintenanceCost,constructionTime)
         {
         }
+
+        public void IncreaseSatisfaction(Zone zone, GameModel gm)
+        {
+
+        }
+
+        public void DecreaseSatisfaction(Zone zone, GameModel gm)
+        {
+
+        }
     }
 }

@@ -24,9 +24,36 @@ namespace TFYP.Model.Facilities
         {
         }
 
-        public void RespondToIncident() { }
+        public void RespondToIncident() 
+        {
+            //if (IsWithinInfluenceRadius(zone))
+            //{
+            //    // Implementation for responding to an incident
+            //}
+        }
 
-        public void IncreaseSafety() { }
+        // Increase safety in the surrounding area
+        public void IncreaseSafety(Zone zone)
+        {
+            //if (IsWithinInfluenceRadius(zone))
+            //{
+            //    zone.UpdateSafety(SafetyIncrease);
+            //}
+        }
 
+        // Decrease safety when a police station is removed or not operational
+        public void DecreaseSafety(Zone zone)
+        {
+            //if (IsWithinInfluenceRadius(zone))
+            //{
+            //    zone.UpdateSafety(-SafetyIncrease);
+            //}
+        }
+
+        // Check if a zone is within the influence radius of the police station
+        //private bool IsWithinInfluenceRadius(Zone zone)
+        //{
+        //    return PathFinder.ManhattanDistance(this.Coordinate, zone.Coordinate) <= InfluenceRadius;
+        //}
     }
 }

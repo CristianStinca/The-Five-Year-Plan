@@ -14,9 +14,7 @@ namespace TFYP.Model.Facilities
     {
         public int MaxCapacity { get; set; }
         public int CurrentCapacity { get; set; }
-
         public int MaintenanceCost { get; set; }
-
         public TimeSpan ConstructionTime { get; set; }
 
 
