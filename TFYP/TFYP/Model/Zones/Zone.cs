@@ -16,6 +16,8 @@ namespace TFYP.Model.Zones
         //*might be needed to store x and y coordinates of the zone as attributes
         //*might be needed to store height and width of the zone for dimensions
 
+        public float Health {  get; private set; } // Health will be probably changed later, so far it is for the disaster and is representing percentage (1-100)
+        // health will help us to calculate the cost of the damage which will be OneTimeCost * (Health/100)
         public List<Citizen> citizens;// Tracking the citizens within the zone
         public EBuildable type { get; }
         public float effectRadius { get; private set; }
@@ -34,6 +36,7 @@ namespace TFYP.Model.Zones
             Capacity = capacity;
             MaintenanceCost = maintenanceCost;
             BuildCost = buildCost;
+            Health = 100;
         }
 
         //This constructor is to use temporarily, will be deleted later!
@@ -104,6 +107,11 @@ namespace TFYP.Model.Zones
             Capacity = Math.Min(Capacity + num, maxCapacity);
         }
 
-
+        public void SetHealth(float health)
+        {
+            // this will be called in disasters at first and will decrease the HP of the zone
+            // then will be increased again to 100% after user repairs it, so RepairZone function is needed
+            Health = health;
+        }
     }
 }
