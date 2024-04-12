@@ -27,7 +27,7 @@ namespace TFYP.Model.Disasters
             Type = type;
             Location = location;
         }
-        
+
         public void ApplyEffects(GameModel gameModel)
         {
             // Iterate over all zones in the game model
