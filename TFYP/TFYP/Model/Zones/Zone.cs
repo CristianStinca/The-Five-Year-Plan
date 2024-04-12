@@ -88,7 +88,7 @@ namespace TFYP.Model.Zones
             int averageSatisfaction = activeCitizenCount > 0 ? totalSatisfaction / activeCitizenCount : 0;
 
             // statistics class can take satisfaction as a constructor parameter
-            return new Statistics { Satisfaction = averageSatisfaction };//******************!!!!!!!!!!!!
+            return new Statistics(new Budget()){ Satisfaction = averageSatisfaction };//******************!!!!!!!!!!!!
         }
 
 
@@ -112,6 +112,10 @@ namespace TFYP.Model.Zones
             // this will be called in disasters at first and will decrease the HP of the zone
             // then will be increased again to 100% after user repairs it, so RepairZone function is needed
             Health = health;
+        }
+        public virtual List<Citizen> GetCitizens()
+        {
+            return citizens;
         }
     }
 }

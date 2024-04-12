@@ -13,27 +13,29 @@ namespace TFYP.Model.City
     public class Statistics
     {
         public int Population { get; set; }
+
         public int Capacity { get; private set; }
         private int satisfaction;
         public Budget Budget { get; private set; }
-        public int IndutstrialZoneCount { get; private set; }
-        public int CommercialZoneCount { get; private set; }
+        public int IndustrialZoneCount { get; private set; }
+        public int ServiceZoneCount { get; private set; }
 
         // Volatile is used for concurrency
-        public Statistics()
-        {
-            Budget = new Budget();
-            IndutstrialZoneCount = 0;
-            CommercialZoneCount = 0;
-            satisfaction = 50; // I think we ust start with avg value
-        }
+        
         public Statistics(Budget budget)
         {
             Budget = budget;
-            IndutstrialZoneCount = 0;
-            CommercialZoneCount = 0;
+            IndustrialZoneCount = 0;
+            ServiceZoneCount = 0;
             satisfaction = 50; // I think we ust start with avg value
         }
+        public void UpdateFinancialStats() { }
+        public void UpdateZoneCount(CityRegistry cityRegistry)
+        {
+            ServiceZoneCount = cityRegistry.Zones.OfType<IndustrialZone>().Count();
+            IndustrialZoneCount = cityRegistry.Zones.OfType<ServiceZone>().Count();
+        }
+        public void IncreaseZoneCOunt() { }
         public int Satisfaction
         {
             get => Math.Clamp(satisfaction, 0, 100); // Ensure satisfaction is within 0-100
@@ -68,7 +70,7 @@ namespace TFYP.Model.City
 
         private double GetZoneBalance()
         {
-            int diff = Math.Abs(IndutstrialZoneCount - CommercialZoneCount);
+            int diff = Math.Abs(IndustrialZoneCount - ServiceZoneCount);
             return 1.0 / (diff == 0 ? 1.0 : diff);
         }
 
@@ -78,7 +80,7 @@ namespace TFYP.Model.City
         }
         private void UpdateNrZones(CityRegistry cityRegistry)
         {
-            //CommercialZoneCount = cityRegistry.GetAllZones().OfType<CommercialZone>().Count();
+            //ServiceZoneCount = cityRegistry.GetAllZones().OfType<CommercialZone>().Count();
             //IndutstrialZoneCount = cityRegistry.GetAllZones().OfType<IndustrialZone>().Count();
         }
     }   

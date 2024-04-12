@@ -14,7 +14,7 @@ namespace TFYP.Model.Common
         public double Balance { get; private set; }
         public double TaxRate { get; private set; }
         public double TotalMaintenanceFee { get; private set; }
-
+        
         public Budget(double balance = 0, double taxRate = 0)
         {
             Balance = balance;
