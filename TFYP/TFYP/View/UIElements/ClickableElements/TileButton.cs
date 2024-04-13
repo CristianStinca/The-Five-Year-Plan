@@ -15,21 +15,21 @@ namespace TFYP.View.UIElements.ClickableElements
 {
     internal class TileButton : Button
     {
-        public delegate void TileButtonPressedHandler(int x, int y, string btn);
+        public delegate void TileButtonPressedHandler(int col, int row, int x, int y, string btn);
         public event TileButtonPressedHandler TileButtonPressed;
 
         private Vector2[] _vertecies;
 
-        private int _x;
-        private int _y;
+        private int _col;
+        private int _row;
 
-        public TileButton(Sprite sprite, InputHandler inputHandler, int x, int y)
+        public TileButton(Sprite sprite, InputHandler inputHandler, int col, int row)
             : base(sprite, inputHandler)
         {
             int width = Windows.GameWindow.TILE_W * Windows.GameWindow.SCALE;
             int height = Windows.GameWindow.TILE_H * Windows.GameWindow.SCALE;
-            this._x = x;
-            this._y = y;
+            this._col = col;
+            this._row = row;
 
             _vertecies = new Vector2[]
             {
@@ -78,12 +78,12 @@ namespace TFYP.View.UIElements.ClickableElements
 
             if (IsMouseOverButton(mouse_state) && _inputHandler.LeftButton == Utils.KeyState.Clicked)
             {
-                TileButtonPressed.Invoke(this._x, this._y, "L");
+                TileButtonPressed.Invoke(this._col, this._row, mouse_state.Position.X, mouse_state.Position.Y, "L");
             }
 
             if (IsMouseOverButton(mouse_state) && _inputHandler.RightButton == Utils.KeyState.Clicked)
             {
-                TileButtonPressed.Invoke(this._x, this._y, "R");
+                TileButtonPressed.Invoke(this._col, this._row, mouse_state.Position.X, mouse_state.Position.Y, "R");
             }
         }
     }

@@ -31,6 +31,9 @@ namespace TFYP.View.Windows
         private Vector2 focusCoord;
         private Vector2 initPos;
 
+        private Rectangle screenRect;
+        private List<Rectangle> _UIElements;
+
         List<IRenderable> mapRend = new List<IRenderable>();
 
         public GameWindow(IUIElements UIElements, InputHandler inputHandler) : base(UIElements, inputHandler)
@@ -40,13 +43,17 @@ namespace TFYP.View.Windows
             mapRend = new();
             initPos = new Vector2(-TILE_W / 2, -TILE_H / 2);
             map = null;
+            screenRect = new Rectangle(0, 0, Globals.Graphics.PreferredBackBufferWidth, Globals.Graphics.PreferredBackBufferHeight);
+            _UIElements = new List<Rectangle>();
+
+            InitialiseUi();
         }
 
         /// <summary>
         /// Method to update the matrix of IRenderable
         /// </summary>
         /// <param name="_map">The IRenderable matrix.</param>
-        public void SendGameMap(IRenderable[,] _map)
+        public void SendGameMap(ISprite[,] _map)
         {
             if (map == null)
             {
@@ -59,7 +66,7 @@ namespace TFYP.View.Windows
             {
                 for (int j = 0; j < _map.GetLength(1); j++)
                 {
-                    IRenderable _vo = _map[i, j];
+                    ISprite _vo = _map[i, j];
                     float deviation = (i % 2 == 1) ? (TILE_W * SCALE / 2f) : 0f;
 
                     Sprite sprite = new Sprite(
@@ -83,19 +90,63 @@ namespace TFYP.View.Windows
             this.mapIsInit = true;
         }
 
-        public void OnTilePressed(int x, int y, string btn)
+        public void OnTilePressed(int col, int row, int x, int y, string btn)
         {
-            if (btn == "L")
+            if (!screenRect.Contains(x, y) || IsOnUIElement(x, y))
             {
-                Debug.WriteLine(map[2, 2]._sprite.Position.X);
+                return;
             }
 
-            TileButtonPressedInWindow.Invoke(x, y, btn); // TODO: Refactor the events so that the controller gets it more directly? (now we create an event for every tile and that's sad :( )
+            TileButtonPressedInWindow.Invoke(col, row, btn); // TODO: Refactor the events so that the controller gets it more directly? (now we create an event for every tile and that's sad :( )
+        }
+
+        private bool IsOnUIElement(int x, int y)
+        {
+            return _UIElements.Any(element => element.Contains(x, y));
         }
 
         public void SetFocusCoord(Vector2 vec)
         {
             focusCoord = vec;
+        }
+
+        private void InitialiseUi()
+        {
+            //Sprite ResidentialZone = new Sprite(Globals.Content.Load<Texture2D>("Residential_Zone_Button"), new Vector2(20, 30));
+            //ResidentialZone.SourceRectangle = new Rectangle(0, 0, ResidentialZone.SourceRectangle.Width, (int)Math.Round(ZonesText.Font.MeasureString(ZonesText.TextString).Y));
+            //ElementsInWindow.Add(ResidentialZone);
+
+            Sprite BackgroundButtonTab = new (Globals.Content.Load<Texture2D>("ButtonsHolder"));
+            _UIElements.Add(new Rectangle(0, 0, BackgroundButtonTab.Texture.Width, BackgroundButtonTab.Texture.Height));
+            ElementsInWindow.Add(BackgroundButtonTab);
+
+            RenderableListCollection buttonsBar = new (10, 20, 30);
+
+            RenderableList zonesList = new RenderableList(10, 20, 30);
+            zonesList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Zones", new Vector2(20, 30), Color.Black));
+            zonesList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Residential_Zone_Button")));
+            zonesList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Industrial_Zone_Button")));
+            zonesList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Commertial_Zone_Button")));
+            zonesList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Erase_Zone_Button")));
+
+            buttonsBar.AddElement(zonesList);
+
+            RenderableList roadList = new RenderableList(10, 20, 30);
+            roadList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Roads", new Vector2(20, 30), Color.Black));
+            roadList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Build_Road_Button")));
+            roadList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Demolish_Road_Button")));
+
+            buttonsBar.AddElement(roadList);
+
+            RenderableList specialsList = new RenderableList(10, 20, 30);
+            specialsList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Specials", new Vector2(20, 30), Color.Black));
+            specialsList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Police_Button")));
+            specialsList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Stadium_Button")));
+            specialsList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("School_Button")));
+
+            buttonsBar.AddElement(specialsList);
+
+            ElementsInWindow.AddRange(buttonsBar.GetToDraw());
         }
 
         public override void Update()

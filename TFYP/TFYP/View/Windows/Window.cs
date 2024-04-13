@@ -14,13 +14,13 @@ namespace TFYP.View.Windows
 {
     internal abstract class Window
     {
-        protected List<IRenderable> SpritesInWindow { get; set; } // list of all the sprites that need to be rendered on the scnene
+        protected List<IRenderable> ElementsInWindow { get; set; } // list of all the sprites that need to be rendered on the scnene
         private IUIElements _UIElements;
         protected InputHandler _inputHandler;
 
         protected Window(IUIElements UIElements, InputHandler inputHandler) 
         {
-            this.SpritesInWindow = new();
+            this.ElementsInWindow = new();
             this._UIElements = UIElements;
             this._inputHandler = inputHandler;
         }
@@ -32,7 +32,8 @@ namespace TFYP.View.Windows
 
         public virtual void Draw(IRenderer renderer)
         {
-            renderer.DrawState(this.SpritesInWindow);
+            renderer.DrawState(this.ElementsInWindow);
+            //renderer.DrawITextRenderable(this.TextInWindow);
         }
     }
 }

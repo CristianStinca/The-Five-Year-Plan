@@ -5,7 +5,7 @@ using TFYP.View.Windows;
 
 namespace TFYP.View.UIElements
 {
-    public class Sprite : IRenderable
+    internal class Sprite : ISprite
     {
         public Vector2 Position { get; set; }
 
@@ -39,6 +39,11 @@ namespace TFYP.View.UIElements
 
         public Sprite(Texture2D texture, float scale) : this(texture, Vector2.Zero, 1f)
         {
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }
