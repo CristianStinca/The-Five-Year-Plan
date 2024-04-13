@@ -81,14 +81,13 @@ namespace TFYP.Model.Zones
 
 
 
-        public Statistics GetOverallSatisfaction()
+        public double GetOverallSatisfaction()
         {
             int totalSatisfaction = citizens.Where(c => c.IsActive).Sum(c => c.Satisfaction);
             int activeCitizenCount = citizens.Count(c => c.IsActive);
             int averageSatisfaction = activeCitizenCount > 0 ? totalSatisfaction / activeCitizenCount : 0;
 
-            // statistics class can take satisfaction as a constructor parameter
-            return new Statistics(new Budget()){ Satisfaction = averageSatisfaction };//******************!!!!!!!!!!!!
+            return averageSatisfaction;//******************!!!!!!!!!!!!
         }
 
 
