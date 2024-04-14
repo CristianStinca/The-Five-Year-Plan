@@ -16,11 +16,12 @@ namespace TFYP.Model.Facilities
         public bool IsConnected {  get; private set; }
         public Road(Vector2 _coor, EBuildable _type) : base(_coor, _type)
         {
+            IsConnected = false;
+            MaintenanceCost = Constants.RoadMaintenanceFee;
+            ConstructionCost = Constants.RoadBuildCost;
+            // ConstructionTime = Constants.; // Must be added in Constants.cs
         }
-        public Road(Vector2 coor, int constructionCost, int maintenanceCost, int capacity, TimeSpan constructionTime)
-            : base(coor, EBuildable.Road, constructionCost, maintenanceCost, capacity, constructionTime)
-        {
-        }
+
 
     }
 }

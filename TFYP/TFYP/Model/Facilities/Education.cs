@@ -6,15 +6,10 @@ namespace TFYP.Model.Facilities
 {
     public abstract class Education : Facility
     {
-        public int GraduationTime { get; protected set; }
-        public EducationLevel EducationLevel { get; protected set; }
+        public int GraduationTime { get; set; }
+        public EducationLevel EducationLevel { get; set; }
 
-        protected Education(Vector2 coordinate, EBuildable type, int constructionCost, int maintenanceCost,
-                            int capacity, int graduationTime, EducationLevel educationLevel)
-            : base(coordinate, type, constructionCost, maintenanceCost, capacity, TimeSpan.FromDays(graduationTime * 365))
-        {
-            GraduationTime = graduationTime;
-            EducationLevel = educationLevel;
-        }
+        public Education(Vector2 _coor, EBuildable _type) :base(_coor, _type) { }
+
     }
 }

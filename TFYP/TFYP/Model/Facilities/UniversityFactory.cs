@@ -15,10 +15,7 @@ namespace TFYP.Model.Facilities
 
         public University CreateFacility(Vector2 coordinate)
         {
-            int constructionCost = Constants.UniversityBuildCost;
-            int maintenanceCost = Constants.UniversityMaintenanceFee;
-
-            return new University(coordinate, constructionCost, maintenanceCost);
+            return new University(coordinate);
         }
     }
 }
