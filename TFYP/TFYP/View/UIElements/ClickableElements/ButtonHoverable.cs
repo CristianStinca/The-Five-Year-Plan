@@ -21,10 +21,10 @@ namespace TFYP.View.UIElements.ClickableElements
 
         protected Texture2D _normalImage { get; set; }
 
-        public ButtonHoverable(Sprite sprite, Texture2D hoverImage, Texture2D normalImage, InputHandler inputHandler) : base(sprite, inputHandler)
+        public ButtonHoverable(Sprite sprite, Texture2D hoverImage, InputHandler inputHandler) : base(sprite, inputHandler)
         {
             _hoverImage = hoverImage;
-            _normalImage = normalImage;
+            _normalImage = sprite.Texture;
         }
 
         /// <summary>
@@ -32,15 +32,15 @@ namespace TFYP.View.UIElements.ClickableElements
         /// </summary>
         public void ChangeToHoverImage()
         {
-            _sprite.Texture = _hoverImage;
+            Sprite.Texture = _hoverImage;
         }
 
         /// <summary>
-        /// Chanfes the Button texture to the one designated for normal view.
+        /// Changes the Button texture to the one designated for normal view.
         /// </summary>
         public void ChangeToNormalImage()
         {
-            _sprite.Texture = _normalImage;
+            Sprite.Texture = _normalImage;
         }
     }
 }

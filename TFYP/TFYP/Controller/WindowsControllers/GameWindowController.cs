@@ -27,12 +27,15 @@ namespace TFYP.Controller.WindowsControllers
 
         View.Windows.GameWindow _gw_view;
 
+        private EBuildable? _activeZone;
+
         public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
             : base(inputHandler, _view, _uiTextures, _gameModel)
         {
             _view.changeToGameWindow();
 
             _focusCoord = new();
+            _activeZone = null;
             InitiateConverionDict();
 
             _screenLimits = new Rectangle(0, 0,
@@ -49,6 +52,7 @@ namespace TFYP.Controller.WindowsControllers
                 throw new TypeLoadException("GameWindowController (set_map)");
             }
 
+            LinkViewEvents();
             _gw_view.TileButtonPressedInWindow += ClickInButton;
         }
 
@@ -61,19 +65,22 @@ namespace TFYP.Controller.WindowsControllers
         public void ClickInButton(int x, int y, string btn)
         {
 
-            Zone zone1 = new Zone(EBuildable.Stadium);
-            Zone zone2 = new Zone(EBuildable.None);
+            //Zone zone1 = new Zone(EBuildable.Stadium);
+            //Zone zone2 = new Zone(EBuildable.None);
 
             //Debug.WriteLine($"Clicked on X: {x}, Y: {y}");
             switch (btn)
             {
                 case "L":
-                    Debug.WriteLine($"X: {Mouse.GetState().X}, Y: {Mouse.GetState().Y}.");
-                    _gameModel.AddZone(y, x, zone1);
+                    //Debug.WriteLine($"X: {Mouse.GetState().X}, Y: {Mouse.GetState().Y}.");
+                    if (_activeZone != null)
+                    {
+                        _gameModel.AddZone(y, x, (EBuildable)_activeZone);
+                    }
                     break;
 
                 case "R":
-                    _gameModel.AddZone(y, x, zone2);
+                    _activeZone = null;
                     break;
             }
         }
@@ -178,7 +185,21 @@ namespace TFYP.Controller.WindowsControllers
 
             return conversionDict[from];
         }
-        
+
+        private void LinkViewEvents()
+        {
+            _gw_view.UIResidentialZoneButtonPressed += () => _activeZone = EBuildable.Residential;
+            _gw_view.UIIndustrialZoneButtonPressed += () => _activeZone = EBuildable.Industrial;
+            _gw_view.UICommertialZoneButtonPressed += () => _activeZone = EBuildable.Service;
+            //_gw_view.UIDeleteZoneButtonPressed += () => _activeZone = EBuildable.None;
+            _gw_view.UIBuildRoadButtonPressed += () => _activeZone = EBuildable.Road;
+            //_gw_view.UIDeleteRoadButtonPressed += () => _activeZone = EBuildable.None;
+            _gw_view.UIDeleteButtonPressed += () => _activeZone = EBuildable.None;
+            _gw_view.UIPoliceButtonPressed += () => _activeZone = EBuildable.PoliceStation;
+            _gw_view.UIStadiumButtonPressed += () => _activeZone = EBuildable.Stadium;
+            _gw_view.UISchoolButtonPressed += () => _activeZone = EBuildable.School;
+        }
+
         #endregion
     }
 }
