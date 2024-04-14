@@ -4,16 +4,11 @@ using TFYP.Model.Common;
 
 namespace TFYP.Model.Facilities
 {
-    public class SchoolFactory
+    public class SchoolFactory : FacilityFactory
     {
-        private GameModel gameModel;
+        public SchoolFactory(GameModel gm) :base(gm) { }
 
-        public SchoolFactory(GameModel gm)
-        {
-            this.gameModel = gm;
-        }
-
-        public School CreateFacility(Vector2 coordinate)
+        public override Facility CreateFacility(Vector2 coordinate)
         {
             return new School(coordinate);
         }
