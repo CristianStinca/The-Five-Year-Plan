@@ -72,7 +72,7 @@ namespace TFYP.Controller
             this._controller.Update();
 
             // Updates the internal state of the view
-            this._view.Update(); // unsure if we need it?
+            this._view.Update();
 
             base.Update(gameTime);
         }

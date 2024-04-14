@@ -23,9 +23,11 @@ namespace TFYP.Controller.WindowsControllers
     internal class GameWindowController : WindowController
     {
         private Vector2 _focusCoord; 
-        private Vector4 _screenLimits;
+        private Rectangle _screenLimits;
 
         View.Windows.GameWindow _gw_view;
+
+        private EBuildable? _activeZone;
 
         public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
             : base(inputHandler, _view, _uiTextures, _gameModel)
@@ -33,12 +35,12 @@ namespace TFYP.Controller.WindowsControllers
             _view.changeToGameWindow();
 
             _focusCoord = new();
+            _activeZone = null;
             InitiateConverionDict();
 
-            _screenLimits = new Vector4(
-                0, 0,
-                Globals.Graphics.PreferredBackBufferHeight - (((GameModel.MAP_H - 1) / 2) * View.Windows.GameWindow.TILE_H * View.Windows.GameWindow.SCALE),
-                Globals.Graphics.PreferredBackBufferWidth - (((GameModel.MAP_W - (0.5f))) * View.Windows.GameWindow.TILE_W * View.Windows.GameWindow.SCALE)
+            _screenLimits = new Rectangle(0, 0,
+                            (int)Math.Round(((GameModel.MAP_W - 0.5f) * View.Windows.GameWindow.TILE_W * View.Windows.GameWindow.SCALE) - Globals.Graphics.PreferredBackBufferWidth),
+                            (((GameModel.MAP_H - 1) / 2) * View.Windows.GameWindow.TILE_H * View.Windows.GameWindow.SCALE) - Globals.Graphics.PreferredBackBufferHeight
             );
 
             if (base._view.CurrentWindow.GetType().Name.CompareTo(typeof(View.Windows.GameWindow).Name) == 0)
@@ -50,6 +52,7 @@ namespace TFYP.Controller.WindowsControllers
                 throw new TypeLoadException("GameWindowController (set_map)");
             }
 
+            LinkViewEvents();
             _gw_view.TileButtonPressedInWindow += ClickInButton;
         }
 
@@ -61,18 +64,23 @@ namespace TFYP.Controller.WindowsControllers
         /// <param name="btn">The name of the mouse button (L/R)</param>
         public void ClickInButton(int x, int y, string btn)
         {
-            Zone zone1 = new Zone(EBuildable.Stadium);
-            Zone zone2 = new Zone(EBuildable.None);
+
+            //Zone zone1 = new Zone(EBuildable.Stadium);
+            //Zone zone2 = new Zone(EBuildable.None);
 
             //Debug.WriteLine($"Clicked on X: {x}, Y: {y}");
             switch (btn)
             {
                 case "L":
-                    _gameModel.AddZone(y, x, zone1);
+                    //Debug.WriteLine($"X: {Mouse.GetState().X}, Y: {Mouse.GetState().Y}.");
+                    if (_activeZone != null)
+                    {
+                        _gameModel.AddZone(y, x, (EBuildable)_activeZone);
+                    }
                     break;
 
                 case "R":
-                    _gameModel.AddZone(y, x, zone2);
+                    _activeZone = null;
                     break;
             }
         }
@@ -82,7 +90,7 @@ namespace TFYP.Controller.WindowsControllers
             base.Update();
 
             var map = _gameModel.map;
-            IRenderable[,] out_map = new IRenderable[map.GetLength(0), map.GetLength(1)];
+            ISprite[,] out_map = new ISprite[map.GetLength(0), map.GetLength(1)];
 
             // TODO: add an event/obs collection to model to avoid re-drawing of the matrix
 
@@ -109,22 +117,22 @@ namespace TFYP.Controller.WindowsControllers
                 }
                 else if (key.Button == Keys.Up && key.ButtonState == Utils.KeyState.Held)
                 {
-                    ExecuteFocusMove(new Vector2(0, speed));
+                    ExecuteFocusMove(new Vector2(0, -speed));
                 }
                 else if (key.Button == Keys.Down && key.ButtonState == Utils.KeyState.Held)
                 {
-                    ExecuteFocusMove(new Vector2(0, -speed));
+                    ExecuteFocusMove(new Vector2(0, speed));
                 }
                 else if (key.Button == Keys.Left && key.ButtonState == Utils.KeyState.Held)
                 {
-                    ExecuteFocusMove(new Vector2(speed, 0));
+                    ExecuteFocusMove(new Vector2(-speed, 0));
                 }
                 else if (key.Button == Keys.Right && key.ButtonState == Utils.KeyState.Held)
                 {
-                    ExecuteFocusMove(new Vector2(-speed, 0));
+                    ExecuteFocusMove(new Vector2(speed, 0));
                 }
 
-                _gw_view.SetFocusCoord(_focusCoord);
+                _gw_view.SetFocusCoord(-_focusCoord);
             }
         }
 
@@ -137,7 +145,7 @@ namespace TFYP.Controller.WindowsControllers
         {
             Vector2 result = _focusCoord + direction;
 
-            if (result.X <= _screenLimits.X && result.Y <= _screenLimits.Y && result.X >= _screenLimits.W && result.Y >= _screenLimits.Z )
+            if (_screenLimits.Contains(result))
             {
                 _focusCoord = result;
                 return true;
@@ -148,7 +156,7 @@ namespace TFYP.Controller.WindowsControllers
 
         #region MODEL_TO_VIEW_TYPE_CONVERSIONS
 
-        private Dictionary<EBuildable, IRenderable> conversionDict;
+        private Dictionary<EBuildable, ISprite> conversionDict;
 
         /// <summary>
         /// Initiates the dictionary for conversions between EBuildable and UITexture
@@ -168,7 +176,7 @@ namespace TFYP.Controller.WindowsControllers
         /// <param name="from">An EBuildable object.</param>
         /// <returns>A IRenderable object.</returns>
         /// <exception cref="ArgumentException">Raises exception if the EBuildable is not in the dictionary.</exception>
-        private IRenderable CreateUIElement(EBuildable from)
+        private ISprite CreateUIElement(EBuildable from)
         {
             if (!conversionDict.ContainsKey(from))
             {
@@ -177,7 +185,21 @@ namespace TFYP.Controller.WindowsControllers
 
             return conversionDict[from];
         }
-        
+
+        private void LinkViewEvents()
+        {
+            _gw_view.UIResidentialZoneButtonPressed += () => _activeZone = EBuildable.Residential;
+            _gw_view.UIIndustrialZoneButtonPressed += () => _activeZone = EBuildable.Industrial;
+            _gw_view.UICommertialZoneButtonPressed += () => _activeZone = EBuildable.Service;
+            //_gw_view.UIDeleteZoneButtonPressed += () => _activeZone = EBuildable.None;
+            _gw_view.UIBuildRoadButtonPressed += () => _activeZone = EBuildable.Road;
+            //_gw_view.UIDeleteRoadButtonPressed += () => _activeZone = EBuildable.None;
+            _gw_view.UIDeleteButtonPressed += () => _activeZone = EBuildable.None;
+            _gw_view.UIPoliceButtonPressed += () => _activeZone = EBuildable.PoliceStation;
+            _gw_view.UIStadiumButtonPressed += () => _activeZone = EBuildable.Stadium;
+            _gw_view.UISchoolButtonPressed += () => _activeZone = EBuildable.School;
+        }
+
         #endregion
     }
 }

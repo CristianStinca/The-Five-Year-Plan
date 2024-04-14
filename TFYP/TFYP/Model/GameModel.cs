@@ -59,7 +59,7 @@ namespace TFYP.Model
         }
         
         //Adds the zone to the city
-        public void AddZone(int _x, int _y, Zone zone)
+        public void AddZone(int _x, int _y, EBuildable zone)
         {
             // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
             
@@ -67,20 +67,20 @@ namespace TFYP.Model
             //cityRegistry.AddZone(zone);
             //cityRegistry.UpdateBalance(-zone.GetOneTimeCost(), GetCurrentDate());
         }
-        private void AddToMap(int _x, int _y, Zone zone) {
+        private void AddToMap(int _x, int _y, EBuildable zone) {
 
             //left as x and y for now, can be changed to coordinate later
 
             //map[_x, _y] = new Buildable(new Vector2(_x, _y), zone.type);
 
-            switch (zone.type)
+            switch (zone)
             {
                 case EBuildable.Stadium:
-                    map[_x, _y] = new Stadium(new Vector2(_x, _y), zone.type);
+                    map[_x, _y] = new Stadium(new Vector2(_x, _y), zone);
                     break;
 
                 case EBuildable.None:
-                    map[_x, _y] = new Buildable(new Vector2(_x, _y), zone.type);
+                    map[_x, _y] = new Buildable(new Vector2(_x, _y), zone);
                     break;
             }
         }

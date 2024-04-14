@@ -12,18 +12,21 @@ using TFYP.View.Renders;
 
 namespace TFYP.View.UIElements.ClickableElements
 {
-    internal class Button
+    internal class Button : IRenderableObject
     {
-        public delegate void ButtonPressedHandler();
+        public delegate void ButtonPressedHandler(string name);
         public event ButtonPressedHandler ButtonPressed;
 
-        public Sprite _sprite { get; set; }
+        public Sprite Sprite { get; set; }
 
         protected InputHandler _inputHandler { get; }
+        public Vector2 Position { get => Sprite.Position; set => Sprite.Position = value; }
+        public Rectangle SourceRectangle { get => Sprite.SourceRectangle; set => Sprite.SourceRectangle = value; }
+        public Rectangle CollisionRectangle { get => Sprite.CollisionRectangle; set => Sprite.CollisionRectangle = value; }
 
         public Button(Sprite sprite, InputHandler inputHandler)
         {
-            _sprite = sprite;
+            Sprite = sprite;
             _inputHandler = inputHandler;
         }
 
@@ -31,14 +34,9 @@ namespace TFYP.View.UIElements.ClickableElements
         {
             MouseState mouse_state = Mouse.GetState();
 
-            if (IsMouseOverButton(mouse_state))
-            {
-                Debug.WriteLine("Mouse_Over_BUTTON");
-            }
-
             if (IsMouseOverButton(mouse_state) && _inputHandler.LeftButton == Utils.KeyState.Clicked)
             {
-                ButtonPressed.Invoke();
+                ButtonPressed.Invoke(Sprite.Texture.Name);
             }
         }
 
@@ -49,7 +47,17 @@ namespace TFYP.View.UIElements.ClickableElements
         /// <returns>True if the coursor is over the Button.</returns>
         public virtual bool IsMouseOverButton(MouseState mouse_state)
         {
-            return _sprite.CollisionRectangle.Contains(mouse_state.Position);
+            return Sprite.CollisionRectangle.Contains(mouse_state.Position);
+        }
+
+        public IRenderable ToIRenderable()
+        {
+            return this.Sprite;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
         }
     }
 }
