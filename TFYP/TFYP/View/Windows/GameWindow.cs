@@ -39,6 +39,8 @@ namespace TFYP.View.Windows
 
         List<IRenderable> mapRend = new List<IRenderable>();
 
+        private bool is2D = false;
+
         #region UIButtons
 
         Button resZone;
@@ -51,34 +53,32 @@ namespace TFYP.View.Windows
         Button stadium;
         Button school;
 
-        public delegate void UIResidentialZoneButtonPressedHandler();
-        public event UIResidentialZoneButtonPressedHandler UIResidentialZoneButtonPressed;
+        Button stopTime;
+        Button timeX1;
+        Button timeX2;
+        Button timeX3;
 
-        public delegate void UIIndustrialZoneButtonPressedHandler();
-        public event UIIndustrialZoneButtonPressedHandler UIIndustrialZoneButtonPressed;
+        Button perspectiveButton;
 
-        public delegate void UICommertialZoneButtonPressedHandler();
-        public event UICommertialZoneButtonPressedHandler UICommertialZoneButtonPressed;
+        public delegate void UIButtonPressedHandler();
 
-        //public delegate void UIDeleteZoneButtonPressedHandler();
-        //public event UIDeleteZoneButtonPressedHandler UIDeleteZoneButtonPressed;
+        public event UIButtonPressedHandler UIResidentialZoneButtonPressed;
+        public event UIButtonPressedHandler UIIndustrialZoneButtonPressed;
+        public event UIButtonPressedHandler UICommertialZoneButtonPressed;
+        //public event UIButtonPressedHandler UIDeleteZoneButtonPressed;
+        public event UIButtonPressedHandler UIBuildRoadButtonPressed;
+        //public event UIButtonPressedHandler UIDeleteRoadButtonPressed;
+        public event UIButtonPressedHandler UIDeleteButtonPressed;
+        public event UIButtonPressedHandler UIPoliceButtonPressed;
+        public event UIButtonPressedHandler UIStadiumButtonPressed;
+        public event UIButtonPressedHandler UISchoolButtonPressed;
 
-        public delegate void UIBuildRoadButtonPressedHandler();
-        public event UIBuildRoadButtonPressedHandler UIBuildRoadButtonPressed;
+        public event UIButtonPressedHandler UIStopSpeedPressed;
+        public event UIButtonPressedHandler UISpeedX1Pressed;
+        public event UIButtonPressedHandler UISpeedX2Pressed;
+        public event UIButtonPressedHandler UISpeedX3Pressed;
 
-        //public delegate void UIDeleteRoadButtonPressedHandler();
-        //public event UIDeleteRoadButtonPressedHandler UIDeleteRoadButtonPressed;
-        public delegate void UIDeleteButtonPressedHandler();
-        public event UIDeleteButtonPressedHandler UIDeleteButtonPressed;
-
-        public delegate void UIPoliceButtonPressedHandler();
-        public event UIPoliceButtonPressedHandler UIPoliceButtonPressed;
-
-        public delegate void UIStadiumButtonPressedHandler();
-        public event UIStadiumButtonPressedHandler UIStadiumButtonPressed;
-
-        public delegate void UISchoolButtonPressedHandler();
-        public event UISchoolButtonPressedHandler UISchoolButtonPressed;
+        public event UIButtonPressedHandler UIChangePerspectivePressed;
 
         #endregion
 
@@ -163,103 +163,107 @@ namespace TFYP.View.Windows
             //ResidentialZone.SourceRectangle = new Rectangle(0, 0, ResidentialZone.SourceRectangle.Width, (int)Math.Round(ZonesText.Font.MeasureString(ZonesText.TextString).Y));
             //ElementsInWindow.Add(ResidentialZone);
 
-            Sprite BackgroundButtonTab = new (Globals.Content.Load<Texture2D>("ButtonsHolder"));
-            _UIElementsContainers.Add(new Rectangle(0, 0, BackgroundButtonTab.Texture.Width, BackgroundButtonTab.Texture.Height));
+            Sprite BackgroundButtonTab = new (Globals.Content.Load<Texture2D>("Buttons/ButtonsHolder"));
+            _UIElementsContainers.Add(BackgroundButtonTab.CollisionRectangle);
             ElementsInWindow.Add(BackgroundButtonTab);
 
             RenderableList buttonsBar = new (30, 20, 30);
 
-            delRoad = new Button(new Sprite(Globals.Content.Load<Texture2D>("Demolish_Road_Button")), _inputHandler);
-            delRoad.ButtonPressed += UIButtonPressed;
-            _UIElements.Add(delRoad);
+            delRoad = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Demolish_Road_Button")));
+            delRoad.ButtonPressed += (string name) => UIDeleteButtonPressed.Invoke();
             buttonsBar.AddElement(delRoad);
 
             RenderableList zonesList = new RenderableList(10, 20, 30);
             zonesList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Zones", new Vector2(20, 30), Color.Black));
 
-            resZone = new Button(new Sprite(Globals.Content.Load<Texture2D>("Residential_Zone_Button")), _inputHandler);
-            resZone.ButtonPressed += UIButtonPressed;
-            _UIElements.Add(resZone);
+            resZone = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Residential_Zone_Button")));
+            resZone.ButtonPressed += (string name) => UIResidentialZoneButtonPressed.Invoke();
             zonesList.AddElement(resZone);
-            indZone = new Button(new Sprite(Globals.Content.Load<Texture2D>("Industrial_Zone_Button")), _inputHandler);
-            indZone.ButtonPressed += UIButtonPressed;
-            _UIElements.Add(indZone);
+            indZone = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Industrial_Zone_Button")));
+            indZone.ButtonPressed += (string name) => UIIndustrialZoneButtonPressed.Invoke();
             zonesList.AddElement(indZone);
-            commZone = new Button(new Sprite(Globals.Content.Load<Texture2D>("Commertial_Zone_Button")), _inputHandler);
-            commZone.ButtonPressed += UIButtonPressed;
-            _UIElements.Add(commZone);
+            commZone = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Commertial_Zone_Button")));
+            commZone.ButtonPressed += (string name) => UICommertialZoneButtonPressed.Invoke();
             zonesList.AddElement(commZone);
-            //delZone = new Button(new Sprite(Globals.Content.Load<Texture2D>("Erase_Zone_Button")), _inputHandler);
+            //delZone = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Erase_Zone_Button")));
             //delZone.ButtonPressed += UIButtonPressed;
-            //_UIElements.Add(delZone);
             //zonesList.AddElement(delZone);
 
             buttonsBar.AddElement(zonesList);
 
             RenderableList roadList = new RenderableList(10, 20, 30);
             roadList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Roads", new Vector2(20, 30), Color.Black));
-            buildRoad = new Button(new Sprite(Globals.Content.Load<Texture2D>("Build_Road_Button")), _inputHandler);
-            buildRoad.ButtonPressed += UIButtonPressed;
-            _UIElements.Add(buildRoad);
+            buildRoad = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Build_Road_Button")));
+            buildRoad.ButtonPressed += (string name) => UIBuildRoadButtonPressed.Invoke();
             roadList.AddElement(buildRoad);
 
             buttonsBar.AddElement(roadList);
 
             RenderableList specialsList = new RenderableList(10, 20, 30);
             specialsList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Specials", new Vector2(20, 30), Color.Black));
-            police = new Button(new Sprite(Globals.Content.Load<Texture2D>("Police_Button")), _inputHandler);
-            police.ButtonPressed += UIButtonPressed;
-            _UIElements.Add(police);
+            police = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Police_Button")));
+            police.ButtonPressed += (string name) => UIPoliceButtonPressed.Invoke();
             specialsList.AddElement(police);
-            stadium = new Button(new Sprite(Globals.Content.Load<Texture2D>("Stadium_Button")), _inputHandler);
-            stadium.ButtonPressed += UIButtonPressed;
-            _UIElements.Add(stadium);
+            stadium = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Stadium_Button")));
+            stadium.ButtonPressed += (string name) => UIStadiumButtonPressed.Invoke();
             specialsList.AddElement(stadium);
-            school = new Button(new Sprite(Globals.Content.Load<Texture2D>("School_Button")), _inputHandler);
-            school.ButtonPressed += UIButtonPressed;
-            _UIElements.Add(school);
+            school = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/School_Button")));
+            school.ButtonPressed += (string name) => UISchoolButtonPressed.Invoke();
             specialsList.AddElement(school);
 
             buttonsBar.AddElement(specialsList);
 
             ElementsInWindow.AddRange(buttonsBar.ToIRenderable());
+
+            Texture2D buttonBackTexture = Globals.Content.Load<Texture2D>("Buttons/speed_buttons_container");
+            Sprite buttonBack = new Sprite(buttonBackTexture, new Vector2(Globals.Graphics.PreferredBackBufferWidth - buttonBackTexture.Width - 20, 30));
+            _UIElementsContainers.Add(buttonBack.CollisionRectangle);
+            ElementsInWindow.Add(buttonBack);
+
+            stopTime = AddButton (new Sprite(Globals.Content.Load<Texture2D>("Buttons/stop_button"), new Vector2(buttonBack.Position.X + 10, buttonBack.Position.Y + 7)));
+            stopTime.ButtonPressed += (string name) => UIStopSpeedPressed.Invoke();
+            ElementsInWindow.Add(stopTime.ToIRenderable());
+
+            timeX1 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/speed_1"), new Vector2(stopTime.Position.X + stopTime.SourceRectangle.Width + 9, buttonBack.Position.Y + 7)));
+            timeX1.ButtonPressed += (string name) => UISpeedX1Pressed.Invoke();
+            ElementsInWindow.Add(timeX1.ToIRenderable());
+
+            timeX2 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/speed_2"), new Vector2(timeX1.Position.X + timeX1.SourceRectangle.Width + 7, buttonBack.Position.Y + 7)));
+            timeX2.ButtonPressed += (string name) => UISpeedX2Pressed.Invoke();
+            ElementsInWindow.Add(timeX2.ToIRenderable());
+
+            timeX3 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/speed_3"), new Vector2(timeX2.Position.X + timeX2.SourceRectangle.Width + 7, buttonBack.Position.Y + 7)));
+            timeX3.ButtonPressed += (string name) => UISpeedX3Pressed.Invoke();
+            ElementsInWindow.Add(timeX3.ToIRenderable());
+
+            Texture2D perspectiveButtonTexture = Globals.Content.Load<Texture2D>("Buttons/Switch_Perspective_Button");
+            perspectiveButton = AddButton(new Sprite(perspectiveButtonTexture, new Vector2(Globals.Graphics.PreferredBackBufferWidth - perspectiveButtonTexture.Width - 20, Globals.Graphics.PreferredBackBufferHeight - perspectiveButtonTexture.Height - 30)));
+            _UIElementsContainers.Add(perspectiveButton.CollisionRectangle);
+            perspectiveButton.ButtonPressed += (string name) => ChangePerspective();
+            ElementsInWindow.Add(perspectiveButton.ToIRenderable());
         }
 
-        private void UIButtonPressed(string name)
+        private Button AddButton(Sprite sprite)
         {
-            switch (name)
+            Button btn = new Button(sprite, _inputHandler);
+            _UIElements.Add(btn);
+            return btn;
+        }
+
+        public void ChangePerspective()
+        {
+            if (is2D)
             {
-                case var value when value == resZone.Sprite.Texture.Name:
-                    UIResidentialZoneButtonPressed.Invoke();
-                    break;
-                case var value when value ==  indZone.Sprite.Texture.Name:
-                    UIIndustrialZoneButtonPressed.Invoke();
-                    break;
-                case var value when value ==  commZone.Sprite.Texture.Name:
-                    UICommertialZoneButtonPressed.Invoke();
-                    break;
-                //case var value when value ==  delZone.Sprite.Texture.Name:
-                //    UIDeleteZoneButtonPressed.Invoke();
-                //    break;
-                case var value when value ==  buildRoad.Sprite.Texture.Name:
-                    UIBuildRoadButtonPressed.Invoke();
-                    break;
-                //case var value when value ==  delRoad.Sprite.Texture.Name:
-                //    UIDeleteRoadButtonPressed.Invoke();
-                //    break;
-                case var value when value ==  delRoad.Sprite.Texture.Name:
-                    UIDeleteButtonPressed.Invoke();
-                    break;
-                case var value when value ==  police.Sprite.Texture.Name:
-                    UIPoliceButtonPressed.Invoke();
-                    break;
-                case var value when value ==  stadium.Sprite.Texture.Name:
-                    UIStadiumButtonPressed.Invoke();
-                    break;
-                case var value when value ==  school.Sprite.Texture.Name:
-                    UISchoolButtonPressed.Invoke();
-                    break;
+                Debug.WriteLine("Switched to 2.5D");
+                // run all the map and switch the textures
             }
+            else
+            {
+                Debug.WriteLine("Switched to 2D");
+                // run all the map and switch the textures
+            }
+
+            is2D = !is2D;
         }
 
         public override void Update()

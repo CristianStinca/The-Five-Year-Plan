@@ -22,8 +22,8 @@ namespace TFYP.View.UIElements
 
         public UIObjects()
         {
-            EmptyTile = CreateSprite("empty_tile");
-            StadiumTile = CreateSprite("stadium_tile3");
+            EmptyTile = CreateSprite("Tiles/empty_tile");
+            StadiumTile = CreateSprite("Tiles/stadium_tile3");
         }
 
         private T ifLoaded<T>(T val)
