@@ -42,7 +42,10 @@ namespace TFYP.Model.Common
         public const int TaxRate = 100;
         public const int InitialBalance = 1000000;
 
-        
+
+        // TIME
+        public const int SchoolGraduationTime = 1100; // in days
+        public const int UniversityGraduationTime = 700; // in days
 
     }
 }

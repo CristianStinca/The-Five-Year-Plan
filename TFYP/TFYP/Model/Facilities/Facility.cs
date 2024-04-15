@@ -15,20 +15,16 @@ namespace TFYP.Model.Facilities
         public int MaxCapacity { get; set; }
         public int CurrentCapacity { get; set; }
         public int MaintenanceCost { get; set; }
+        public int ConstructionCost { get; set; }
+        public float EffectRadius { get; set; }
         public TimeSpan ConstructionTime { get; set; }
 
 
         // did not remove this just in case...
         public Facility(Vector2 _coor, EBuildable _type) : base(_coor, _type)
         {
-        }
-        protected Facility(Vector2 coor, EBuildable type, int constructionCost, int maintenanceCost, int capacity, TimeSpan constructionTime)
-            : base(coor, type, constructionCost)
-        {
-            MaxCapacity = capacity;
             CurrentCapacity = 0;
-            ConstructionTime = constructionTime;
-            MaintenanceCost = maintenanceCost;
+
         }
 
         public void IncreaseCapacity(int amount)

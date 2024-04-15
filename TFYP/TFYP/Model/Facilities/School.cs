@@ -5,11 +5,15 @@ namespace TFYP.Model.Facilities
 {
     public class School : Education
     {
-        public School(Vector2 coordinate, int constructionCost, int maintenanceCost)
-            : base(coordinate, EBuildable.School, constructionCost, maintenanceCost,
-                   capacity: 5, graduationTime: 12, educationLevel: EducationLevel.School)
+        public School(Vector2 _coor) :base(_coor, EBuildable.School)
         {
+            MaxCapacity = Constants.ServiceZoneCapacity;
+            MaintenanceCost = Constants.SchoolMaintenanceFee;
+            ConstructionCost = Constants.SchoolBuildCost;
+            GraduationTime = Constants.SchoolGraduationTime;
+            // ConstructionTime = Constants.; // Must be added in Constants.cs
         }
+        
 
     }
 }

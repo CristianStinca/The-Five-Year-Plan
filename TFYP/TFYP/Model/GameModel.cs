@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework;
 using TFYP.Model.Disasters;
 
 
-
 namespace TFYP.Model
 {
     /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
@@ -24,21 +23,23 @@ namespace TFYP.Model
         public Buildable[,] map;
         public List<Citizen> Citizens { get; private set; }
         public List<Zone> Zones { get; private set; }
-        public DateTime dateOfWorld; // DateTime built-in in c#
-        //public CityRegistry cityRegistry;
-        //public Statistics statistics;
+        public DateTime CreationDate; // DateTime built-in in c#
+        public Statistics Statistics { get; private set; }
+        public CityRegistry CityRegistry { get; private set; }
+        public List<Road> Roads { get; private set; }
 
         public GameModel(int _mapH, int _mapW)
         {
             MAP_H = _mapH;
             MAP_W = _mapW;
             map = new Buildable[_mapH, _mapW];
-            //statistics = new Statistics(new Budget(Constants.InitialCityBalance, 0.3f));
-            //cityRegistry = new CityRegistry(cityStatistics);
+            Budget budget = new Budget(Constants.InitialBalance, Constants.TaxRate);
+            Statistics = new Statistics(budget);
+            CityRegistry = new CityRegistry(Statistics);
             Citizens = new List<Citizen>();
             Zones = new List<Zone>();
-            dateOfWorld = new DateTime(2024, 1, 1); // Year, Month, Day - we will change date later
-
+            CreationDate = DateTime.Now; // Year, Month, Day - we will change date later
+            Roads = new List<Road>();
 
             for (int i = 0; i < map.GetLength(0); i++)
                 for (int j = 0; j < map.GetLength(1); j++)

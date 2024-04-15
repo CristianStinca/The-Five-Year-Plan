@@ -27,5 +27,9 @@ namespace TFYP.Model.Zones
         public new int MaintenanceCost => Constants.ResidentialZoneMaintenanceCost;
         public new int BuildCost => Constants.ResidentialZoneBuildCost;
         public new float EffectRadius => Constants.ResidentialEffectRadius;
+        public override List<Citizen> GetCitizens()
+        {
+            return base.GetCitizens();
+        }
     }
 }

@@ -4,21 +4,12 @@ using TFYP.Model.Common;
 
 namespace TFYP.Model.Facilities
 {
-    public class UniversityFactory
+    public class UniversityFactory : FacilityFactory
     {
-        private GameModel gameModel;
-
-        public UniversityFactory(GameModel gm)
+        public UniversityFactory(GameModel gm) :base(gm) { }
+        public override Facility CreateFacility(Vector2 coordinate)
         {
-            this.gameModel = gm;
-        }
-
-        public University CreateFacility(Vector2 coordinate)
-        {
-            int constructionCost = Constants.UniversityBuildCost;
-            int maintenanceCost = Constants.UniversityMaintenanceFee;
-
-            return new University(coordinate, constructionCost, maintenanceCost);
+            return new University(coordinate);
         }
     }
 }

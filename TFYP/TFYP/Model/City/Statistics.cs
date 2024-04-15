@@ -12,74 +12,67 @@ namespace TFYP.Model.City
 {
     public class Statistics
     {
-        public int Population { get; set; }
         public int Capacity { get; private set; }
-        private int satisfaction;
+        private double satisfaction;
         public Budget Budget { get; private set; }
-        public int IndutstrialZoneCount { get; private set; }
-        public int CommercialZoneCount { get; private set; }
+        public int IndustrialZoneCount { get; private set; }
+        public int ServiceZoneCount { get; private set; }
+        public double BudgetEffect { get; }
+        public double TaxEffect { get => 1 / (Budget.TaxRate > 0 ? Budget.TaxRate : 1); }
 
-        // Volatile is used for concurrency
-        public Statistics()
-        {
-            Budget = new Budget();
-            IndutstrialZoneCount = 0;
-            CommercialZoneCount = 0;
-            satisfaction = 50; // I think we ust start with avg value
-        }
         public Statistics(Budget budget)
         {
+            satisfaction = 0;
+            IndustrialZoneCount = 0;
+            ServiceZoneCount = 0;
             Budget = budget;
-            IndutstrialZoneCount = 0;
-            CommercialZoneCount = 0;
-            satisfaction = 50; // I think we ust start with avg value
         }
-        public int Satisfaction
+        public double ZoneBalance()
         {
-            get => Math.Clamp(satisfaction, 0, 100); // Ensure satisfaction is within 0-100
-            set => satisfaction = value;
-        }
-        public void UpdateCityStatistics(CityRegistry cityRegistry)
-        {
-            //UpdateZoneCount(cityRegistry);
-            //Population = cityRegistry.GetAllCitizens().Count;
-            //CitySatisfaction = CalculateCitySatisfaction(cityRegistry);
-        }
-
-        private double CalculateCitySatisfaction(CityRegistry cityRegistry)
-        {
-            var currentSatisfaction = GetTaxEffect()
-                                    + GetZoneBalance()
-                                    + GetBudgetEffect(DateTime.Now);
-
-            var zones = cityRegistry.GetAllZones();
-            if (zones.Any())
+            int difference = Math.Abs(ServiceZoneCount - IndustrialZoneCount);
+            if(difference == 0)
             {
-                //currentSatisfaction += zones.Average(z => z.GetZoneSatisfaction());
-                // TODO satisfaction logic from zone
-                currentSatisfaction += 0;
+                return 1.0;
             }
+            else
+            {
+                return 1.0 / difference;
+            }
+        }
+        public void UpdateZoneCount(CityRegistry cityRegistry)
+        {
+            ServiceZoneCount = cityRegistry.Zones.OfType<IndustrialZone>().Count();
+            IndustrialZoneCount = cityRegistry.Zones.OfType<ServiceZone>().Count();
+        }
+        
+        public double Satisfaction
+        {
+            get => Math.Clamp(satisfaction, 0.0, 100.0); // ensure satisfaction is within 0-100
+            private set => satisfaction = value;
+        }
+        public void CitySatisfaction(GameModel gm)
+        {
+            double totalSatisfactionInZone = gm.CityRegistry.Zones.Sum(zone => zone.GetOverallSatisfaction());
+            int zoneCount = (gm.CityRegistry.Zones.Count());
+            satisfaction = zoneCount == 0 ? 60 + (CalculateCitySatisfaction()) : (double)totalSatisfactionInZone / zoneCount;
+        }
+        private double CalculateCitySatisfaction()
+        {
+            var currentSatisfaction = TaxEffect + GetZoneBalance() + BudgetEffect;
+
             return currentSatisfaction;
         }
-        private double GetTaxEffect()
+
+        public int GetPopulationCount(CityRegistry cityRegistry)
         {
-            return 1 / (Budget.TaxRate > 0 ? Budget.TaxRate : 1);
+            return cityRegistry.GetAllCitizens().Count();
         }
 
         private double GetZoneBalance()
         {
-            int diff = Math.Abs(IndutstrialZoneCount - CommercialZoneCount);
+            int diff = Math.Abs(IndustrialZoneCount - ServiceZoneCount);
             return 1.0 / (diff == 0 ? 1.0 : diff);
         }
 
-        private double GetBudgetEffect(DateTime now)
-        {
-            return 0; // change
-        }
-        private void UpdateNrZones(CityRegistry cityRegistry)
-        {
-            //CommercialZoneCount = cityRegistry.GetAllZones().OfType<CommercialZone>().Count();
-            //IndutstrialZoneCount = cityRegistry.GetAllZones().OfType<IndustrialZone>().Count();
-        }
     }   
 }

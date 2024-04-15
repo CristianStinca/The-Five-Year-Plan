@@ -18,11 +18,13 @@ namespace TFYP.Model.Facilities
 
         public PoliceStation(Vector2 _coor, EBuildable _type) : base(_coor, _type)
         {
+            MaxCapacity = Constants.ServiceZoneCapacity;
+            MaintenanceCost = Constants.PoliceStationMaintenanceFee;
+            ConstructionCost = Constants.PoliceStationBuildCost;
+            EffectRadius = Constants.PoliceStationEffectRadius;
+            // ConstructionTime = Constants.; // Must be added in Constants.cs
         }
-        public PoliceStation(Vector2 coor, int constructionCost, int maintenanceCost, int capacity, TimeSpan constructionTime)
-            : base(coor, EBuildable.PoliceStation, constructionCost, maintenanceCost, capacity, constructionTime)
-        {
-        }
+        
 
         public void RespondToIncident() 
         {
