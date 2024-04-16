@@ -17,13 +17,16 @@ namespace TFYP.View.UIElements
 
         public Sprite EmptyTile { get; set; }//{ get => ifLoaded(EmptyTile); private set => EmptyTile = value; }
         public Sprite StadiumTile { get; set; } //{ get => ifLoaded(StadiumTile); private set => StadiumTile = value; }
-
+        public Sprite SchoolTile { get; set; }
+        public Sprite PoliceTile { get; set; }
         #endregion
 
         public UIObjects()
         {
             EmptyTile = CreateSprite("Tiles/empty_tile");
             StadiumTile = CreateSprite("Tiles/stadium_tile3");
+            SchoolTile = CreateSprite("Tiles/school");
+            PoliceTile = CreateSprite("Tiles/police_station");
         }
 
         private T ifLoaded<T>(T val)

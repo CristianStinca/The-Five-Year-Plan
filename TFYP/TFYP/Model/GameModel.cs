@@ -82,6 +82,9 @@ namespace TFYP.Model
                 case EBuildable.None:
                     map[_x, _y] = new Buildable(new Vector2(_x, _y), zone);
                     break;
+                case EBuildable.PoliceStation:
+                    map[_x, _y] = new PoliceStation(new Vector2(_x, _y), zone);
+                    break;
             }
         }
         public IEnumerable<Zone> GetAllZones()

@@ -166,7 +166,9 @@ namespace TFYP.Controller.WindowsControllers
             conversionDict = new()
             {
                 { EBuildable.None, _uiTextures.EmptyTile },
-                { EBuildable.Stadium, _uiTextures.StadiumTile }
+                { EBuildable.Stadium, _uiTextures.StadiumTile },
+                { EBuildable.School, _uiTextures.SchoolTile },
+                { EBuildable.PoliceStation, _uiTextures.PoliceTile }
             };
         }
 
