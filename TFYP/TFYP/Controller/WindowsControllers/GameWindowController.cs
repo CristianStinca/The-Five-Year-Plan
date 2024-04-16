@@ -188,16 +188,20 @@ namespace TFYP.Controller.WindowsControllers
 
         private void LinkViewEvents()
         {
-            _gw_view.UIResidentialZoneButtonPressed += () => _activeZone = EBuildable.Residential;
-            _gw_view.UIIndustrialZoneButtonPressed += () => _activeZone = EBuildable.Industrial;
-            _gw_view.UICommertialZoneButtonPressed += () => _activeZone = EBuildable.Service;
-            //_gw_view.UIDeleteZoneButtonPressed += () => _activeZone = EBuildable.None;
-            _gw_view.UIBuildRoadButtonPressed += () => _activeZone = EBuildable.Road;
-            //_gw_view.UIDeleteRoadButtonPressed += () => _activeZone = EBuildable.None;
-            _gw_view.UIDeleteButtonPressed += () => _activeZone = EBuildable.None;
-            _gw_view.UIPoliceButtonPressed += () => _activeZone = EBuildable.PoliceStation;
-            _gw_view.UIStadiumButtonPressed += () => _activeZone = EBuildable.Stadium;
-            _gw_view.UISchoolButtonPressed += () => _activeZone = EBuildable.School;
+            _gw_view.UIResidentialZoneButtonPressed += () => { _activeZone = EBuildable.Residential; Debug.WriteLine("Selected Residential."); };
+            _gw_view.UIIndustrialZoneButtonPressed += () => { _activeZone = EBuildable.Industrial; Debug.WriteLine("Selected Industrial."); };
+            _gw_view.UICommertialZoneButtonPressed += () => { _activeZone = EBuildable.Service; Debug.WriteLine("Selected Service."); };
+            //_gw_view.UIDeleteZoneButtonPressed += () => { _activeZone = EBuildable.None; Debug.WriteLine("Selected None."); };
+            _gw_view.UIBuildRoadButtonPressed += () => { _activeZone = EBuildable.Road; Debug.WriteLine("Selected Road."); };
+            //_gw_view.UIDeleteRoadButtonPressed += () => { _activeZone = EBuildable.None; Debug.WriteLine("Selected None."); };
+            _gw_view.UIDeleteButtonPressed += () => { _activeZone = EBuildable.None; Debug.WriteLine("Selected Delete."); };
+            _gw_view.UIPoliceButtonPressed += () => { _activeZone = EBuildable.PoliceStation; Debug.WriteLine("Selected PoliceStation."); };
+            _gw_view.UIStadiumButtonPressed += () => { _activeZone = EBuildable.Stadium; Debug.WriteLine("Selected Stadium."); };
+            _gw_view.UISchoolButtonPressed += () => { _activeZone = EBuildable.School; Debug.WriteLine("Selected School."); };
+            _gw_view.UIStopSpeedPressed += () => Debug.WriteLine("Stop Speed!");
+            _gw_view.UISpeedX1Pressed += () => Debug.WriteLine("Speed X1!");
+            _gw_view.UISpeedX2Pressed += () => Debug.WriteLine("Speed X2!");
+            _gw_view.UISpeedX3Pressed += () => Debug.WriteLine("Speed X3!");
         }
 
         #endregion
