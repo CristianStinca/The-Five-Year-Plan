@@ -12,13 +12,7 @@ namespace TFYP.Model.Facilities
 {
     public abstract class Facility : Buildable
     {
-        public int MaxCapacity { get; set; }
         public int CurrentCapacity { get; set; }
-        public int MaintenanceCost { get; set; }
-        public int ConstructionCost { get; set; }
-        public float EffectRadius { get; set; }
-        public TimeSpan ConstructionTime { get; set; }
-
 
         // did not remove this just in case...
         public Facility(Vector2 _coor, EBuildable _type) : base(_coor, _type)
@@ -32,7 +26,7 @@ namespace TFYP.Model.Facilities
             if (amount < 0)
                 throw new ArgumentException("Amount cannot be negative.", nameof(amount));
 
-            CurrentCapacity = Math.Min(CurrentCapacity + amount, MaxCapacity);
+            CurrentCapacity = Math.Min(CurrentCapacity + amount, Capacity);
         }
         public void DecreaseCapacity(int amount)
         {
@@ -44,7 +38,7 @@ namespace TFYP.Model.Facilities
 
         public void SetCapacity(int newCapacity)
         {
-            if (newCapacity < 0 || newCapacity > MaxCapacity)
+            if (newCapacity < 0 || newCapacity > Capacity)
                 throw new ArgumentOutOfRangeException(nameof(newCapacity), "New capacity must be within valid range.");
 
             CurrentCapacity = newCapacity;

@@ -7,11 +7,11 @@ namespace TFYP.Model.Facilities
     {
         public School(Vector2 _coor) :base(_coor, EBuildable.School)
         {
-            MaxCapacity = Constants.ServiceZoneCapacity;
+            Capacity = Constants.ServiceZoneCapacity;
             MaintenanceCost = Constants.SchoolMaintenanceFee;
             ConstructionCost = Constants.SchoolBuildCost;
             GraduationTime = Constants.SchoolGraduationTime;
-            // ConstructionTime = Constants.; // Must be added in Constants.cs
+            TimeToBuild = Constants.SchoolConstructionTime;
         }
         
 

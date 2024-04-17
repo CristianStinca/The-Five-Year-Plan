@@ -13,16 +13,15 @@ namespace TFYP.Model.Facilities
 {
     public class PoliceStation : Facility
     {
-        public int InfluenceRadius { get; private set; } = 2; // influence area for safety
         public int SafetyIncrease { get; private set; } = 10; // safety impact
 
         public PoliceStation(Vector2 _coor, EBuildable _type) : base(_coor, _type)
         {
-            MaxCapacity = Constants.ServiceZoneCapacity;
+            Capacity = Constants.ServiceZoneCapacity;
             MaintenanceCost = Constants.PoliceStationMaintenanceFee;
             ConstructionCost = Constants.PoliceStationBuildCost;
-            EffectRadius = Constants.PoliceStationEffectRadius;
-            // ConstructionTime = Constants.; // Must be added in Constants.cs
+            InfluenceRadius = Constants.PoliceStationEffectRadius;
+            TimeToBuild = Constants.PoliceConstructionTime;
         }
         
 

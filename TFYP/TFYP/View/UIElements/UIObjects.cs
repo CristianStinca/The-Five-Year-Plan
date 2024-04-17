@@ -4,10 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using TFYP.Controller;
+using TFYP.Model.Facilities;
 using TFYP.Utils;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Net.WebRequestMethods;
 
 namespace TFYP.View.UIElements
 {
@@ -19,6 +23,12 @@ namespace TFYP.View.UIElements
         public Sprite StadiumTile { get; set; } //{ get => ifLoaded(StadiumTile); private set => StadiumTile = value; }
         public Sprite SchoolTile { get; set; }
         public Sprite PoliceTile { get; set; }
+        public Sprite ResidentialTile { get; set; }
+        public Sprite IndustrialTile { get; set; }
+        public Sprite ServiceTile { get; set; }
+        public Sprite RoadTile { get; set; }
+        public Sprite DoneResidentialTile { get; set; }
+
         #endregion
 
         public UIObjects()
@@ -27,6 +37,12 @@ namespace TFYP.View.UIElements
             StadiumTile = CreateSprite("Tiles/stadium_tile3");
             SchoolTile = CreateSprite("Tiles/school");
             PoliceTile = CreateSprite("Tiles/police_station");
+            ResidentialTile = CreateSprite("Grasses/grass1"); // must be changed
+            IndustrialTile = CreateSprite("Tiles/school"); // must be changed
+            ServiceTile = CreateSprite("Tiles/empty_tile"); // must be changed
+            RoadTile = CreateSprite("Roads/road2"); // must be changed this is just for testing
+            DoneResidentialTile = CreateSprite("Tiles/police_station");
+
         }
 
         private T ifLoaded<T>(T val)

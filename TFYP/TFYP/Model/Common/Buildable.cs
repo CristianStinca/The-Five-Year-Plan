@@ -14,29 +14,44 @@ namespace TFYP.Model.Common
 {
     public class Buildable
     {
+
         public Vector2 coor {  get; }
-        public EBuildable type { get; }
-
+        public EBuildable type { get; set; }
         public int ConstructionCost { get; set; }
-        public int MaintenanceCost { get; set; }
         public int InfluenceRadius { get; set; }
-
+        public int Capacity { get; set; }
+        public int TimeToBuild { get; set; }
+        public int MaintenanceCost { get; set; }
+        private bool isBuilt;
+        public List<Citizen> citizens;
+        
 
         // Main constructor
-        public Buildable(Vector2 _coor, EBuildable _type, int constructionCost = 0, int maintenanceCost = 0, int influenceRadius = 0)
+        public Buildable(Vector2 _coor, EBuildable _type, int constructionCost = 0, int maintenanceCost = 0, int influenceRadius = 0, int capacity=0, int timeToBuild=0)
         {
             this.coor = _coor;
             this.type = _type;
             ConstructionCost = constructionCost;
-            MaintenanceCost = maintenanceCost;
             InfluenceRadius = influenceRadius;
+            MaintenanceCost = maintenanceCost;
+            Capacity = capacity;
+            TimeToBuild = timeToBuild;
+            isBuilt = false;
+            citizens = new List<Citizen>();
         }
 
-        // Convenience constructors
-        public Buildable() : this(new Vector2(0, 0), EBuildable.None) { }
-        public Buildable(Vector2 coor) : this(coor, EBuildable.None) { }
-        public Buildable(EBuildable type) : this(new Vector2(0, 0), type) { }
+        public virtual void startBuilding() { }
 
+        public virtual void stopBuilding() { }
+
+        public virtual bool checkToBuild() { return true; }
+
+        // when timer has gone through the days needed it will call this function to register that building is done
+        public void finishBuilding() {
+            this.isBuilt = true;
+        }
+
+        
     }
 
 }

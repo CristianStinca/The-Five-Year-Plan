@@ -7,6 +7,7 @@ using TFYP.Model.Facilities;
 using TFYP.Model.Common;
 using TFYP.Model.City;
 using System.Security.Policy;
+using Microsoft.Xna.Framework;
 
 namespace TFYP.Model.Zones
 {
@@ -19,9 +20,10 @@ namespace TFYP.Model.Zones
         public override Zone CreateZone(int _x, int _y)
         {
             return new ServiceZone(
-                EBuildable.Service, 
+                EBuildable.Service,
+                new Vector2(_x, _y),
                 Constants.ServiceEffectRadius, 
-                10.0, 
+                10, 
                 Constants.ServiceZoneCapacity, 
                 Constants.ServiceZoneMaintenanceCost, 
                 Constants.ServiceZoneBuildCost 

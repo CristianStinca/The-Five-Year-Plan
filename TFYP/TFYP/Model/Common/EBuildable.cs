@@ -17,6 +17,7 @@ namespace TFYP.Model.Common
         University,
         PoliceStation,
         Residential,
+        DoneResidential,
         Industrial,
         Service,
         Road

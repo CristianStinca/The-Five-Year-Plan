@@ -1,3 +1,5 @@
+using System.Threading;
+
 namespace TFYP.Model.Common
 {
     public static class Constants // Leaving constants for now, can be changed later
@@ -28,11 +30,11 @@ namespace TFYP.Model.Common
         public const int UniversityMaintenanceFee = 100;
 
         // LOCATION EFFECT
-        public const float IndustrialEffectRadius = 10;
-        public const float ServiceEffectRadius = 10;
-        public const float ResidentialEffectRadius = 0;
-        public const float StadiumEffectRadius = 10;
-        public const float PoliceStationEffectRadius = 10;
+        public const int IndustrialEffectRadius = 10;
+        public const int ServiceEffectRadius = 10;
+        public const int ResidentialEffectRadius = 0;
+        public const int StadiumEffectRadius = 10;
+        public const int PoliceStationEffectRadius = 10;
 
 
         //TO DO - Should be added constants for Disaster
@@ -43,9 +45,15 @@ namespace TFYP.Model.Common
         public const int InitialBalance = 1000000;
 
 
-        // TIME
-        public const int SchoolGraduationTime = 1100; // in days
-        public const int UniversityGraduationTime = 700; // in days
-
+        // TIME in days
+        public const int SchoolGraduationTime = 1100;
+        public const int UniversityGraduationTime = 700;
+        public const int ResidentialZoneBuildTime = 5;
+        public const int ServiceZoneBuildTime = 5;
+        public const int IndustrialBuildTime = 5;
+        public const int PoliceConstructionTime = 5;
+        public const int SchoolConstructionTime = 5;
+        public const int UniversityConstructionTime = 5;
+        public const int StadiumConstructionTime = 5;
     }
 }

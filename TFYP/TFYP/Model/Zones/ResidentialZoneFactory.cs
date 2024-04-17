@@ -7,7 +7,7 @@ using TFYP.Model.Facilities;
 using TFYP.Model.Common;
 using TFYP.Model.City;
 using System.Security.Policy;
-
+using Microsoft.Xna.Framework;
 namespace TFYP.Model.Zones
 {
     public class ResidentialZoneFactory : ZoneFactory
@@ -20,8 +20,9 @@ namespace TFYP.Model.Zones
         {
             return new ResidentialZone(
                 EBuildable.Residential, 
+                new Vector2(_x, _y),
                 Constants.ResidentialEffectRadius,
-                10.0, // example value for `timeToBuild`, will change later 
+                10, // example value for `timeToBuild`, will change later 
                 Constants.ResidentialZoneCapacity,
                 Constants.ResidentialZoneMaintenanceCost,
                 Constants.ResidentialZoneBuildCost

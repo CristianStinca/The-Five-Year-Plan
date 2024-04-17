@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using TFYP.Model.Facilities;
 using TFYP.Model.Common;
 using TFYP.Model.City;
+using Microsoft.Xna.Framework;
 
 namespace TFYP.Model.Zones
 {
     public class ServiceZone : Zone  // TO DO: implement logic around free work places in service zone!!!
     {
-        public ServiceZone(EBuildable type, float effectRadius, double timeToBuild, int capacity, int maintenanceCost, int buildCost)
-        : base(type, effectRadius, timeToBuild, capacity, maintenanceCost, buildCost)
+        public ServiceZone(EBuildable type, Vector2 coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
+        : base(type, coor, influenceRadius, timeToBuild, capacity, maintenanceCost, buildCost)
         {
         
         }
@@ -21,17 +22,6 @@ namespace TFYP.Model.Zones
         {
             get { return EBuildable.Service; }
         }
-
-        // Adjusted constants for service zone
-
-        public new int Capacity => Constants.ServiceZoneCapacity;
-        public new int MaintenanceCost => Constants.ServiceZoneMaintenanceCost;
-        public new int BuildCost => Constants.ServiceZoneBuildCost;
-        public new float EffectRadius => Constants.ServiceEffectRadius;
-
-
-
-
 
     }
 }

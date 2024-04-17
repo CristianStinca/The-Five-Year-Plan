@@ -12,6 +12,11 @@ namespace TFYP.View.UIElements
         public Sprite StadiumTile { get => ifLoaded(StadiumTile); private set => StadiumTile = value; }
         public Sprite SchoolTile { get => ifLoaded(SchoolTile); private set => SchoolTile = value; }
         public Sprite PoliceTile { get => ifLoaded(PoliceTile); private set => PoliceTile = value; }
+        public Sprite ResidentialTile { get => ifLoaded(ResidentialTile); private set => ResidentialTile = value; } // must be changed
+        public Sprite IndustrialTile { get => ifLoaded(IndustrialTile); private set => IndustrialTile = value; } // must be changed
+        public Sprite ServiceTile { get => ifLoaded(EmptyTile); private set => EmptyTile = value; } // must be changed
+        public Sprite RoadTile { get => ifLoaded(RoadTile); private set => RoadTile = value; }
+        public Sprite DoneResidentialTile { get => ifLoaded(DoneResidentialTile); private set => DoneResidentialTile = value; }
 
         /// <summary>
         /// Checks if the texture was loaded (not null).

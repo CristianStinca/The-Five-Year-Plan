@@ -168,7 +168,13 @@ namespace TFYP.Controller.WindowsControllers
                 { EBuildable.None, _uiTextures.EmptyTile },
                 { EBuildable.Stadium, _uiTextures.StadiumTile },
                 { EBuildable.School, _uiTextures.SchoolTile },
-                { EBuildable.PoliceStation, _uiTextures.PoliceTile }
+                { EBuildable.PoliceStation, _uiTextures.PoliceTile },
+                { EBuildable.Residential, _uiTextures.ResidentialTile },
+                { EBuildable.Industrial, _uiTextures.IndustrialTile },
+                { EBuildable.Service, _uiTextures.ServiceTile },
+                { EBuildable.Road, _uiTextures.RoadTile },
+                { EBuildable.DoneResidential,_uiTextures.DoneResidentialTile }
+
             };
         }
 

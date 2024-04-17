@@ -7,13 +7,11 @@ namespace TFYP.Model.Facilities
     {
         public University(Vector2 _coor) : base(_coor, EBuildable.University)
         {
-            MaxCapacity = Constants.ServiceZoneCapacity;
+            Capacity = Constants.ServiceZoneCapacity;
             MaintenanceCost = Constants.UniversityMaintenanceFee;
             ConstructionCost = Constants.UniversityBuildCost;
             GraduationTime = Constants.UniversityGraduationTime;
-            // ConstructionTime = Constants.; // Must be added in Constants.cs
+            TimeToBuild = Constants.UniversityConstructionTime; // Must be added in Constants.cs
         }
-        
-
     }
 }

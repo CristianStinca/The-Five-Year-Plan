@@ -7,13 +7,14 @@ using TFYP.Model.Facilities;
 using TFYP.Model.Common;
 using TFYP.Model.City;
 using System.Security.Policy;
+using Microsoft.Xna.Framework;
 
 namespace TFYP.Model.Zones
 {
     public class IndustrialZone : Zone 
     {
-        public IndustrialZone(EBuildable type, float effectRadius, double timeToBuild, int capacity, int maintenanceCost, int buildCost)
-        : base(type, effectRadius, timeToBuild, capacity, maintenanceCost, buildCost)
+        public IndustrialZone(EBuildable type, Vector2 coor,int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
+        : base(type, coor, influenceRadius, timeToBuild, capacity, maintenanceCost, buildCost)
         {
 
         }
@@ -22,12 +23,6 @@ namespace TFYP.Model.Zones
         {
             get { return EBuildable.Industrial; }
         }
-
-
-        public new int Capacity => Constants.IndustrialZoneCapacity;
-        public new int MaintenanceCost => Constants.IndustrialZoneMaintenanceCost;
-        public new int BuildCost => Constants.IndustrialZoneBuildCost;
-        public new float EffectRadius => Constants.IndustrialEffectRadius;
 
         //TO DO - pollution effect
 

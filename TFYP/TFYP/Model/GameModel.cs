@@ -10,6 +10,7 @@ using TFYP.Model.City;
 using TFYP.Model.Zones;
 using Microsoft.Xna.Framework;
 using TFYP.Model.Disasters;
+using Microsoft.Xna.Framework.Graphics;
 
 
 namespace TFYP.Model
@@ -18,7 +19,8 @@ namespace TFYP.Model
     
     [Serializable]
     public class GameModel
-    {        
+    {       
+        private static GameModel instance = null;
         private static int _mapH, _mapW;
         public Buildable[,] map;
         public List<Citizen> Citizens { get; private set; }
@@ -27,8 +29,8 @@ namespace TFYP.Model
         public Statistics Statistics { get; private set; }
         public CityRegistry CityRegistry { get; private set; }
         public List<Road> Roads { get; private set; }
-
-        public GameModel(int _mapH, int _mapW)
+        
+        private GameModel(int _mapH, int _mapW)
         {
             MAP_H = _mapH;
             MAP_W = _mapW;
@@ -43,7 +45,14 @@ namespace TFYP.Model
 
             for (int i = 0; i < map.GetLength(0); i++)
                 for (int j = 0; j < map.GetLength(1); j++)
-                    map[i, j] = new Buildable(new Vector2(i, j));
+                    map[i, j] = new Buildable(new Vector2(i, j),EBuildable.None);
+        }
+        public static GameModel GetInstance() {
+            if (instance == null)
+            { 
+                instance= new GameModel(20, 20);
+            }
+            return instance;
         }
 
         public static int MAP_H
@@ -51,6 +60,7 @@ namespace TFYP.Model
             get { return _mapH; }
             set { _mapH = value; }
         }
+
 
         public static int MAP_W
         {
@@ -64,6 +74,11 @@ namespace TFYP.Model
             // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
             
             AddToMap(_x, _y, zone);
+            foreach (Road tmp in Roads)
+            {
+                tmp.checkForZones();
+                tmp.connected.ForEach(x => { x.startBuilding(); x.type = x.type==EBuildable.Residential ? EBuildable.DoneResidential:x.type; });
+            }
             //cityRegistry.AddZone(zone);
             //cityRegistry.UpdateBalance(-zone.GetOneTimeCost(), GetCurrentDate());
         }
@@ -80,11 +95,32 @@ namespace TFYP.Model
                     break;
 
                 case EBuildable.None:
+                    if (map[_x,_y].GetType()==typeof(Road))
+                    {
+                        Road r1 = Roads.Single(s => s.coor==new Vector2(_x,_y));
+                        Roads.Remove(r1);
+                        r1.connected.ForEach(x => x.stopBuilding());
+                    }
                     map[_x, _y] = new Buildable(new Vector2(_x, _y), zone);
                     break;
                 case EBuildable.PoliceStation:
                     map[_x, _y] = new PoliceStation(new Vector2(_x, _y), zone);
                     break;
+                case EBuildable.Residential:
+                    map[_x, _y] = new Zone(EBuildable.Residential, new Vector2(_x, _y), Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime,  Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost);
+                    break;
+                case EBuildable.Service:
+                    map[_x, _y] = new Zone(EBuildable.Service, new Vector2(_x, _y), Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost);
+                    break;
+                case EBuildable.Industrial:
+                    map[_x, _y] = new Zone(EBuildable.Industrial, new Vector2(_x, _y), Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost);
+                    break;
+                case EBuildable.Road:
+                    Road r = new Road(new Vector2(_x, _y), EBuildable.Road);
+                    map[_x, _y] =r ;
+                    Roads.Add(r);
+                    break;
+
             }
         }
         public IEnumerable<Zone> GetAllZones()

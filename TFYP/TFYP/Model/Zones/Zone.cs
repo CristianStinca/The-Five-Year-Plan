@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TFYP.Model.Facilities;
 using TFYP.Model.Common;
 using TFYP.Model.City;
+using Microsoft.Xna.Framework;
 
 namespace TFYP.Model.Zones
 {
@@ -18,38 +19,15 @@ namespace TFYP.Model.Zones
 
         public float Health {  get; private set; } // Health will be probably changed later, so far it is for the disaster and is representing percentage (1-100)
         // health will help us to calculate the cost of the damage which will be OneTimeCost * (Health/100)
-        public List<Citizen> citizens;// Tracking the citizens within the zone
-        public EBuildable type { get; }
-        public float effectRadius { get; private set; }
-        public double TimeToBuild { get; private set; }
-        public int Capacity { get; private set; }
-        public int MaintenanceCost { get; private set; }
-        public int BuildCost { get; private set; }
+        // Tracking the citizens within the zone
+        private bool canStartBuilding;
         //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
 
-        public Zone(EBuildable type, float effectRadius, double timeToBuild, int capacity, int maintenanceCost, int buildCost)
-        { // Initialize or assign
-            this.citizens = new List<Citizen>();
-            this.type = type;
-            this.effectRadius = effectRadius;
-            TimeToBuild = timeToBuild;
-            Capacity = capacity;
-            MaintenanceCost = maintenanceCost;
-            BuildCost = buildCost;
-            Health = 100;
-        }
-
-        //This constructor is to use temporarily, will be deleted later!
-
-        public Zone(EBuildable type)
+        public Zone(EBuildable type, Vector2 coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
+            :base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
         {
-            this.type = type; 
-            this.citizens = new List<Citizen>();
-            this.effectRadius = 0f; 
-            this.TimeToBuild = 0; 
-            this.Capacity = 0; 
-            this.MaintenanceCost = 0; 
-            this.BuildCost = 0; 
+            Health = 100;
+            canStartBuilding = false;
         }
 
         //TO DO: Need to implement method for finding paths and set Connected for every zone
@@ -116,5 +94,19 @@ namespace TFYP.Model.Zones
         {
             return citizens;
         }
+
+        public override void startBuilding() {
+            this.canStartBuilding = true;
+        }
+
+        public override bool checkToBuild()
+        {
+            return this.canStartBuilding;
+        }
+
+        public override void stopBuilding() {
+            this.canStartBuilding = false;
+        }
+
     }
 }
