@@ -23,6 +23,7 @@ namespace TFYP.Controller.WindowsControllers
     internal class GameWindowController : WindowController
     {
         private Vector2 _focusCoord; 
+        private Vector2 _initCoord; 
         private Rectangle _screenLimits;
 
         View.Windows.GameWindow _gw_view;
@@ -34,14 +35,8 @@ namespace TFYP.Controller.WindowsControllers
         {
             _view.changeToGameWindow();
 
-            _focusCoord = new();
             _activeZone = null;
             InitiateConverionDict();
-
-            _screenLimits = new Rectangle(0, 0,
-                            (int)Math.Round(((GameModel.MAP_W - 0.5f) * View.Windows.GameWindow.TILE_W * View.Windows.GameWindow.SCALE) - Globals.Graphics.PreferredBackBufferWidth),
-                            (((GameModel.MAP_H - 1) / 2) * View.Windows.GameWindow.TILE_H * View.Windows.GameWindow.SCALE) - Globals.Graphics.PreferredBackBufferHeight
-            );
 
             if (base._view.CurrentWindow.GetType().Name.CompareTo(typeof(View.Windows.GameWindow).Name) == 0)
             {
@@ -54,6 +49,9 @@ namespace TFYP.Controller.WindowsControllers
 
             LinkViewEvents();
             _gw_view.TileButtonPressedInWindow += ClickInButton;
+            _screenLimits = _gw_view.ScreenLimit;
+            _focusCoord = new Vector2(_screenLimits.X, _screenLimits.Y);
+            _initCoord = new Vector2(_screenLimits.X, _screenLimits.Y);
         }
 
         /// <summary>
@@ -80,6 +78,7 @@ namespace TFYP.Controller.WindowsControllers
                     break;
 
                 case "R":
+                    Debug.WriteLine($"X: {x}, Y: {y}");
                     _activeZone = null;
                     break;
             }
@@ -132,7 +131,7 @@ namespace TFYP.Controller.WindowsControllers
                     ExecuteFocusMove(new Vector2(speed, 0));
                 }
 
-                _gw_view.SetFocusCoord(-_focusCoord);
+                _gw_view.SetFocusCoord(_initCoord - _focusCoord);
             }
         }
 
