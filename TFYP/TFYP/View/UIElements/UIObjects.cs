@@ -19,8 +19,8 @@ namespace TFYP.View.UIElements
     {
         #region OBJECTS_DECLARATIONS
 
-        public Sprite EmptyTile { get; set; }//{ get => ifLoaded(EmptyTile); private set => EmptyTile = value; }
-        public Sprite StadiumTile { get; set; } //{ get => ifLoaded(StadiumTile); private set => StadiumTile = value; }
+        public Sprite EmptyTile { get; set; }
+        public Sprite StadiumTile { get; set; }
         public Sprite SchoolTile { get; set; }
         public Sprite PoliceTile { get; set; }
         public Sprite ResidentialTile { get; set; }

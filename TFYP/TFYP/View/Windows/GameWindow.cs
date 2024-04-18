@@ -11,8 +11,8 @@ using TFYP.View.Renders;
 using TFYP.View.UIElements;
 using TFYP.View.UIElements.ClickableElements;
 using static TFYP.View.UIElements.ClickableElements.Button;
-using TFYP.Model.Facilities;
 using Microsoft.Xna.Framework.Input;
+using TFYP.Model;
 
 namespace TFYP.View.Windows
 {
@@ -34,6 +34,7 @@ namespace TFYP.View.Windows
         private Vector2 initPos;
 
         private Rectangle screenRect;
+        public Rectangle ScreenLimit;
         private List<Rectangle> _UIElementsContainers;
         private List<Button> _UIElements;
 
@@ -92,6 +93,10 @@ namespace TFYP.View.Windows
             screenRect = new Rectangle(0, 0, Globals.Graphics.PreferredBackBufferWidth, Globals.Graphics.PreferredBackBufferHeight);
             _UIElementsContainers = new List<Rectangle>();
             _UIElements = new List<Button>();
+            ScreenLimit = new Rectangle(0, 0,
+                (int)Math.Round(((GameModel.MAP_W - 0.5f) * GameWindow.TILE_W * GameWindow.SCALE) - Globals.Graphics.PreferredBackBufferWidth),
+                (int)Math.Round(((GameModel.MAP_H / 2) - 0.5f) * GameWindow.TILE_H * GameWindow.SCALE - Globals.Graphics.PreferredBackBufferHeight)
+            );
 
             InitialiseUi();
         }
@@ -118,9 +123,9 @@ namespace TFYP.View.Windows
 
                     Sprite sprite = new Sprite(
                         _vo.Texture,
-                        new Microsoft.Xna.Framework.Vector2(
-                            (initPos.X * SCALE) + focusCoord.X + deviation + _vo.Position.X + (j * TILE_W * SCALE),
-                            (initPos.Y * SCALE) + focusCoord.Y + _vo.Position.Y + (i * TILE_H * SCALE / 2) - ((_vo.Texture.Height - TILE_H) * (SCALE - 1))
+                        new Vector2(
+                            (initPos.X * SCALE) + focusCoord.X + deviation + _vo.Position.X + ScreenLimit.X + (j * TILE_W * SCALE),
+                            (initPos.Y * SCALE) + focusCoord.Y + _vo.Position.Y + ScreenLimit.Y + (i * TILE_H * SCALE / 2) - ((_vo.Texture.Height - TILE_H) * (SCALE - 1))
                         ),
                         SCALE
                     );
@@ -166,6 +171,10 @@ namespace TFYP.View.Windows
             Sprite BackgroundButtonTab = new (Globals.Content.Load<Texture2D>("Buttons/ButtonsHolder"));
             _UIElementsContainers.Add(BackgroundButtonTab.CollisionRectangle);
             ElementsInWindow.Add(BackgroundButtonTab);
+
+            ScreenLimit.X = BackgroundButtonTab.Texture.Width;
+            ScreenLimit.Width += BackgroundButtonTab.Texture.Width;
+
 
             RenderableList buttonsBar = new (30, 20, 30);
 
