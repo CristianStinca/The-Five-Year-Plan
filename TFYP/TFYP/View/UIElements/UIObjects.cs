@@ -34,10 +34,10 @@ namespace TFYP.View.UIElements
         public UIObjects()
         {
             EmptyTile = CreateSprite("Tiles/empty_tile");
-            StadiumTile = CreateSprite("Tiles/stadium_tile3");
+            StadiumTile = CreateSprite("Tiles/stadium_tile");
             SchoolTile = CreateSprite("Tiles/school");
             PoliceTile = CreateSprite("Tiles/police_station");
-            ResidentialTile = CreateSprite("Grasses/grass1"); // must be changed
+            ResidentialTile = CreateSprite("Grasses/plain_grass"); // must be changed
             IndustrialTile = CreateSprite("Tiles/school"); // must be changed
             ServiceTile = CreateSprite("Tiles/empty_tile"); // must be changed
             RoadTile = CreateSprite("Roads/road2"); // must be changed this is just for testing

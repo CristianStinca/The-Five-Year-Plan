@@ -40,7 +40,7 @@
 
 
 
-#begin ../Resources/Images/Grasses/grass1.png
+#begin ../Resources/Images/Grasses/plain_grass.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -50,7 +50,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../Resources/Images/Grasses/grass1.png;Grasses/grass1.png
+/build:../Resources/Images/Grasses/plain_grass.png;Grasses/plain_grass.png
 
 #begin ../Resources/Images/Roads/road1.png
 /importer:TextureImporter
@@ -304,7 +304,7 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Tiles/stadium_tile.png;Tiles/stadium_tile.png
 
-#begin ../Resources/Images/Tiles/stadium_tile3.png
+#begin ../Resources/Images/Tiles/stadium_tile.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -314,7 +314,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../Resources/Images/Tiles/stadium_tile3.png;Tiles/stadium_tile3.png
+/build:../Resources/Images/Tiles/stadium_tile.png;Tiles/stadium_tile.png
 
 #begin back2.jpg
 /importer:TextureImporter
