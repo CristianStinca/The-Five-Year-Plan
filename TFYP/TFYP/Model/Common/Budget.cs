@@ -11,31 +11,61 @@ namespace TFYP.Model.Common
 {
     public class Budget
     {
+
         public double Balance { get; private set; }
-        public double TaxRate { get; private set; }
-        public double TotalMaintenanceFee { get; private set; }
-        
+        public double CurrentTaxRate { get; private set; }
+        public double MaintenanceFeeForEverything { get; private set; }
+        public DateTime DateOfStartingLoan { get; private set; }
+
         public Budget(double balance = 0, double taxRate = 0)
         {
             Balance = balance;
-            TaxRate = taxRate;
-            TotalMaintenanceFee = 0;
+            CurrentTaxRate = taxRate;
+            MaintenanceFeeForEverything = 0;
         }
 
-        public void SetTaxRate(double taxRate)
+        public void SetCurrentTaxRate(double taxRate)
         {
-            TaxRate = taxRate;
+            CurrentTaxRate = taxRate;
         }
 
         public void UpdateBalance(double amount)
         {
+            DateTime now = DateTime.Now;
             Balance += amount;
+            if (Balance < 0 && DateOfStartingLoan == DateTime.MinValue)
+            {
+                DateOfStartingLoan = now;
+            }
         }
 
-        public void UpdateMaintenanceFee(double maintenanceFee)
+        public int YearsOfBeingInLoan(DateTime now)
         {
-            TotalMaintenanceFee += maintenanceFee;
+            if (DateOfStartingLoan != DateTime.MinValue && now > DateOfStartingLoan)
+            {
+                return now.Year - DateOfStartingLoan.Year - (now.DayOfYear < DateOfStartingLoan.DayOfYear ? 1 : 0);
+            }
+            return 0;
         }
+
+        public void AddToMaintenanceFee(double maintenanceFee)
+        {
+            MaintenanceFeeForEverything += maintenanceFee;
+        }
+
+        public void RemoveFromMaintenanceFee(double maintenanceFee)
+        {
+            MaintenanceFeeForEverything -= maintenanceFee;
+        }
+
+        public double ComputeRevenue(GameModel gm)
+        {
+            return gm.Citizens.Sum(citizen => citizen.TaxAmount(this));
+        }
+
+        // spend not necessary as exta method, just --> MaintenanceFeeForEverything
+        //და მოკლედ ყოველ ჯერზე როცა ახალ ფესილიტის დაამატებ AddToMaintenanceFee უნდა გამოიძახო
+        //და როცა მოაშორებ RemoveFromMaintenanceFee
 
     }
 }

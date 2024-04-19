@@ -41,7 +41,7 @@ namespace TFYP.Model.Common
 
 
         // GENERAL CONSTANTS
-        public const int TaxRate = 100;
+        public const int CityBaseTax = 100;
         public const int InitialBalance = 1000000;
 
 
@@ -55,5 +55,17 @@ namespace TFYP.Model.Common
         public const int SchoolConstructionTime = 5;
         public const int UniversityConstructionTime = 5;
         public const int StadiumConstructionTime = 5;
+
+
+        //SATTISFACTION WEIGHTS (for citizen)
+        public const float EducationWeight = 0.3f; // 30% of total satisfaction
+        public const float EmploymentWeight = 0.2f; // 20% of total satisfaction
+        public const float DistanceWeight = 0.2f; // 20% of total satisfaction
+        public const float TaxWeight = 0.1f; // 10% of total satisfaction
+        public const float ZoneSatisfactionWeight = 0.2f; // 20% of total satisfaction
+
+        public const float baseZoneSatisfaction = 60.0f;
+
+
     }
 }

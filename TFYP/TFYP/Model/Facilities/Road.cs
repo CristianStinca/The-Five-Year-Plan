@@ -28,19 +28,19 @@ namespace TFYP.Model.Facilities
         public void checkForZones() {
             GameModel gm = GameModel.GetInstance();
             connected.Clear();
-            if ((int)this.coor.X % 2 == 0)
+            if ((int)this.Coor.X % 2 == 0)
             {
-                connected.Add(gm.map[(int)this.coor.X - 1, (int)coor.Y-1]);
-                connected.Add(gm.map[(int)this.coor.X - 1, (int)coor.Y + 1]);
-                connected.Add(gm.map[(int)coor.X + 1, (int)coor.Y-1]);
-                connected.Add(gm.map[(int)coor.X + 1, (int)coor.Y + 1]);
+                connected.Add(gm.map[(int)this.Coor.X - 1, (int)Coor.Y-1]);
+                connected.Add(gm.map[(int)this.Coor.X - 1, (int)Coor.Y + 1]);
+                connected.Add(gm.map[(int)Coor.X + 1, (int)Coor.Y-1]);
+                connected.Add(gm.map[(int)Coor.X + 1, (int)Coor.Y + 1]);
             }
             else
             {
-                connected.Add(gm.map[(int)this.coor.X - 1, (int)coor.Y]);
-                connected.Add(gm.map[(int)this.coor.X - 1, (int)coor.Y + 1]);
-                connected.Add(gm.map[(int)coor.X + 1, (int)coor.Y]);
-                connected.Add(gm.map[(int)coor.X + 1, (int)coor.Y + 1]);
+                connected.Add(gm.map[(int)this.Coor.X - 1, (int)Coor.Y]);
+                connected.Add(gm.map[(int)this.Coor.X - 1, (int)Coor.Y + 1]);
+                connected.Add(gm.map[(int)Coor.X + 1, (int)Coor.Y]);
+                connected.Add(gm.map[(int)Coor.X + 1, (int)Coor.Y + 1]);
             }
         }
         public bool isConnected(Buildable elem)

@@ -70,7 +70,7 @@ namespace TFYP.Model.Disasters
 
         private bool IsWithinEffectRadius(Zone zone)
         {
-            float distance = Vector2.Distance(this.Location, zone.coor);
+            float distance = Vector2.Distance(this.Location, zone.Coor);
             return distance <= this.EffectRadius;
         }
 

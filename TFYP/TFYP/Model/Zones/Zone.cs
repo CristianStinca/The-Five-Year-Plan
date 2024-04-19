@@ -13,18 +13,16 @@ namespace TFYP.Model.Zones
     [Serializable]
     public class Zone : Buildable
     {
-        //*removed level
-        //*might be needed to store x and y coordinates of the zone as attributes
-        //*might be needed to store height and width of the zone for dimensions
 
         public float Health {  get; private set; } // Health will be probably changed later, so far it is for the disaster and is representing percentage (1-100)
         // health will help us to calculate the cost of the damage which will be OneTimeCost * (Health/100)
         // Tracking the citizens within the zone
         private bool canStartBuilding;
+        private List<Citizen> citizens = new List<Citizen>();
         //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
 
         public Zone(EBuildable type, Vector2 coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
-            :base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
+            : base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
         {
             Health = 100;
             canStartBuilding = false;
@@ -32,23 +30,6 @@ namespace TFYP.Model.Zones
 
         //TO DO: Need to implement method for finding paths and set Connected for every zone
 
-        public void AddCitizen(Citizen citizen, GameModel _gameModel)
-        {
-            if (citizen == null)
-                throw new ArgumentNullException(nameof(citizen));
-
-            if (!citizen.IsActive)
-                throw new InvalidOperationException("Cannot add an inactive citizen.");
-
-            if (citizens.Count >= Capacity)
-                throw new InvalidOperationException("Cannot add new citizen; zone capacity reached.");
-
-            if (citizens.Contains(citizen))
-                throw new InvalidOperationException("Citizen is already in the zone.");
-            citizens.Add(citizen);
-            //Statistics.Population += 1;
-            //_gameModel.CityStatistics.SetCitySatisfaction(_gameModel);
-        }
 
         public void RemoveCitizen(Citizen citizen, GameModel _gameModel)
         {
@@ -59,30 +40,12 @@ namespace TFYP.Model.Zones
 
 
 
-        public double GetOverallSatisfaction()
-        {
-            int totalSatisfaction = citizens.Where(c => c.IsActive).Sum(c => c.Satisfaction);
-            int activeCitizenCount = citizens.Count(c => c.IsActive);
-            int averageSatisfaction = activeCitizenCount > 0 ? totalSatisfaction / activeCitizenCount : 0;
 
-            return averageSatisfaction;//******************!!!!!!!!!!!!
+        public float GetIncome(Budget budget)
+        {
+            return citizens.Where(c => c.IsActive).Sum(c => c.TaxAmount(budget));
         }
 
-
-        public int GetIncome(int taxRate)
-        {
-            return citizens.Where(c => c.IsActive).Sum(c => c.PayTax(taxRate));
-        }
-
-
-        public void IncCapacity(int num)
-        {
-            if (num < 0)
-                throw new ArgumentException("Capacity increment must be positive.", nameof(num));
-
-            int maxCapacity = 100; // for zone
-            Capacity = Math.Min(Capacity + num, maxCapacity);
-        }
 
         public void SetHealth(float health)
         {
@@ -107,6 +70,59 @@ namespace TFYP.Model.Zones
         public override void stopBuilding() {
             this.canStartBuilding = false;
         }
+
+
+        // Method to calculate effects based on distance
+        private double CalculateDistanceEffect(double maxEffect, double distance, double decayRate)
+        {
+            // Effect diminishes as distance increases, decayRate controls how quickly the effect diminishes
+            return Math.Max(0, maxEffect - (distance * decayRate));
+        }
+
+        public double GetZoneSatisfaction(GameModel gm)
+        {
+            // Calculate effects based on the distance to the nearest police station, stadium, and industrial area
+            double policeEffect = CalculateDistanceEffect(100, gm.GetDistanceToNearestPoliceStation(Coor), 0.5);
+            double stadiumEffect = CalculateDistanceEffect(80, gm.GetDistanceToNearestStadium(Coor), 0.3); 
+            double industrialEffect = -CalculateDistanceEffect(50, gm.GetDistanceToNearestIndustrialArea(Coor), 0.7); 
+
+            double freeWorkplaceEffect = (Capacity - citizens.Count) * 10; // more free capacity increases satisfaction
+
+            double citizenSatisfaction = citizens.Any(c => c.IsActive)
+                ? citizens.Where(c => c.IsActive).Average(c => c.Satisfaction)
+                : 0;
+
+            double totalSatisfaction = Constants.baseZoneSatisfaction+
+                                       policeEffect +
+                                       stadiumEffect +
+                                       industrialEffect +
+                                       freeWorkplaceEffect +
+                                       citizenSatisfaction;
+
+            return Math.Clamp(totalSatisfaction, 0, 100);
+        }
+
+        public void AddCitizen(Citizen citizen, GameModel _gameModel)
+        {
+            if (citizen == null)
+                throw new ArgumentNullException(nameof(citizen), "Citizen cannot be null.");
+
+            if (!citizen.IsActive)
+                throw new InvalidOperationException("Cannot add an inactive citizen.");
+
+            if (citizens.Count >= Capacity)
+                throw new InvalidOperationException("Cannot add new citizen; zone capacity reached.");
+
+            if (citizens.Contains(citizen))
+                throw new InvalidOperationException("Citizen is already in the zone.");
+
+            citizens.Add(citizen);
+
+            //this.statistics.Population += 1; 
+
+        }
+
+
 
     }
 }

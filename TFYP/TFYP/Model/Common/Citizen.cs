@@ -11,70 +11,130 @@ namespace TFYP.Model.Common
 {
     public enum EducationLevel
     {
-        Uneducated,
+        Primary,
         School,
         University
     }
+
+    public static class EducationExtensions
+    {
+        public static float GetEducationValue(this EducationLevel level)
+        {
+            switch (level)
+            {
+                case EducationLevel.Primary:
+                    return 50.0f;
+                case EducationLevel.School:
+                    return 100.0f;
+                case EducationLevel.University:
+                    return 150.0f;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(level), level, null);
+            }
+        }
+    }
+
+
     public class Citizen
     {
-        public int Satisfaction { get; private set; }
+        //In which zones does citizen work:
+        public Zone WorkPlace { get; private set; }
+        public Zone LivingPlace { get; private set; }
+
         public int Age { get; private set; }
-        public bool IsActive { get; private set; } = true; // citizens are active when created
         public bool IsWorking { get; private set; }
         public EducationLevel EducationLevel { get; private set; }
-        public Zone Living { get; private set; }
-        public Zone Working { get; private set; }
 
-        public Citizen(Zone living, Zone working)
+        public float TaxPaidThisYear { get; private set; }
+
+        private static Random random = new Random();//for age
+
+        public float Satisfaction { get; private set; }
+        public bool IsActive { get; private set; } = true; // citizens are active when created
+
+
+
+        public Citizen(Zone livingPlace, Zone workPlace, EducationLevel educationLevel)
         {
-            Satisfaction = 50; // if we assume it is from 1-100
-            EducationLevel = EducationLevel.Uneducated;
-            Living = living;
-            Working = working;
+            EducationLevel = educationLevel;
+            LivingPlace = livingPlace;
+            WorkPlace = workPlace;
+            Age = random.Next(0, 101);
+            IsWorking = WorkPlace != null;
         }
 
-        //public void SetSatisfaction(GameModel gm)
-        //{
-
-        //}
-        public int PayTax(int taxRate)
-        {
-            return taxRate;
-        }
 
         public void SetWorking(GameModel gm, Zone workPlace)
         {
-            Working = workPlace;
+            WorkPlace = workPlace;
             IsWorking = true;
-            //workPlace.AddCitizen(this, gm);
+            workPlace.AddCitizen(this, gm);
         }
-        public void Retire()
-        {
-            IsWorking = false;
-        }
-        public void IncAge()
+
+        public void IncAge()//სად გამოვიყენებთ?
         {
             Age++;
         }
-        public int GetSatisfaction()
-        {
-            return Satisfaction;
-        }
-        public void LeaveCity()
+
+        public void LeaveCity()//სად გამოვიყენებთ?
         {
             IsActive = false;
         }
 
+
+
+        public void CalculateSatisfaction(GameModel gm, Budget budget)
+        {
+            float educationSatisfaction = (float)(EducationExtensions.GetEducationValue(EducationLevel) / 150f); // Cast if needed
+            float employmentSatisfaction = IsWorking ? 1f : 0f;
+            float distanceSatisfaction = 1f - (float)(GetDistanceLiveWork(gm, LivingPlace, WorkPlace) / gm.MaxDistance);
+            float taxSatisfaction = 1f - (float)(TaxAmount(budget) / gm.MaxTax);
+
+            float livingPlaceSatisfaction = (float)LivingPlace.GetZoneSatisfaction(gm);
+            float workPlaceSatisfaction = WorkPlace != null ? (float)WorkPlace.GetZoneSatisfaction(gm) : 1f;
+
+            Satisfaction = (educationSatisfaction * Constants.EducationWeight) +
+                           (employmentSatisfaction * Constants.EmploymentWeight) +
+                           (distanceSatisfaction * Constants.DistanceWeight) +
+                           (taxSatisfaction * Constants.TaxWeight) +
+                           ((livingPlaceSatisfaction + workPlaceSatisfaction) / 2 * Constants.ZoneSatisfactionWeight);
+
+            Satisfaction = Math.Clamp(Satisfaction, 0f, 1f);
+        }
+
+
+
+        // Method to calculate how much tax should a citizen pay tax based on current factors
+        public float TaxAmount(Budget budget)
+        {
+            // Calculating tax based on some constant base tax, the current tax rate, and an additional value based on education
+
+            float tax = (float)(Constants.CityBaseTax * budget.CurrentTaxRate + EducationLevel.GetEducationValue());
+            TaxPaidThisYear = tax; // Assuming tax is paid annually
+            return tax;
+
+            //taxRate is base in beginning for city and then after time it should be updated in Budges class!!
+        }
+
+
+        public static int GetDistanceLiveWork(GameModel gm, Zone livingPlace, Zone workplace)
+        {
+            return gm.CalculateDistanceBetweenZones(livingPlace, workplace);
+        }
+
+
+
         public override string ToString()
         {
-            return "Citizen{" +
-                    "  levelOfEducation=" + EducationLevel +
-                    ", livingPlace=" + Living +
-                    ", workplace=" + Working +
-                    ", age=" + Age +
-                    ", isWorking=" + IsWorking +
-                    '}';
+            return $"Citizen{{WorkPlace={WorkPlace}, " +
+                $"LivingPlace={LivingPlace}, " +
+                $"EducationLevel={EducationLevel}, " +
+                $"Age={Age}, " +
+                $"IsWorking={IsWorking}, " +
+                $"TaxAmount={TaxPaidThisYear}}}";
         }
 
     }
+
 }
+

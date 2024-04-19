@@ -98,7 +98,7 @@ namespace TFYP.Controller.WindowsControllers
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    out_map[i, j] = this.CreateUIElement(map[i, j].type);
+                    out_map[i, j] = this.CreateUIElement(map[i, j].Type);
                 }
             }
 

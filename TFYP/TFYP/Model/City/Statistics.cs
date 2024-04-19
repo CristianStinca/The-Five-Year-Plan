@@ -18,7 +18,7 @@ namespace TFYP.Model.City
         public int IndustrialZoneCount { get; private set; }
         public int ServiceZoneCount { get; private set; }
         public double BudgetEffect { get; }
-        public double TaxEffect { get => 1 / (Budget.TaxRate > 0 ? Budget.TaxRate : 1); }
+        public double TaxEffect { get => 1 / (Budget.CurrentTaxRate > 0 ? Budget.CurrentTaxRate : 1); }
 
         public Statistics(Budget budget)
         {
@@ -52,7 +52,7 @@ namespace TFYP.Model.City
         }
         public void CitySatisfaction(GameModel gm)
         {
-            double totalSatisfactionInZone = gm.CityRegistry.Zones.Sum(zone => zone.GetOverallSatisfaction());
+            double totalSatisfactionInZone = gm.CityRegistry.Zones.Sum(zone => zone.GetZoneSatisfaction(gm));
             int zoneCount = (gm.CityRegistry.Zones.Count());
             satisfaction = zoneCount == 0 ? 60 + (CalculateCitySatisfaction()) : (double)totalSatisfactionInZone / zoneCount;
         }

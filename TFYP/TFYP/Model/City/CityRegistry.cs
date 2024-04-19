@@ -74,7 +74,7 @@ namespace TFYP.Model.City
 
         public void ChangeTaxRate(double newRate)
         {
-            Statistics.Budget.SetTaxRate(newRate);
+            Statistics.Budget.SetCurrentTaxRate(newRate);
         }
 
 

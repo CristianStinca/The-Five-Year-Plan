@@ -15,8 +15,8 @@ namespace TFYP.Model.Common
     public class Buildable
     {
 
-        public Vector2 coor {  get; }
-        public EBuildable type { get; set; }
+        public Vector2 Coor {  get; }
+        public EBuildable Type { get; set; }
         public int ConstructionCost { get; set; }
         public int InfluenceRadius { get; set; }
         public int Capacity { get; set; }
@@ -29,8 +29,8 @@ namespace TFYP.Model.Common
         // Main constructor
         public Buildable(Vector2 _coor, EBuildable _type, int constructionCost = 0, int maintenanceCost = 0, int influenceRadius = 0, int capacity=0, int timeToBuild=0)
         {
-            this.coor = _coor;
-            this.type = _type;
+            Coor = _coor;
+            Type = _type;
             ConstructionCost = constructionCost;
             InfluenceRadius = influenceRadius;
             MaintenanceCost = maintenanceCost;
