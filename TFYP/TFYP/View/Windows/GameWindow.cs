@@ -36,7 +36,7 @@ namespace TFYP.View.Windows
         private Rectangle screenRect;
         public Rectangle ScreenLimit;
         private List<Rectangle> _UIElementsContainers;
-        private List<Button> _UIElements;
+        //private List<Button> _UpdateingUIElements;
 
         List<IRenderable> mapRend = new List<IRenderable>();
 
@@ -60,8 +60,6 @@ namespace TFYP.View.Windows
         Button timeX3;
 
         Button perspectiveButton;
-
-        public delegate void UIButtonPressedHandler();
 
         public event UIButtonPressedHandler UIResidentialZoneButtonPressed;
         public event UIButtonPressedHandler UIIndustrialZoneButtonPressed;
@@ -92,7 +90,7 @@ namespace TFYP.View.Windows
             map = null;
             screenRect = new Rectangle(0, 0, Globals.Graphics.PreferredBackBufferWidth, Globals.Graphics.PreferredBackBufferHeight);
             _UIElementsContainers = new List<Rectangle>();
-            _UIElements = new List<Button>();
+            //_UpdateingUIElements = new List<Button>();
             ScreenLimit = new Rectangle(0, 0,
                 (int)Math.Round(((GameModel.MAP_W - 0.5f) * GameWindow.TILE_W * GameWindow.SCALE) - Globals.Graphics.PreferredBackBufferWidth),
                 (int)Math.Round(((GameModel.MAP_H / 2) - 0.5f) * GameWindow.TILE_H * GameWindow.SCALE - Globals.Graphics.PreferredBackBufferHeight)
@@ -229,7 +227,7 @@ namespace TFYP.View.Windows
             _UIElementsContainers.Add(buttonBack.CollisionRectangle);
             ElementsInWindow.Add(buttonBack);
 
-            stopTime = AddButton (new Sprite(Globals.Content.Load<Texture2D>("Buttons/stop_button"), new Vector2(buttonBack.Position.X + 10, buttonBack.Position.Y + 7)));
+            stopTime = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/stop_button"), new Vector2(buttonBack.Position.X + 10, buttonBack.Position.Y + 7)));
             stopTime.ButtonPressed += (string name) => UIStopSpeedPressed.Invoke();
             ElementsInWindow.Add(stopTime.ToIRenderable());
 
@@ -252,13 +250,6 @@ namespace TFYP.View.Windows
             ElementsInWindow.Add(perspectiveButton.ToIRenderable());
         }
 
-        private Button AddButton(Sprite sprite)
-        {
-            Button btn = new Button(sprite, _inputHandler);
-            _UIElements.Add(btn);
-            return btn;
-        }
-
         public void ChangePerspective()
         {
             if (is2D)
@@ -279,17 +270,15 @@ namespace TFYP.View.Windows
         {
             base.Update();
 
-            for (int i = 0; i < map.GetLength(0); i++)
+            if (map != null)
             {
-                for (int j = 0; j < map.GetLength(1); j++)
+                for (int i = 0; i < map.GetLength(0); i++)
                 {
-                    map[i, j].Update();
+                    for (int j = 0; j < map.GetLength(1); j++)
+                    {
+                        map[i, j].Update();
+                    }
                 }
-            }
-
-            foreach (Button btn in _UIElements)
-            {
-                btn.Update();
             }
         }
 

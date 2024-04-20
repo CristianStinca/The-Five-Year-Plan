@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,20 +12,44 @@ namespace TFYP.Controller.WindowsControllers
 {
     internal abstract class WindowController
     {
+        public delegate void ChangeWindowHandler();
+        public static event ChangeWindowHandler OnChangeToGameWindow;
+        public static event ChangeWindowHandler OnChangeToMenuWindow;
+        public static event ChangeWindowHandler OnChangeToSettingsWindow;
+        public static event ChangeWindowHandler OnChangeToLoadsWindow;
+
         public delegate void ExitHandler();
         public static event ExitHandler ExitPressed;
 
         protected InputHandler _inputHandler;
         protected View.View _view;
-        protected GameModel _gameModel;
         protected IUIElements _uiTextures;
 
-        public WindowController(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
+        public WindowController(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures)
         {
             this._inputHandler = _inputHandler;
             this._view = _view;
-            this._gameModel = _gameModel;
             this._uiTextures = _uiTextures;
+        }
+
+        public void ToGameWindow()
+        {
+            OnChangeToGameWindow.Invoke();
+        }
+        
+        public void ToMenuWindow()
+        {
+            OnChangeToMenuWindow.Invoke();
+        }
+
+        public void ToSettingsWindow()
+        {
+            OnChangeToSettingsWindow.Invoke();
+        }
+
+        public void ToLoadsWindow()
+        {
+            OnChangeToLoadsWindow.Invoke();
         }
 
         public virtual void Update()

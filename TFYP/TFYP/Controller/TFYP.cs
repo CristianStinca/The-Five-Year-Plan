@@ -49,8 +49,8 @@ namespace TFYP.Controller
 
             _uiTextures = new UIObjects();
             _view = new View.View(_uiTextures, _inputHandler);
-            _gameModel = GameModel.GetInstance();//initialized map with size here (Kristi)
-            _controller = new Controller(_inputHandler, _view, _uiTextures, _gameModel);
+            //_gameModel = GameModel.GetInstance();//initialized map with size here (Kristi)
+            _controller = new Controller(_inputHandler, _view, _uiTextures);
 
             base.Initialize();
         }

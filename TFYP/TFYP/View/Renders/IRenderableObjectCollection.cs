@@ -10,4 +10,27 @@ namespace TFYP.View.Renders
     {
         List<IRenderable> ToIRenderable();
     }
+
+    public enum EVPosition
+    {
+        Center,
+        Top,
+        Bottom
+    }
+
+    public enum EHPosition
+    {
+        Center,
+        Right,
+        Left
+    }
+
+    public enum ESize
+    {
+        AllScreen,
+        FullVerticaly,
+        FullHorizontaly,
+        FitContent,
+        Custom
+    }
 }

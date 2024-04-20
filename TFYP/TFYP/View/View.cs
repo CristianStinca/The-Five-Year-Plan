@@ -22,7 +22,6 @@ namespace TFYP.View
 
         public View(IUIElements UIElements, InputHandler inputHandler) 
         {
-            //this.CurrentWindow = new GameWindow(UIElements); // to be changed to MenuWindow.Instance;
             this._UIElements = UIElements;
             this._inputHandler = inputHandler;
         }
@@ -30,7 +29,7 @@ namespace TFYP.View
         /// <summary>
         /// Changes the current window to GameWindow.
         /// </summary>
-        public void changeToGameWindow()
+        public void ChangeToGameWindow()
         {
             this.CurrentWindow = new GameWindow(_UIElements, _inputHandler);
         }
@@ -38,7 +37,7 @@ namespace TFYP.View
         /// <summary>
         /// Changes the current window to MenuWindow.
         /// </summary>
-        public void changeToMenuWindow()
+        public void ChangeToMenuWindow()
         {
             this.CurrentWindow = new MenuWindow(_UIElements, _inputHandler);
         }
