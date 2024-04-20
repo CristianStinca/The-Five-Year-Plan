@@ -265,30 +265,6 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Menu/LoadGame_Button.png;Menu/LoadGame_Button.png
 
-#begin ../Resources/Images/Menu/LoadGame_Button.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Menu/LoadGame_Button.png;Menu/LoadGame_Button.png
-
-#begin ../Resources/Images/Menu/NewGame_Button.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Menu/NewGame_Button.png;Menu/NewGame_Button.png
-
 #begin ../Resources/Images/Menu/NewGame_Button.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -313,7 +289,7 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Menu/Settings_Button.png;Menu/Settings_Button.png
 
-#begin ../Resources/Images/Menu/Settings_Button.png
+#begin ../Resources/Images/Menu/Settings.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -323,7 +299,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:../Resources/Images/Menu/Settings_Button.png;Menu/Settings_Button.png
+/build:../Resources/Images/Menu/Settings.png;Menu/Settings.png
 
 #begin ../Resources/Images/Menu/Slot1_Button.png
 /importer:TextureImporter
@@ -360,18 +336,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Menu/Slot3_Button.png;Menu/Slot3_Button.png
-
-#begin ../Resources/Images/Menu/Title.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Menu/Title.png;Menu/Title.png
 
 #begin ../Resources/Images/Menu/Title.png
 /importer:TextureImporter
