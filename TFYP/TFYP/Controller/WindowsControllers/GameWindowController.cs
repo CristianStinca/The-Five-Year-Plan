@@ -22,6 +22,8 @@ namespace TFYP.Controller.WindowsControllers
 {
     internal class GameWindowController : WindowController
     {
+        private GameModel _gameModel;
+
         private Vector2 _focusCoord; 
         private Vector2 _initCoord; 
         private Rectangle _screenLimits;
@@ -31,9 +33,10 @@ namespace TFYP.Controller.WindowsControllers
         private EBuildable? _activeZone;
 
         public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
-            : base(inputHandler, _view, _uiTextures, _gameModel)
+            : base(inputHandler, _view, _uiTextures)
         {
-            _view.changeToGameWindow();
+            _view.ChangeToGameWindow();
+            this._gameModel = _gameModel;
 
             _activeZone = null;
             InitiateConverionDict();
@@ -49,6 +52,7 @@ namespace TFYP.Controller.WindowsControllers
 
             LinkViewEvents();
             _gw_view.TileButtonPressedInWindow += ClickInButton;
+            //_gw_view.UIMenuNewGameButtonPressed += ToGameWindow;
             _screenLimits = _gw_view.ScreenLimit;
             _focusCoord = new Vector2(_screenLimits.X, _screenLimits.Y);
             _initCoord = new Vector2(_screenLimits.X, _screenLimits.Y);

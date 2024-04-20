@@ -7,7 +7,16 @@ namespace TFYP.View.UIElements
 {
     internal class Sprite : ISprite
     {
-        public Vector2 Position { get; set; }
+        protected Vector2 _position;
+        public Vector2 Position
+        {
+            get { return _position; }
+            set
+            {
+                _position = value;
+                CollisionRectangle = new Rectangle(_position.ToPoint(), SourceRectangle.Size);
+            }
+        }
 
         public virtual Texture2D Texture { get; set; }
 

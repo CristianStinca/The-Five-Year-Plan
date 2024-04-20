@@ -25,45 +25,6 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/back2.jpg;back2.jpg
 
-
-#begin ../Resources/Images/Roads/road2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Roads/road2.png;Roads/road2.png
-
-
-
-#begin ../Resources/Images/Grasses/plain_grass.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Grasses/plain_grass.png;Grasses/plain_grass.png
-
-#begin ../Resources/Images/Roads/road1.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Roads/road1.png;Roads/road1.png
-
 #begin ../Resources/Images/Buttons/Build_Road_Button.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -256,6 +217,90 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Buttons/Switch_Perspective_Button.png;Buttons/Switch_Perspective_Button.png
 
+#begin ../Resources/Images/Grasses/plain_grass.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Grasses/plain_grass.png;Grasses/plain_grass.png
+
+#begin ../Resources/Images/Menu/LoadGame_Button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Menu/LoadGame_Button.png;Menu/LoadGame_Button.png
+
+#begin ../Resources/Images/Menu/NewGame_Button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Menu/NewGame_Button.png;Menu/NewGame_Button.png
+
+#begin ../Resources/Images/Menu/Settings_Button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Menu/Settings_Button.png;Menu/Settings_Button.png
+
+#begin ../Resources/Images/Menu/Title.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Menu/Title.png;Menu/Title.png
+
+#begin ../Resources/Images/Roads/road1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/road1.png;Roads/road1.png
+
+#begin ../Resources/Images/Roads/road2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/road2.png;Roads/road2.png
+
 #begin ../Resources/Images/Tiles/empty_tile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -291,18 +336,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Tiles/school.png;Tiles/school.png
-
-#begin ../Resources/Images/Tiles/stadium_tile.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Tiles/stadium_tile.png;Tiles/stadium_tile.png
 
 #begin ../Resources/Images/Tiles/stadium_tile.png
 /importer:TextureImporter
