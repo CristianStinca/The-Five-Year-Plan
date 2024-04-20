@@ -48,6 +48,11 @@ namespace TFYP.View
             this.CurrentWindow = new SavesMenuWindow(_UIElements, _inputHandler);
         }
 
+        public void ChangeToSettingsWindow()
+        {
+            this.CurrentWindow = new SettingsWindow(_UIElements, _inputHandler);
+        }
+
         public void Update()
         {
             this.CurrentWindow.Update();
