@@ -20,7 +20,7 @@ namespace TFYP.Model.Zones
         {
             return new ResidentialZone(
                 EBuildable.Residential, 
-                new Vector2(_x, _y),
+               new List<Vector2> { new Vector2(_x, _y) },
                 Constants.ResidentialEffectRadius,
                 10, // example value for `timeToBuild`, will change later 
                 Constants.ResidentialZoneCapacity,

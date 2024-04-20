@@ -21,7 +21,7 @@ namespace TFYP.Model.Zones
         {
             return new ServiceZone(
                 EBuildable.Service,
-                new Vector2(_x, _y),
+                new List<Vector2> { new Vector2(_x, _y) },
                 Constants.ServiceEffectRadius, 
                 10, 
                 Constants.ServiceZoneCapacity, 

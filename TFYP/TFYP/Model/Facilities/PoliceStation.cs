@@ -15,7 +15,7 @@ namespace TFYP.Model.Facilities
     {
         public int SafetyIncrease { get; private set; } = 10; // safety impact
 
-        public PoliceStation(Vector2 _coor, EBuildable _type) : base(_coor, _type)
+        public PoliceStation(List<Vector2> _coor, EBuildable _type) : base(_coor, _type)
         {
             Capacity = Constants.ServiceZoneCapacity;
             MaintenanceCost = Constants.PoliceStationMaintenanceFee;

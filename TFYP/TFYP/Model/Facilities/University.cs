@@ -1,11 +1,12 @@
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 using TFYP.Model.Common;
 
 namespace TFYP.Model.Facilities
 {
     public class University : Education
     {
-        public University(Vector2 _coor) : base(_coor, EBuildable.University)
+        public University(List<Vector2> _coor) : base(_coor, EBuildable.University)
         {
             Capacity = Constants.ServiceZoneCapacity;
             MaintenanceCost = Constants.UniversityMaintenanceFee;

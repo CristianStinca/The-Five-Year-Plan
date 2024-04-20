@@ -11,6 +11,7 @@ using TFYP.Model.Zones;
 using Microsoft.Xna.Framework;
 using TFYP.Model.Disasters;
 using Microsoft.Xna.Framework.Graphics;
+using System.Diagnostics;
 
 
 namespace TFYP.Model
@@ -53,9 +54,12 @@ namespace TFYP.Model
 
         private void InitializeMap()
         {
-            for (int i = 0; i < map.GetLength(0); i++)
-                for (int j = 0; j < map.GetLength(1); j++)
-                    map[i, j] = new Buildable(new Vector2(i, j), EBuildable.None);
+            for (int i = 0; i < map.GetLength(0); i++) {
+                for (int j = 0; j < map.GetLength(1); j++) {
+                    
+                    map[i, j] = new Buildable(new List<Vector2> { new Vector2(i, j)}, EBuildable.None);
+                }
+            }
         }
 
         private void InitializeMaxValues()
@@ -90,12 +94,17 @@ namespace TFYP.Model
         public void AddZone(int _x, int _y, EBuildable zone)
         {
             // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
-            
-            AddToMap(_x, _y, zone);
-            foreach (Road tmp in Roads)
+            try
             {
-                tmp.checkForZones();
-                tmp.connected.ForEach(x => { x.startBuilding(); x.Type = x.Type==EBuildable.Residential ? EBuildable.DoneResidential:x.Type; });
+                AddToMap(_x, _y, zone);
+                foreach (Road tmp in Roads)
+                {
+                    tmp.checkForZones();
+                    tmp.connected.ForEach(x => { x.startBuilding(); x.Type = x.Type == EBuildable.Residential ? EBuildable.DoneResidential : x.Type; });
+                }
+            }
+            catch (Exception ex) {
+                Debug.WriteLine(ex);    
             }
             //cityRegistry.AddZone(zone);
             //cityRegistry.UpdateBalance(-zone.GetOneTimeCost(), GetCurrentDate());
@@ -105,42 +114,87 @@ namespace TFYP.Model
             //left as x and y for now, can be changed to coordinate later
 
             //map[_x, _y] = new Buildable(new Vector2(_x, _y), zone.type);
+            List<Vector2> t = new List<Vector2>();
+            t.Add((new Vector2(_x, _y)));
+
 
             switch (zone)
             {
+                
                 case EBuildable.Stadium:
-                    map[_x, _y] = new Stadium(new Vector2(_x, _y), zone);
+
+                    Stadium stad;
+                    if (_x % 2 == 0)
+                    {
+                        if (!(map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None) && map[_x - 1, _y].Type.Equals(EBuildable.None) && map[_x, _y + 1].Type.Equals(EBuildable.None)))
+                        {
+                            throw new Exception("second tile was alradsy filled");
+                        }
+                        t.Add(new Vector2(_x + 1, _y));
+                        t.Add(new Vector2(_x - 1, _y));
+                        t.Add(new Vector2(_x, _y+1));
+                        stad = new Stadium(t, zone);
+                        map[_x, _y] = stad;
+                        map[_x + 1, _y] = stad;
+                        map[_x - 1, _y] = stad;
+                        map[_x, _y +1] = stad;
+                    }
+                    else
+                    {
+                        if (!(map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None) && map[_x - 1, _y].Type.Equals(EBuildable.None) && map[_x, _y - 1].Type.Equals(EBuildable.None)))
+                        {
+                            throw new Exception("second tile was alradsy filled");
+                        }
+                        t.Add(new Vector2(_x + 1, _y));
+                        t.Add(new Vector2(_x - 1, _y));
+                        t.Add(new Vector2(_x, _y - 1));
+                        stad = new Stadium(t, zone);
+                        map[_x, _y] = stad;
+                        map[_x + 1, _y] = stad;
+                        map[_x - 1, _y] = stad;
+                        map[_x, _y - 1] = stad;
+                    }
+
                     break;
 
                 case EBuildable.None:
-                    if (map[_x,_y].GetType()==typeof(Road))
-                    {
-                        Road r1 = Roads.Single(s => s.Coor==new Vector2(_x,_y));
-                        Roads.Remove(r1);
-                        r1.connected.ForEach(x => x.stopBuilding());
-                    }
-                    map[_x, _y] = new Buildable(new Vector2(_x, _y), zone);
+                    this.RemoveFromMap(_x,_y);
                     break;
                 case EBuildable.PoliceStation:
-                    map[_x, _y] = new PoliceStation(new Vector2(_x, _y), zone);
+                    map[_x, _y] = new PoliceStation(t, zone);
                     break;
                 case EBuildable.Residential:
-                    map[_x, _y] = new Zone(EBuildable.Residential, new Vector2(_x, _y), Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime,  Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost);
+                    map[_x, _y] = new Zone(EBuildable.Residential,t , Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime,  Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost);
                     break;
                 case EBuildable.Service:
-                    map[_x, _y] = new Zone(EBuildable.Service, new Vector2(_x, _y), Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost);
+                    map[_x, _y] = new Zone(EBuildable.Service,t , Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost);
                     break;
                 case EBuildable.Industrial:
-                    map[_x, _y] = new Zone(EBuildable.Industrial, new Vector2(_x, _y), Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost);
+                    map[_x, _y] = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost);
                     break;
                 case EBuildable.Road:
-                    Road r = new Road(new Vector2(_x, _y), EBuildable.Road);
+                    Road r = new Road(t, EBuildable.Road);
                     map[_x, _y] =r ;
                     Roads.Add(r);
+                    
+                    break;
+                case EBuildable.School:
+                        
+                        
+                        if (!(map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x,_y].Type.Equals(EBuildable.None))) {
+                            throw new Exception("second tile was alradsy filled");
+                        }
+                        t.Add(new Vector2(_x + 1, _y));
+                        School tmp = new School(t);
+                        map[_x, _y] = tmp;
+                        map[_x + 1, _y] = tmp;
+                     
                     break;
 
             }
         }
+
+
         public IEnumerable<Zone> GetAllZones()
         {
             for (int i = 0; i < _mapH; i++)
@@ -174,6 +228,14 @@ namespace TFYP.Model
             // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
         }
 
+        private void RemoveFromMap(int _x, int _y) {
+            var obj = map[_x, _y];
+            if (!map[_x, _y].Type.Equals(EBuildable.Road))
+            {
+                obj.Coor.ForEach(c => map[(int)c.X,(int)c.Y]=new Buildable(new List<Vector2> { c },EBuildable.None));      
+               
+            }
+        }
 
 
         //These 3 helper functions to calculate zone sattisfaction!!
@@ -262,12 +324,23 @@ namespace TFYP.Model
                 throw new ArgumentNullException("Both zones must be non-null to calculate distance.");
             }
 
-            Vector2 position1 = zone1.Coor;
-            Vector2 position2 = zone2.Coor;
+            List<Vector2> position1 = zone1.Coor;
+            List<Vector2> position2 = zone2.Coor;
+            int min = 1000000;
 
-            int distance = (int)(Math.Abs(position1.X - position2.X) + Math.Abs(position1.Y - position2.Y));
+            foreach (Vector2 pos1 in position1)
+            {
+                foreach (Vector2 pos2 in position2)
+                {
+                    int distance = (int)(Math.Abs(pos1.X - pos2.X) + Math.Abs(pos1.Y - pos2.Y));
+                    if (distance < min) {
+                        min = distance;
+                    }
+                }
+            }
+            
 
-            return distance;
+            return min;
         }
 
         

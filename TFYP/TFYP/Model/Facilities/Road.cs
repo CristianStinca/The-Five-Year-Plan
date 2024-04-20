@@ -17,7 +17,7 @@ namespace TFYP.Model.Facilities
         public bool IsConnected {  get; private set; }
 
         public List<Buildable> connected;
-        public Road(Vector2 _coor, EBuildable _type) : base(_coor, _type)
+        public Road(List<Vector2> _coor, EBuildable _type) : base(_coor, _type)
         {
             IsConnected = false;
             MaintenanceCost = Constants.RoadMaintenanceFee;
@@ -28,19 +28,19 @@ namespace TFYP.Model.Facilities
         public void checkForZones() {
             GameModel gm = GameModel.GetInstance();
             connected.Clear();
-            if ((int)this.Coor.X % 2 == 0)
+            if ((int)this.Coor[0].X % 2 == 0)
             {
-                connected.Add(gm.map[(int)this.Coor.X - 1, (int)Coor.Y-1]);
-                connected.Add(gm.map[(int)this.Coor.X - 1, (int)Coor.Y + 1]);
-                connected.Add(gm.map[(int)Coor.X + 1, (int)Coor.Y-1]);
-                connected.Add(gm.map[(int)Coor.X + 1, (int)Coor.Y + 1]);
+                connected.Add(gm.map[(int)this.Coor[0].X - 1, (int)Coor[0].Y-1]);
+                connected.Add(gm.map[(int)this.Coor[0].X + 1, (int)Coor[0].Y - 1]);
+                connected.Add(gm.map[(int)Coor[0].X-1 , (int)Coor[0].Y]);
+                connected.Add(gm.map[(int)Coor[0].X+1, (int)Coor[0].Y]);
             }
             else
             {
-                connected.Add(gm.map[(int)this.Coor.X - 1, (int)Coor.Y]);
-                connected.Add(gm.map[(int)this.Coor.X - 1, (int)Coor.Y + 1]);
-                connected.Add(gm.map[(int)Coor.X + 1, (int)Coor.Y]);
-                connected.Add(gm.map[(int)Coor.X + 1, (int)Coor.Y + 1]);
+                connected.Add(gm.map[(int)this.Coor[0].X - 1, (int)Coor[0].Y+1]);
+                connected.Add(gm.map[(int)this.Coor[0].X + 1, (int)Coor[0].Y + 1]);
+                connected.Add(gm.map[(int)Coor[0].X + 1, (int)Coor[0].Y]);
+                connected.Add(gm.map[(int)Coor[0].X - 1, (int)Coor[0].Y]);
             }
         }
         public bool isConnected(Buildable elem)

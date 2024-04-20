@@ -21,7 +21,7 @@ namespace TFYP.Model.Zones
         private List<Citizen> citizens = new List<Citizen>();
         //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
 
-        public Zone(EBuildable type, Vector2 coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
+        public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
             : base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
         {
             Health = 100;
@@ -82,9 +82,12 @@ namespace TFYP.Model.Zones
         public double GetZoneSatisfaction(GameModel gm)
         {
             // Calculate effects based on the distance to the nearest police station, stadium, and industrial area
-            double policeEffect = CalculateDistanceEffect(100, gm.GetDistanceToNearestPoliceStation(Coor), 0.5);
-            double stadiumEffect = CalculateDistanceEffect(80, gm.GetDistanceToNearestStadium(Coor), 0.3); 
-            double industrialEffect = -CalculateDistanceEffect(50, gm.GetDistanceToNearestIndustrialArea(Coor), 0.7); 
+            double mindistPolice=this.Coor.Min(s => gm.GetDistanceToNearestPoliceStation(s));
+            double policeEffect = CalculateDistanceEffect(100, mindistPolice, 0.5);
+            double mindistStad = this.Coor.Min(s => gm.GetDistanceToNearestStadium(s));
+            double stadiumEffect = CalculateDistanceEffect(80, mindistStad, 0.3);
+            var mindistInd = this.Coor.Min(s=>gm.GetDistanceToNearestIndustrialArea(s));
+            double industrialEffect = -CalculateDistanceEffect(50, mindistInd, 0.7);
 
             double freeWorkplaceEffect = (Capacity - citizens.Count) * 10; // more free capacity increases satisfaction
 
@@ -92,7 +95,7 @@ namespace TFYP.Model.Zones
                 ? citizens.Where(c => c.IsActive).Average(c => c.Satisfaction)
                 : 0;
 
-            double totalSatisfaction = Constants.baseZoneSatisfaction+
+            double totalSatisfaction = Constants.baseZoneSatisfaction +
                                        policeEffect +
                                        stadiumEffect +
                                        industrialEffect +
@@ -100,6 +103,7 @@ namespace TFYP.Model.Zones
                                        citizenSatisfaction;
 
             return Math.Clamp(totalSatisfaction, 0, 100);
+
         }
 
         public void AddCitizen(Citizen citizen, GameModel _gameModel)

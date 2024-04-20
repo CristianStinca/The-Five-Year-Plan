@@ -14,7 +14,7 @@ namespace TFYP.Model.Facilities
     public class Stadium : Facility
     {
         public int HappinessBoost { get; private set; } = 5; // this will be changed later
-        public Stadium(Vector2 _coor, EBuildable _type) : base(_coor, _type)
+        public Stadium(List<Vector2> _coor, EBuildable _type) : base(_coor, _type)
         {
             //Capacity = Constants.;
             MaintenanceCost = Constants.StadiumMaintenanceFee;

@@ -21,7 +21,7 @@ namespace TFYP.Model.Zones
         {
             return new IndustrialZone(
                 EBuildable.Industrial,
-                new Vector2(_x, _y),
+                new List<Vector2> { new Vector2(_x, _y) },
                 Constants.IndustrialEffectRadius,
                 10,
                 Constants.IndustrialZoneCapacity, 

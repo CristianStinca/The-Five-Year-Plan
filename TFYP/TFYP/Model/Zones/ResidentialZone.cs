@@ -13,7 +13,7 @@ namespace TFYP.Model.Zones
 {
     public class ResidentialZone : Zone
     {
-        public ResidentialZone(EBuildable type, Vector2 coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
+        public ResidentialZone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
         : base(type, coor, influenceRadius, timeToBuild, capacity, maintenanceCost, buildCost)
         {
 

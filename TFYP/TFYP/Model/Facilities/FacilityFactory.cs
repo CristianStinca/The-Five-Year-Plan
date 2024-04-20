@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace TFYP.Model.Facilities
 {
@@ -11,6 +12,6 @@ namespace TFYP.Model.Facilities
             this.gameModel = gameModel;
         }
 
-        public abstract Facility CreateFacility(Vector2 coordinate);
+        public abstract Facility CreateFacility(List<Vector2> coordinate);
     }
 }
