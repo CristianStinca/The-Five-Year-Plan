@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,6 +41,11 @@ namespace TFYP.View
         public void ChangeToMenuWindow()
         {
             this.CurrentWindow = new MenuWindow(_UIElements, _inputHandler);
+        }
+        
+        public void ChangeToSavesMenuWindow()
+        {
+            this.CurrentWindow = new SavesMenuWindow(_UIElements, _inputHandler);
         }
 
         public void Update()

@@ -32,22 +32,22 @@ namespace TFYP.Controller.WindowsControllers
             this._uiTextures = _uiTextures;
         }
 
-        public void ToGameWindow()
+        public static void ToGameWindow()
         {
             OnChangeToGameWindow.Invoke();
         }
         
-        public void ToMenuWindow()
+        public static void ToMenuWindow()
         {
             OnChangeToMenuWindow.Invoke();
         }
 
-        public void ToSettingsWindow()
+        public static void ToSettingsWindow()
         {
             OnChangeToSettingsWindow.Invoke();
         }
 
-        public void ToLoadsWindow()
+        public static void ToLoadsWindow()
         {
             OnChangeToLoadsWindow.Invoke();
         }
