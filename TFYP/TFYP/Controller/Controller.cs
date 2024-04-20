@@ -24,8 +24,8 @@ namespace TFYP.Controller
 
             WindowController.OnChangeToGameWindow += () => this.NextController = new GameWindowController(_inputHandler, _view, _uiTextures, GameModel.GetInstance());
             WindowController.OnChangeToMenuWindow += () => this.NextController = new MenuWindowController(_inputHandler, _view, _uiTextures);
-            WindowController.OnChangeToSettingsWindow += () => { } ;
-            WindowController.OnChangeToLoadsWindow += () => { } ;
+            WindowController.OnChangeToSettingsWindow += () => { };
+            WindowController.OnChangeToLoadsWindow += () => this.NextController = new SavesMenuWindowController(_inputHandler, _view, _uiTextures);
         }
 
         public void Update()
