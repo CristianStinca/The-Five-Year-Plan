@@ -16,10 +16,16 @@ namespace TFYP.Controller
 
         public WindowController CurrentController { get; set; }
 
-        public Controller(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
+        public Controller(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures)
         {
-            this.CurrentController = new GameWindowController(_inputHandler, _view, _uiTextures, _gameModel);
+            //this.CurrentController = new GameWindowController(_inputHandler, _view, _uiTextures, _gameModel);
+            this.CurrentController = new MenuWindowController(_inputHandler, _view, _uiTextures);
             this.NextController = this.CurrentController;
+
+            WindowController.OnChangeToGameWindow += () => this.NextController = new GameWindowController(_inputHandler, _view, _uiTextures, GameModel.GetInstance());
+            WindowController.OnChangeToMenuWindow += () => this.NextController = new MenuWindowController(_inputHandler, _view, _uiTextures);
+            WindowController.OnChangeToSettingsWindow += () => { } ;
+            WindowController.OnChangeToLoadsWindow += () => { } ;
         }
 
         public void Update()
