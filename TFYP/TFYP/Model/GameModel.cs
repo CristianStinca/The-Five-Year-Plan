@@ -100,7 +100,11 @@ namespace TFYP.Model
                 foreach (Road tmp in Roads)
                 {
                     tmp.checkForZones();
-                    tmp.connected.ForEach(x => { x.startBuilding(); x.Type = x.Type == EBuildable.Residential ? EBuildable.DoneResidential : x.Type; });
+                    if (map[_x, _y].Type == EBuildable.Industrial || map[_x, _y].Type == EBuildable.Service || map[_x, _y].Type == EBuildable.Residential)
+                    {
+                        //bool con = tmp.connection(map[_x, _y]);
+                        
+                    }
                 }
             }
             catch (Exception ex) {
@@ -173,9 +177,10 @@ namespace TFYP.Model
                     map[_x, _y] = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost);
                     break;
                 case EBuildable.Road:
-                    Road r = new Road(t, EBuildable.Road);
-                    map[_x, _y] =r ;
-                    Roads.Add(r);
+                        Road r = new Road(t, EBuildable.Road);
+                        map[_x, _y] = r;
+                        Roads.Add(r);
+                    
                     
                     break;
                 case EBuildable.School:

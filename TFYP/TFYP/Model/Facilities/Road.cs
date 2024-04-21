@@ -48,6 +48,38 @@ namespace TFYP.Model.Facilities
             return this.connected.Contains(elem);
         }
 
+        public bool connection(Buildable dest) {
+            HashSet<Buildable> visited = new HashSet<Buildable>();
+            Queue<Buildable> queue = new Queue<Buildable>();
+
+            visited.Add(this);
+            queue.Enqueue(this);
+
+            while (queue.Count > 0)
+            {
+                Buildable currentBuildable = queue.Dequeue();
+
+                
+                if (currentBuildable == dest)
+                {
+                    return true;
+                }
+
+                
+                foreach (Buildable neighbor in ((Road)currentBuildable).connected)
+                {
+                    if (!visited.Contains(neighbor))
+                    {
+                        visited.Add(neighbor);
+                        queue.Enqueue(neighbor);
+                    }
+                }
+            }
+
+            
+            return false;
+        }
+
 
     }
 }
