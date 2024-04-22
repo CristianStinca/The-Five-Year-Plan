@@ -425,6 +425,7 @@
 #begin ../Resources/JSON/names.json
 /importer:JsonContentImporter
 /processor:JsonContentProcessor
+/processorParam:ContentType=TFYP.Resources.JSON.NamesReader, TFYP
 /build:../Resources/JSON/names.json;names.json
 
 #begin back2.jpg
