@@ -77,7 +77,7 @@ namespace TFYP.Model.Common
             workPlace.AddCitizen(this, gm);
         }
 
-        public void IncAge()//სად გამოვიყენებთ?
+        public void IncAge()
         {
             Age++;
         }
@@ -109,8 +109,9 @@ namespace TFYP.Model.Common
                            ((livingPlaceSatisfaction + workPlaceSatisfaction) / 2 * Constants.ZoneSatisfactionWeight) +
                            cityFinancialHealthEffect;
 
-            // Clamp satisfaction between 0 and 1
-            Satisfaction = Math.Clamp(Satisfaction, 0f, 1f);
+
+            Satisfaction = Math.Clamp(Satisfaction * 100, 0f, 100f);
+
         }
 
         private float CalculateIndustrialProximityEffect(Zone livingPlace, GameModel gm)

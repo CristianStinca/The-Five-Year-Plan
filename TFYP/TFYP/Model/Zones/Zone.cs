@@ -28,8 +28,14 @@ namespace TFYP.Model.Zones
         // Tracking the citizens within the zone
         private bool canStartBuilding;
         private List<Citizen> citizens = new List<Citizen>();
+
         //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
-        public ZoneLevel Level { get; private set; } 
+        public ZoneLevel Level { get; private set; }
+
+        public int NCitizensInZone
+        {
+            get { return citizens.Count(c => c.IsActive); } 
+        }
 
         public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
             : base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
@@ -41,13 +47,14 @@ namespace TFYP.Model.Zones
 
         //TO DO: Need to implement method for finding paths and set Connected for every zone
 
-
+        //isactive ლოგიკა გვაქ და ეს აღარ გვინდა
+        /*
         public void RemoveCitizen(Citizen citizen, GameModel _gameModel)
         {
             citizens.Remove(citizen);
             //Statistics.Population -= 1;
             //_gameModel.CityStatistics.SetCitySatisfaction(_gameModel);
-        }
+        }*/
 
 
 
@@ -100,7 +107,7 @@ namespace TFYP.Model.Zones
             var mindistInd = this.Coor.Min(s=>gm.GetDistanceToNearestIndustrialArea(s));
             double industrialEffect = -CalculateDistanceEffect(50, mindistInd, 0.7);
 
-            double freeWorkplaceEffect = (Capacity - citizens.Count) * 10; // more free capacity increases satisfaction
+            double freeWorkplaceEffect = (Capacity - NCitizensInZone) * 10; // more free capacity increases satisfaction
 
             double citizenSatisfaction = citizens.Any(c => c.IsActive)
                 ? citizens.Where(c => c.IsActive).Average(c => c.Satisfaction)
@@ -113,10 +120,13 @@ namespace TFYP.Model.Zones
                                        freeWorkplaceEffect +
                                        citizenSatisfaction;
 
+           
             return Math.Clamp(totalSatisfaction, 0, 100);
 
         }
 
+
+        //ყველაფერს თუ იზაქთივის ლოგიკაზე გადავაწყობთ ამას აღარ გამოვიყენებთ
         public void AddCitizen(Citizen citizen, GameModel _gameModel)
         {
             if (citizen == null)

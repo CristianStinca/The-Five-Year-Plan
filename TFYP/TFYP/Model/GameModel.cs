@@ -369,5 +369,20 @@ namespace TFYP.Model
 
         }
 
+        public bool AreNewCitizensEligible()
+        {
+            // Check general satisfaction level
+            bool highSatisfaction = Statistics.Satisfaction >= Constants.SatisfactionUpperLimit;
+
+            // Check for free workplaces near available residential zones
+            bool freeWorkplacesAvailable = CityRegistry.GetFreeWorkplacesNearResidentialZones(this);
+
+            // Check for absence of industrial buildings near these zones
+            bool noNearbyIndustries = CityRegistry.NoIndustriesNearResidentialZones(this);
+
+            return highSatisfaction && freeWorkplacesAvailable && noNearbyIndustries;
+        }
+
+
     }
 }

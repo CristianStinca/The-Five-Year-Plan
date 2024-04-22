@@ -60,8 +60,10 @@ namespace TFYP.Model.Common
 
         public double ComputeRevenue(GameModel gm)
         {
-            return gm.Citizens.Sum(citizen => citizen.TaxAmount(this));
+            // Sum the TaxAmount for only active citizens
+            return gm.Citizens.Where(citizen => citizen.IsActive).Sum(citizen => citizen.TaxAmount(this));
         }
+
 
         // spend not necessary as exta method, just --> MaintenanceFeeForEverything
         //და მოკლედ ყოველ ჯერზე როცა ახალ ფესილიტის დაამატებ AddToMaintenanceFee უნდა გამოიძახო

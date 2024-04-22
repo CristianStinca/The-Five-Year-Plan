@@ -60,11 +60,13 @@ namespace TFYP.Model.City
             {
                 if (zone is ResidentialZone residentialZone) // Checking if the zone is a ResidentialZone
                 {
-                    allCitizens.AddRange(residentialZone.GetCitizens());
+                    // Filter to include only active citizens
+                    allCitizens.AddRange(residentialZone.GetCitizens().Where(citizen => citizen.IsActive));
                 }
             }
             return allCitizens;
         }
+
 
         // budget
         public void SetBalance(double amount) // adds value (if negative, subtracts) from the balance
@@ -75,6 +77,48 @@ namespace TFYP.Model.City
         public void ChangeTaxRate(double newRate)
         {
             Statistics.Budget.SetCurrentTaxRate(newRate);
+        }
+
+
+
+
+        public bool GetFreeWorkplacesNearResidentialZones(GameModel gm)
+        {
+            /*
+            const int proximityThreshold = 10; 
+
+            foreach (var residential in Zones.OfType<ResidentialZone>())
+            {
+                foreach (var residential in Zones.OfType<ResidentialZone>().Where(f => f.HasFreeCapacity))
+                {
+                    if (gm.CalculateDistanceBetweenZones(residential, facility) < proximityThreshold)
+                    {
+                        return true;
+                    }
+                }
+            }*/
+            return false;
+            
+        }
+
+        // Method to check for absence of industrial buildings near residential zones
+        public bool NoIndustriesNearResidentialZones(GameModel gm)
+        {
+            /*
+            const int proximityThreshold = 10; // Define what "near" means in terms of distance
+
+            foreach (var residential in Zones.OfType<ResidentialZone>())
+            {
+                foreach (var industry in Facilities.OfType<IndustrialZone>())
+                {
+                    if (CalculateDistanceBetweenZones(residential, industry) < proximityThreshold)
+                    {
+                        return false; // Found an industry near a residential zone
+                    }
+                }
+            }*/
+            return true; // No industries near any residential zones
+            
         }
 
 
