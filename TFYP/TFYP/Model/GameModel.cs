@@ -352,5 +352,22 @@ namespace TFYP.Model
         {
             return map[y, x];
         }
+
+        public void UpgradeZone(int x, int y)
+        {
+            double upgradeCost = 0;
+            // Find the zone at the given coordinates
+            Zone zone = map[x, y] as Zone;
+            if (zone != null)
+            {
+
+                upgradeCost = zone.UpgradeZone();
+                CityRegistry.SetBalance(-upgradeCost);
+
+
+            }
+
+        }
+
     }
 }

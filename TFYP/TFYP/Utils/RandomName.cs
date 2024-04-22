@@ -45,8 +45,12 @@ namespace TFYP.Utils
             NameList l = new NameList();
 
             JsonSerializer serializer = new JsonSerializer();
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Resources", "names.json");
 
-            using (StreamReader reader = new StreamReader("names.json"))
+            filePath = Path.GetFullPath(filePath);
+
+
+            using (StreamReader reader = new StreamReader(filePath))
             using (JsonReader jreader = new JsonTextReader(reader))
             {
                 l = serializer.Deserialize<NameList>(jreader);
