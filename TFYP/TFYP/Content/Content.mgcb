@@ -10,6 +10,7 @@
 
 #-------------------------------- References --------------------------------#
 
+/reference:C:\Users\Christ\.nuget\packages\monogame.extended.content.pipeline\3.8.0\tools\MonoGame.Extended.Content.Pipeline.dll
 
 #---------------------------------- Content ---------------------------------#
 
@@ -420,6 +421,12 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Tiles/stadium_tile.png;Tiles/stadium_tile.png
+
+#begin ../Resources/JSON/names.json
+/importer:JsonContentImporter
+/processor:JsonContentProcessor
+/processorParam:ContentType=TFYP.Resources.JSON.NamesReader, TFYP
+/build:../Resources/JSON/names.json;names.json
 
 #begin back2.jpg
 /importer:TextureImporter
