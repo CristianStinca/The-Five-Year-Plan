@@ -42,15 +42,17 @@ namespace TFYP.Utils
         public RandomName(Random rand)
         {
             this.rand = rand;
-            NameList l = new NameList();
+            //NameList l = new NameList();
 
-            JsonSerializer serializer = new JsonSerializer();
+            //JsonSerializer serializer = new JsonSerializer();
 
-            using (StreamReader reader = new StreamReader("names.json"))
-            using (JsonReader jreader = new JsonTextReader(reader))
-            {
-                l = serializer.Deserialize<NameList>(jreader);
-            }
+            //using (StreamReader reader = new StreamReader("names.json"))
+            //using (JsonReader jreader = new JsonTextReader(reader))
+            //{
+            //    l = serializer.Deserialize<NameList>(jreader);
+            //}
+            string s = typeof(Program).Assembly.FullName;
+            NameList l = Globals.Content.Load<NameList>("names");
 
             Male = new List<string>(l.boys);
             Female = new List<string>(l.girls);
