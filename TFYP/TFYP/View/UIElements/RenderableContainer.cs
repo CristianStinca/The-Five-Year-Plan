@@ -15,7 +15,6 @@ namespace TFYP.View.UIElements
 {
     internal class RenderableContainer : BaseRenderableObjectCollection
     {
-        //public Sprite background;
         private Color? _backgroundColor;
         private List<Tuple<EVPosition, EHPosition, IGameObject>> _elementsDetails = null;
         private ESize _size;
@@ -131,7 +130,6 @@ namespace TFYP.View.UIElements
                     this.SourceRectangle = new Rectangle(Point.Zero, Point.Zero); break;
             }
 
-            //this._collisionRectangle.Size = SourceRectangle.Size;
             _elementsDetails = new();
             _backgroundColor = null;
         }
@@ -140,9 +138,6 @@ namespace TFYP.View.UIElements
         {
             _backgroundColor = backgroundColor;
             _size = size;
-
-            //background = CreateBackground();
-            //_elements.Add(background);
         }
 
         public void AddElement(EVPosition vertical_allignment, EHPosition horizontal_allignment, IGameObject element)

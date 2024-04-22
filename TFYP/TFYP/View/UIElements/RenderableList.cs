@@ -34,13 +34,6 @@ namespace TFYP.View.UIElements
                 {
                     this.AddElement(obj);
                 }
-
-                //foreach (IGameObject element in _elements)
-                //{
-                //    element.Position = new Vector2(Position.X, Position.Y + _length);
-                //    element.CollisionRectangle = new Rectangle(element.Position.ToPoint(), new Point(element.SourceRectangle.Width, element.SourceRectangle.Height));
-                //    _length += element.SourceRectangle.Height + _space;
-                //}
             }
         }
         public int Length { get { return _length; } }
@@ -79,26 +72,12 @@ namespace TFYP.View.UIElements
             }
 
             element.Position = new Vector2(x, Position.Y + _length);
-            //element.CollisionRectangle = new Rectangle(element.Position.ToPoint(), new Point (element.CollisionRectangle.Width, element.CollisionRectangle.Height));
+
             _elements.Add(element);
             _length += element.CollisionRectangle.Height;
             this.SourceRectangle = new Rectangle(0, 0, maxWidth, _length);
             this.CollisionRectangle = new Rectangle(Position.ToPoint(), new Point(SourceRectangle.Width, SourceRectangle.Height));
             _length += _space;
         }
-
-        //public void AddElementAt(int index, IRenderable renderable)
-        //{
-        //    List<IGameObject> rest = _elements.GetRange(index, _elements.Count - 1 - index);
-        //    rest.Add(renderable);
-        //    IGameObject lastElement = _elements.ElementAt(index - 1);
-        //    _length = (int)Math.Round(lastElement.Position.Y) + lastElement.CollisionRectangle.Height;
-        //    _elements.RemoveRange(index, _elements.Count - 1 - index);
-
-        //    foreach (IGameObject element in rest)
-        //    {
-        //        AddElement(element);
-        //    }
-        //}
     }
 }

@@ -67,11 +67,6 @@ namespace TFYP.Controller.WindowsControllers
         /// <param name="btn">The name of the mouse button (L/R)</param>
         public void ClickInButton(int x, int y, string btn)
         {
-
-            //Zone zone1 = new Zone(EBuildable.Stadium);
-            //Zone zone2 = new Zone(EBuildable.None);
-
-            //Debug.WriteLine($"Clicked on X: {x}, Y: {y}");
             switch (btn)
             {
                 case "L":
@@ -85,7 +80,7 @@ namespace TFYP.Controller.WindowsControllers
 
                 case "R":
                     Debug.WriteLine($"X: {x}, Y: {y}");
-                    //Debug.WriteLine($"Type: {_gameModel.GetMapElementAt(x, y).Type}");
+
                     RandomName rn = new(new Random());
                     _gw_view.PrintInfo(Tuple.Create("Zone", EPrintInfo.Title),
                                        Tuple.Create("Capacity", EPrintInfo.Normal),
