@@ -10,6 +10,14 @@ using Microsoft.Xna.Framework;
 
 namespace TFYP.Model.Zones
 {
+    public enum ZoneLevel
+    {
+        One,
+        Two,
+        Three
+    }
+
+
     [Serializable]
     public class Zone : Buildable
     {
@@ -20,12 +28,14 @@ namespace TFYP.Model.Zones
         private bool canStartBuilding;
         private List<Citizen> citizens = new List<Citizen>();
         //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
+        public ZoneLevel Level { get; private set; } 
 
         public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
             : base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
         {
             Health = 100;
             canStartBuilding = false;
+            Level = ZoneLevel.One;
         }
 
         //TO DO: Need to implement method for finding paths and set Connected for every zone
@@ -126,6 +136,40 @@ namespace TFYP.Model.Zones
 
         }
 
+        public double UpgradeZone()
+        {
+            double upgradeCost = 0;
+            if (Level == ZoneLevel.Three)
+            {
+                throw new InvalidOperationException("Maximum level reached. No further upgrades possible.");
+            }
+            else if(Level == ZoneLevel.One)
+            {
+                Level = ZoneLevel.Two;
+                // Increase by 20%
+                MaintenanceCost = (int)Math.Round(MaintenanceCost * 1.20);
+                Capacity = (int)Math.Round(Capacity * 1.20);
+                if (Type == EBuildable.Industrial)
+                {
+                    InfluenceRadius = (int)Math.Round(InfluenceRadius * 1.20);
+                }
+                upgradeCost = ConstructionCost * 1.20;
+            }
+            else
+            {
+                Level = ZoneLevel.Three;
+                // Increase by 40%
+                MaintenanceCost = (int)Math.Round(MaintenanceCost * 1.40);
+                Capacity = (int)Math.Round(Capacity * 1.40);
+                if (Type == EBuildable.Industrial)
+                {
+                    InfluenceRadius = (int)Math.Round(InfluenceRadius * 1.40);
+                }
+                upgradeCost = ConstructionCost * 1.40;
+            }
+
+            return upgradeCost;
+        }
 
 
     }
