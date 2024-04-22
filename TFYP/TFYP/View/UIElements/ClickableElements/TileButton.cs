@@ -76,7 +76,7 @@ namespace TFYP.View.UIElements.ClickableElements
         {
             MouseState mouse_state = Mouse.GetState();
 
-            if (IsMouseOverButton(mouse_state) && _inputHandler.LeftButton == Utils.KeyState.Clicked)
+            if (IsMouseOverButton(mouse_state) && (_inputHandler.LeftButton == Utils.KeyState.Clicked || _inputHandler.LeftButton == Utils.KeyState.Held))
             {
                 TileButtonPressed.Invoke(this._col, this._row, mouse_state.Position.X, mouse_state.Position.Y, "L");
             }

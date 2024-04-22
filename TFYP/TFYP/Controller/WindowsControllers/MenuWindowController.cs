@@ -15,7 +15,6 @@ namespace TFYP.Controller.WindowsControllers
     internal class MenuWindowController : WindowController
     {
 
-
         MenuWindow _window;
 
         public MenuWindowController(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures)
@@ -29,7 +28,7 @@ namespace TFYP.Controller.WindowsControllers
             }
             else
             {
-                throw new TypeLoadException("GameWindowController (set_map)");
+                throw new TypeLoadException("MenuWindowController (converting Window to MenuWindow)");
             }
 
             _window.UIMenuNewGameButtonPressed += ToGameWindow;

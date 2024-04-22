@@ -34,11 +34,13 @@ namespace TFYP.View.Windows
         private Vector2 initPos;
 
         private Rectangle screenRect;
+        private Rectangle gameScreenRect;
         public Rectangle ScreenLimit;
         private List<Rectangle> _UIElementsContainers;
         //private List<Button> _UpdateingUIElements;
 
         List<IRenderable> mapRend = new List<IRenderable>();
+        List<IRenderable> screenWindow = new List<IRenderable>();
 
         private bool is2D = false;
 
@@ -89,6 +91,7 @@ namespace TFYP.View.Windows
             initPos = new Vector2(-TILE_W / 2, -TILE_H / 2);
             map = null;
             screenRect = new Rectangle(0, 0, Globals.Graphics.PreferredBackBufferWidth, Globals.Graphics.PreferredBackBufferHeight);
+            gameScreenRect = new Rectangle(0, 0, Globals.Graphics.PreferredBackBufferWidth, Globals.Graphics.PreferredBackBufferHeight);
             _UIElementsContainers = new List<Rectangle>();
             //_UpdateingUIElements = new List<Button>();
             ScreenLimit = new Rectangle(0, 0,
@@ -173,6 +176,8 @@ namespace TFYP.View.Windows
             ScreenLimit.X = BackgroundButtonTab.Texture.Width;
             ScreenLimit.Width += BackgroundButtonTab.Texture.Width;
 
+            gameScreenRect.X = BackgroundButtonTab.Texture.Width;
+            gameScreenRect.Width -= BackgroundButtonTab.Texture.Width;
 
             RenderableList buttonsBar = new (30, 20, 30);
 
@@ -250,6 +255,52 @@ namespace TFYP.View.Windows
             ElementsInWindow.Add(perspectiveButton.ToIRenderable());
         }
 
+        public enum EPrintInfo
+        {
+            Title,
+            Normal,
+            Sublist
+        }
+
+        public void PrintInfo(params Tuple<string, EPrintInfo>[] args)
+        {
+            RenderableContainer screenCont = new(gameScreenRect.X, gameScreenRect.Y, gameScreenRect.Size.ToVector2());
+            screenCont.Margin = 20f;
+            RenderableContainer cont = new(0, 0, ESize.FitContent, Color.LightGray);
+            cont.Padding = 20f;
+            RenderableList list = new(10, 0, 0);
+
+            foreach (Tuple<string, EPrintInfo> item in args)
+            {
+                string text = item.Item1;
+                EPrintInfo info = item.Item2;
+
+                switch (info)
+                {
+                    case EPrintInfo.Title:
+                        list.AddElement(new Text(Globals.Content.Load<SpriteFont>("UITitleText"), text, Vector2.Zero, Color.Black));
+                        break;
+                    case EPrintInfo.Normal:
+                        list.AddElement(new Text(Globals.Content.Load<SpriteFont>("UISubtitleText"), text, Vector2.Zero, Color.Black));
+                        break;
+                    case EPrintInfo.Sublist:
+                        list.AddElement(new Text(Globals.Content.Load<SpriteFont>("UINormalText"), text, Vector2.Zero, Color.Black));
+                        break;
+                }
+            }
+
+            cont.AddElement(EVPosition.Bottom, EHPosition.Left, list);
+            screenCont.AddElement(EVPosition.Bottom, EHPosition.Left, cont);
+
+            screenWindow.Clear();
+            screenWindow.AddRange(screenCont.ToIRenderable());
+        }
+
+        public void DeleteInfo()
+        {
+            screenWindow.Clear();
+        }
+
         public void ChangePerspective()
         {
             if (is2D)
@@ -288,6 +339,8 @@ namespace TFYP.View.Windows
             {
                 renderer.DrawState(this.mapRend);
             }
+
+            renderer.DrawState(screenWindow);
 
             base.Draw(renderer);
         }

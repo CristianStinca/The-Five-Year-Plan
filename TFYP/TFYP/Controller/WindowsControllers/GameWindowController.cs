@@ -17,6 +17,7 @@ using TFYP.View;
 using TFYP.View.Renders;
 using TFYP.View.UIElements;
 using TFYP.View.Windows;
+using static TFYP.View.Windows.GameWindow;
 
 namespace TFYP.Controller.WindowsControllers
 {
@@ -66,23 +67,28 @@ namespace TFYP.Controller.WindowsControllers
         /// <param name="btn">The name of the mouse button (L/R)</param>
         public void ClickInButton(int x, int y, string btn)
         {
-
-            //Zone zone1 = new Zone(EBuildable.Stadium);
-            //Zone zone2 = new Zone(EBuildable.None);
-
-            //Debug.WriteLine($"Clicked on X: {x}, Y: {y}");
             switch (btn)
             {
                 case "L":
-                    //Debug.WriteLine($"X: {Mouse.GetState().X}, Y: {Mouse.GetState().Y}.");
+                    _gw_view.DeleteInfo();
+
                     if (_activeZone != null)
                     {
-                        _gameModel.AddZone(y, x, (EBuildable)_activeZone);
+                        _gameModel.AddZone(x, y, (EBuildable)_activeZone);
                     }
                     break;
 
                 case "R":
                     Debug.WriteLine($"X: {x}, Y: {y}");
+
+                    RandomName rn = new(new Random());
+                    _gw_view.PrintInfo(Tuple.Create("Zone", EPrintInfo.Title),
+                                       Tuple.Create("Capacity", EPrintInfo.Normal),
+                                       Tuple.Create("Residents", EPrintInfo.Normal),
+                                       Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
+                                       Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
+                                       Tuple.Create(rn.Generate(), EPrintInfo.Sublist)
+                    );
                     _activeZone = null;
                     break;
             }

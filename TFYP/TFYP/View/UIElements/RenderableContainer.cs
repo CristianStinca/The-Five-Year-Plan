@@ -8,107 +8,109 @@ using TFYP.View.Renders;
 using TFYP.Utils;
 using System.Diagnostics;
 using Microsoft.Xna.Framework.Graphics;
+using Newtonsoft.Json.Linq;
+using System.Security.Cryptography;
 
 namespace TFYP.View.UIElements
 {
     internal class RenderableContainer : BaseRenderableObjectCollection
     {
-        private Sprite background;
-        private Color _backgroundColor;
+        private Color? _backgroundColor;
         private List<Tuple<EVPosition, EHPosition, IGameObject>> _elementsDetails = null;
         private ESize _size;
-        private Vector2 _vectorSize;
 
         private Rectangle _sourceRectangle;
+        private Rectangle _collisionRectangle;
+
+        private float padding = 0; 
+        public float Padding
+        {
+            get => padding;
+            set
+            {
+                padding = value;
+
+                if (_size == ESize.AllScreen || _size == ESize.Custom)
+                    _sourceRectangle = new Rectangle(0, 0, _sourceRectangle.Width - ((int)padding * 2), _sourceRectangle.Height - ((int)padding * 2));
+                
+                _collisionRectangle = new Rectangle((int)_position.X, (int)_position.Y, _sourceRectangle.Width + (int)(margin + padding) * 2, _sourceRectangle.Height + (int)(margin + padding) * 2);
+                
+                UpdateList();
+            }
+        }
+
+        private float margin = 0;
+        public float Margin
+        {
+            get => margin;
+            set
+            {
+                margin = value;
+
+                if (_size == ESize.AllScreen || _size == ESize.Custom)
+                    _sourceRectangle = new Rectangle(0, 0, _sourceRectangle.Width - ((int)margin * 2), _sourceRectangle.Height - ((int)margin * 2));
+
+                _collisionRectangle = new Rectangle((int)_position.X, (int)_position.Y, _sourceRectangle.Width + (int)(margin + padding) * 2, _sourceRectangle.Height + (int)(margin + padding) * 2);
+
+                UpdateList();
+            }
+        }
+
+        public override Rectangle CollisionRectangle
+        {
+            get => _collisionRectangle;
+        }
 
         public override Rectangle SourceRectangle
         {
-            get { return _sourceRectangle; }
+            get => _sourceRectangle;
             set
             {
-                if (_elementsDetails == null)
-                {
-                    _sourceRectangle = value;
-                    return;
-                }
-
-                List<Tuple<EVPosition, EHPosition, IGameObject>> temp_list = new List<Tuple<EVPosition, EHPosition, IGameObject>>(_elementsDetails);
-
-                this._elements.Clear();
-                background = new Sprite(CreateTexture(value, _backgroundColor), this.Position);
-                _elements.Add(background);
-
-                this._elementsDetails.Clear();
-
                 _sourceRectangle = value;
-                foreach (Tuple<EVPosition, EHPosition, IGameObject> obj in temp_list)
-                {
-                    this.AddElement(obj.Item1, obj.Item2, obj.Item3);
-                }
+                _collisionRectangle = new Rectangle((int)_position.X, (int)_position.Y, _sourceRectangle.Width + (int)(margin + padding) * 2, _sourceRectangle.Height + (int)(margin + padding) * 2);
             }
         }
 
         public override Vector2 Position
         {
-            get { return _position; }
+            get => _position;
             set
             {
-                List<Tuple<EVPosition, EHPosition, IGameObject>> temp_list = new List<Tuple<EVPosition, EHPosition, IGameObject>>(_elementsDetails);
-
-                this._elements.Clear();
-
-                if (background != null)
-                {
-                    background.Position = value;
-                    _elements.Add(background);
-                }
-
-                this._elementsDetails.Clear();
-
                 _position = value;
-                foreach (Tuple<EVPosition, EHPosition, IGameObject> obj in temp_list)
-                {
-                    this.AddElement(obj.Item1, obj.Item2, obj.Item3);
-                }
+                _collisionRectangle = new Rectangle((int)_position.X, (int)_position.Y, _sourceRectangle.Width + (int)(margin + padding) * 2, _sourceRectangle.Height + (int)(margin + padding) * 2);
+                UpdateList();
             }
         }
 
-        //public enum EVPosition
-        //{
-        //    Center,
-        //    Top, 
-        //    Bottom
-        //}
+        private void UpdateList()
+        {
+            if (_elementsDetails == null)
+                return;
 
-        //public enum EHPosition
-        //{
-        //    Center,
-        //    Right,
-        //    Left
-        //}
+            List<Tuple<EVPosition, EHPosition, IGameObject>> temp_list = new List<Tuple<EVPosition, EHPosition, IGameObject>>(_elementsDetails);
 
-        //public enum ESize
-        //{
-        //    AllScreen,
-        //    FullVerticaly,
-        //    FullHorizontaly,
-        //    FitContent,
-        //    Custom
-        //}
+            this._elements.Clear();
+            this._elementsDetails.Clear();
+
+            foreach (Tuple<EVPosition, EHPosition, IGameObject> obj in temp_list)
+            {
+                this.AddElement(obj.Item1, obj.Item2, obj.Item3);
+            }
+        }
 
         public RenderableContainer(Vector2 position, Vector2 size) : base(position)
         {
-            this.SourceRectangle = new Rectangle(Point.Zero, size.ToPoint());
-            this.CollisionRectangle = new Rectangle(Position.ToPoint(), SourceRectangle.Size);
+            this._sourceRectangle = new Rectangle(Point.Zero, size.ToPoint());
+            this._collisionRectangle = new Rectangle(_position.ToPoint(), size.ToPoint());
             _elementsDetails = new();
             _size = ESize.Custom;
-        }
 
+            _backgroundColor = null;
+        }
         public RenderableContainer(int x, int y, Vector2 size) : this(new Vector2(x, y), size) { }
         public RenderableContainer(int x, int y, Vector2 size, Color backgroundColor) : this(new Vector2(x, y), size)
         {
-            background = new Sprite(CreateTexture(SourceRectangle, backgroundColor), this.Position);
-            _elements.Add(background);
+            _backgroundColor = backgroundColor;
         }
 
         public RenderableContainer(Vector2 position, ESize size) : base(position)
@@ -128,38 +130,51 @@ namespace TFYP.View.UIElements
                     this.SourceRectangle = new Rectangle(Point.Zero, Point.Zero); break;
             }
 
-            this.CollisionRectangle = new Rectangle(Position.ToPoint(), SourceRectangle.Size);
             _elementsDetails = new();
+            _backgroundColor = null;
         }
-
         public RenderableContainer(int x, int y, ESize size) : this(new Vector2(x, y), size) { }
-
         public RenderableContainer(int x, int y, ESize size, Color backgroundColor) : this(new Vector2(x, y), size)
         {
             _backgroundColor = backgroundColor;
             _size = size;
-
-            if (_size != ESize.FitContent)
-            {
-                background = new Sprite(CreateTexture(SourceRectangle, backgroundColor), this.Position);
-                _elements.Add(background);
-            }
         }
 
         public void AddElement(EVPosition vertical_allignment, EHPosition horizontal_allignment, IGameObject element)
         {
+            if (_size != ESize.AllScreen || _size != ESize.Custom)
+            {
+                int width = Math.Max(element.CollisionRectangle.Width, this.SourceRectangle.Width);
+                int height = Math.Max(element.CollisionRectangle.Height, this.SourceRectangle.Height);
+
+                switch (_size)
+                {
+                    case ESize.FitContent:
+                        this.SourceRectangle = new Rectangle(Point.Zero, new Point((int)width, (int)height));
+                        break;
+
+                    case ESize.FullVerticaly:
+                        this.SourceRectangle = new Rectangle(Point.Zero, new Point((int)width, SourceRectangle.Height));
+                        break;
+
+                    case ESize.FullHorizontaly:
+                        this.SourceRectangle = new Rectangle(Point.Zero, new Point(SourceRectangle.Width, (int)height));
+                        break;
+                }
+            }
+
             float x = 0f, y = 0f;
 
             switch (vertical_allignment)
             {
                 case EVPosition.Center:
-                    y = (this.SourceRectangle.Height - element.SourceRectangle.Height) / 2.0f; break;
+                    y = ((this.CollisionRectangle.Height) - element.CollisionRectangle.Height) / 2.0f; break;
 
                 case EVPosition.Top:
-                    y = 0; break;
+                    y = padding + margin; break;
 
                 case EVPosition.Bottom:
-                    y = this.SourceRectangle.Height - element.SourceRectangle.Height; break;
+                    y = (this.CollisionRectangle.Height - padding - margin) - element.CollisionRectangle.Height; break;
             }
 
             y += this.Position.Y;
@@ -167,72 +182,31 @@ namespace TFYP.View.UIElements
             switch (horizontal_allignment)
             {
                 case EHPosition.Center:
-                    x = (this.SourceRectangle.Width - element.SourceRectangle.Width) / 2.0f; break;
+                    x = ((this.CollisionRectangle.Width) - element.CollisionRectangle.Width) / 2.0f; break;
 
                 case EHPosition.Left:
-                    x = 0; break;
+                    x = padding + margin; break;
 
                 case EHPosition.Right:
-                    x = this.SourceRectangle.Width - element.SourceRectangle.Width; break;
+                    x = (this.CollisionRectangle.Width - padding - margin) - element.CollisionRectangle.Width; break;
             }
 
             x += this.Position.X;
 
             element.Position = new Vector2(x, y);
-            element.CollisionRectangle = new Rectangle(element.Position.ToPoint(), SourceRectangle.Size);
 
             _elements.Add(element);
             _elementsDetails.Add(new Tuple<EVPosition, EHPosition, IGameObject>(vertical_allignment, horizontal_allignment, element));
-
-            if (_size != ESize.AllScreen || _size != ESize.Custom)
-            {
-                int? width = null, height = null;
-                if (element.SourceRectangle.Width > this.SourceRectangle.Width)
-                {
-                    width = element.SourceRectangle.Width;
-                }
-
-                if (element.SourceRectangle.Height > this.SourceRectangle.Height)
-                {
-                    height = element.SourceRectangle.Height;
-                }
-
-                switch (_size)
-                {
-                    case ESize.FitContent:
-                        {
-                            if (width != null || height != null)
-                            {
-                                this.SourceRectangle = new Rectangle(0, 0, (int)width, (int)height);
-                            }
-                            break;
-                        }
-
-                    case ESize.FullVerticaly:
-                        {
-                            if (width != null)
-                            {
-                                this.SourceRectangle = new Rectangle(0, 0, (int)width, SourceRectangle.Height);
-                            }
-                            break;
-                        }
-
-                    case ESize.FullHorizontaly:
-                        {
-                            if (height != null)
-                            {
-                                this.SourceRectangle = new Rectangle(0, 0, SourceRectangle.Width, (int)height);
-                            }
-                            break;
-                        }
-                }
-            }
         }
 
-        private Texture2D CreateTexture(Rectangle rectangle, Color color)
+        private Sprite CreateBackground()
         {
-            int width = rectangle.Width;
-            int height = rectangle.Height;
+            Color color = (Color)_backgroundColor;
+
+            int width = SourceRectangle.Width + (int)(padding * 2);
+            int height = SourceRectangle.Height + (int)(padding * 2);
+
+            if (width <= 0 || height <= 0) { return null; }
 
             //initialize a texture
             Texture2D texture = new Texture2D(Globals.Graphics.GraphicsDevice, width, height);
@@ -248,7 +222,18 @@ namespace TFYP.View.UIElements
             //set the color
             texture.SetData(data);
 
-            return texture;
+            return new Sprite(texture, new Vector2(Position.X + margin, Position.Y + margin));
+        }
+
+        public override List<IRenderable> ToIRenderable()
+        {
+            List<IRenderable> list = base.ToIRenderable();
+            if (_backgroundColor != null)
+            {
+                list.Insert(0, CreateBackground());
+            }
+            
+            return list;
         }
     }
 }
