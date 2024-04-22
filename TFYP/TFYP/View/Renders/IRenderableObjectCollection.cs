@@ -11,6 +11,10 @@ namespace TFYP.View.Renders
         List<IRenderable> ToIRenderable();
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+
     public enum EVPosition
     {
         Center,
