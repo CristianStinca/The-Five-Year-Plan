@@ -18,6 +18,7 @@ using TFYP.View.Renders;
 using TFYP.View.UIElements;
 using TFYP.View.Windows;
 using static TFYP.View.Windows.GameWindow;
+using static TFYP.View.Windows.Window;
 
 namespace TFYP.Controller.WindowsControllers
 {
@@ -33,6 +34,7 @@ namespace TFYP.Controller.WindowsControllers
 
         private EBuildable? _activeZone;
 
+        private bool _menu_is_active = false;
         public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
             : base(inputHandler, _view, _uiTextures)
         {
@@ -122,7 +124,13 @@ namespace TFYP.Controller.WindowsControllers
             {
                 if (key.Button == Keys.Escape && key.ButtonState == Utils.KeyState.Clicked)
                 {
-                    OnExitPressed();
+                    //OnExitPressed();
+                    if (_menu_is_active)
+                        _gw_view.CleanMenu();
+                    else
+                        _gw_view.DrawMenu();
+
+                    _menu_is_active = !_menu_is_active;
                 }
                 else if (key.Button == Keys.Up && key.ButtonState == Utils.KeyState.Held)
                 {
@@ -215,11 +223,19 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.UIPoliceButtonPressed += () => { _activeZone = EBuildable.PoliceStation; Debug.WriteLine("Selected PoliceStation."); };
             _gw_view.UIStadiumButtonPressed += () => { _activeZone = EBuildable.Stadium; Debug.WriteLine("Selected Stadium."); };
             _gw_view.UISchoolButtonPressed += () => { _activeZone = EBuildable.School; Debug.WriteLine("Selected School."); };
+
             _gw_view.UIStopSpeedPressed += () => Debug.WriteLine("Stop Speed!");
             _gw_view.UISpeedX1Pressed += () => Debug.WriteLine("Speed X1!");
             _gw_view.UISpeedX2Pressed += () => Debug.WriteLine("Speed X2!");
             _gw_view.UISpeedX3Pressed += () => Debug.WriteLine("Speed X3!");
-        }
+
+            // TODO: from menu go back to game
+            _gw_view.UIMenuNewGameButtonPressed += ToGameWindow;
+            _gw_view.UIMenuSaveGameButtonPressed += ToLoadsWindow;
+            _gw_view.UIMenuLoadGameButtonPressed += ToLoadsWindow;
+            _gw_view.UIMenuOpenSettingsButtonPressed += ToSettingsWindow;
+            _gw_view.UIMenuExitButtonPressed += () => base.OnExitPressed();
+    }
 
         #endregion
     }
