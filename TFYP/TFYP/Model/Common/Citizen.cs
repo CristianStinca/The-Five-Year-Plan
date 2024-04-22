@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using TFYP.Model.Facilities;
 using TFYP.Model.City;
 using TFYP.Model.Zones;
+using TFYP.Utils;
 
 namespace TFYP.Model.Common
 {
@@ -37,21 +38,20 @@ namespace TFYP.Model.Common
 
     public class Citizen
     {
-        //In which zones does citizen work:
+
+        public string FirstName { get; private set; }
+        public string LastName { get; private set; }
         public Zone WorkPlace { get; private set; }
         public Zone LivingPlace { get; private set; }
-
         public int Age { get; private set; }
         public bool IsWorking { get; private set; }
         public EducationLevel EducationLevel { get; private set; }
-
         public float TaxPaidThisYear { get; private set; }
-
-        private static Random random = new Random();//for age
-
         public float Satisfaction { get; private set; }
-        public bool IsActive { get; private set; } = true; // citizens are active when created
+        public bool IsActive { get; private set; } = true;
 
+        private static Random random = new Random();
+        private static RandomName nameGenerator = new RandomName(random);
 
 
         public Citizen(Zone livingPlace, Zone workPlace, EducationLevel educationLevel)
@@ -61,6 +61,12 @@ namespace TFYP.Model.Common
             WorkPlace = workPlace;
             Age = random.Next(0, 101);
             IsWorking = WorkPlace != null;
+
+            Sex sex = (random.Next(2) == 0) ? Sex.Male : Sex.Female; 
+            string fullName = nameGenerator.Generate(sex);
+            var names = fullName.Split(' ');
+            FirstName = names[0];
+            LastName = names[^1]; 
         }
 
 
@@ -82,25 +88,54 @@ namespace TFYP.Model.Common
         }
 
 
-
         public void CalculateSatisfaction(GameModel gm, Budget budget)
         {
-            float educationSatisfaction = (float)(EducationExtensions.GetEducationValue(EducationLevel) / 150f); // Cast if needed
+            float educationSatisfaction = (float)(EducationExtensions.GetEducationValue(EducationLevel) / 150f);
             float employmentSatisfaction = IsWorking ? 1f : 0f;
             float distanceSatisfaction = 1f - (float)(GetDistanceLiveWork(gm, LivingPlace, WorkPlace) / gm.MaxDistance);
             float taxSatisfaction = 1f - (float)(TaxAmount(budget) / gm.MaxTax);
 
-            float livingPlaceSatisfaction = (float)LivingPlace.GetZoneSatisfaction(gm);
+            float industrialProximityEffect = CalculateIndustrialProximityEffect(LivingPlace, gm);
+            float cityFinancialHealthEffect = CalculateCityFinancialHealthEffect(budget);
+
+            float livingPlaceSatisfaction = (float)LivingPlace.GetZoneSatisfaction(gm) - industrialProximityEffect;
             float workPlaceSatisfaction = WorkPlace != null ? (float)WorkPlace.GetZoneSatisfaction(gm) : 1f;
 
+            // Calculate overall satisfaction
             Satisfaction = (educationSatisfaction * Constants.EducationWeight) +
                            (employmentSatisfaction * Constants.EmploymentWeight) +
                            (distanceSatisfaction * Constants.DistanceWeight) +
                            (taxSatisfaction * Constants.TaxWeight) +
-                           ((livingPlaceSatisfaction + workPlaceSatisfaction) / 2 * Constants.ZoneSatisfactionWeight);
+                           ((livingPlaceSatisfaction + workPlaceSatisfaction) / 2 * Constants.ZoneSatisfactionWeight) +
+                           cityFinancialHealthEffect;
 
+            // Clamp satisfaction between 0 and 1
             Satisfaction = Math.Clamp(Satisfaction, 0f, 1f);
         }
+
+        private float CalculateIndustrialProximityEffect(Zone livingPlace, GameModel gm)
+        {
+            if (livingPlace.Coor.Count > 0) 
+            {
+                double distanceToNearestIndustrial = gm.GetDistanceToNearestIndustrialArea(livingPlace.Coor[0]);
+                return (float)(-0.5f * (1f - (distanceToNearestIndustrial / gm.MaxDistance)));
+            }
+            return 0; // if no coordinates are available
+        }
+
+
+
+        private float CalculateCityFinancialHealthEffect(Budget budget)
+        {
+            if (budget.Balance < 0)
+            {
+                // More negative impact as the loan size increases and the duration of the negative budget extends
+                int yearsNegative = budget.YearsOfBeingInLoan(DateTime.Now);
+                return (float)(-0.1 * yearsNegative * (budget.Balance / 10000));
+            }
+            return 0;
+        }
+
 
 
 
@@ -126,15 +161,14 @@ namespace TFYP.Model.Common
 
         public override string ToString()
         {
-            return $"Citizen{{WorkPlace={WorkPlace}, " +
-                $"LivingPlace={LivingPlace}, " +
-                $"EducationLevel={EducationLevel}, " +
-                $"Age={Age}, " +
-                $"IsWorking={IsWorking}, " +
-                $"TaxAmount={TaxPaidThisYear}}}";
+            return $"Citizen{{FirstName={FirstName}, LastName={LastName}, WorkPlace={WorkPlace}, " +
+                   $"LivingPlace={LivingPlace}, Age={Age}, IsWorking={IsWorking}, " +
+                   $"EducationLevel={EducationLevel}, TaxPaidThisYear={TaxPaidThisYear:F2}, " +
+                   $"Satisfaction={Satisfaction:F2}, IsActive={IsActive}}}";
         }
 
     }
+
 
 }
 
