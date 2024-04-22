@@ -7,6 +7,7 @@ using TFYP.Model.Facilities;
 using TFYP.Model.Common;
 using TFYP.Model.City;
 using Microsoft.Xna.Framework;
+using System.Xml.Serialization;
 
 namespace TFYP.Model.Zones
 {
@@ -170,6 +171,8 @@ namespace TFYP.Model.Zones
 
             return upgradeCost;
         }
+
+
 
 
     }

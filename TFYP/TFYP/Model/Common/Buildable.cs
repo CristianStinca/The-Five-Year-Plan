@@ -47,11 +47,12 @@ namespace TFYP.Model.Common
         public virtual bool checkToBuild() { return true; }
 
         // when timer has gone through the days needed it will call this function to register that building is done
-        public void finishBuilding() {
+        public void finishBuilding()
+        {
             this.isBuilt = true;
         }
 
-        
+
     }
 
 }
