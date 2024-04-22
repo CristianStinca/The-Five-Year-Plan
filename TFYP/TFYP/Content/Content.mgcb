@@ -464,3 +464,24 @@
 /processorParam:TextureFormat=Compressed
 /build:UIButtonsText.spritefont
 
+#begin UINormalText.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:UINormalText.spritefont
+
+#begin UISubtitleText.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:UISubtitleText.spritefont
+
+#begin UITitleText.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:UITitleText.spritefont
+

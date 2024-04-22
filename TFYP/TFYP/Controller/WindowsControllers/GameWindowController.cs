@@ -17,6 +17,7 @@ using TFYP.View;
 using TFYP.View.Renders;
 using TFYP.View.UIElements;
 using TFYP.View.Windows;
+using static TFYP.View.Windows.GameWindow;
 
 namespace TFYP.Controller.WindowsControllers
 {
@@ -74,15 +75,25 @@ namespace TFYP.Controller.WindowsControllers
             switch (btn)
             {
                 case "L":
-                    //Debug.WriteLine($"X: {Mouse.GetState().X}, Y: {Mouse.GetState().Y}.");
+                    _gw_view.DeleteInfo();
+
                     if (_activeZone != null)
                     {
-                        _gameModel.AddZone(y, x, (EBuildable)_activeZone);
+                        _gameModel.AddZone(x, y, (EBuildable)_activeZone);
                     }
                     break;
 
                 case "R":
                     Debug.WriteLine($"X: {x}, Y: {y}");
+                    //Debug.WriteLine($"Type: {_gameModel.GetMapElementAt(x, y).Type}");
+                    RandomName rn = new(new Random());
+                    _gw_view.PrintInfo(Tuple.Create("Zone", EPrintInfo.Title),
+                                       Tuple.Create("Capacity", EPrintInfo.Normal),
+                                       Tuple.Create("Residents", EPrintInfo.Normal),
+                                       Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
+                                       Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
+                                       Tuple.Create(rn.Generate(), EPrintInfo.Sublist)
+                    );
                     _activeZone = null;
                     break;
             }

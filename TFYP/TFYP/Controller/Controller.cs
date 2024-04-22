@@ -18,7 +18,7 @@ namespace TFYP.Controller
 
         public Controller(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures)
         {
-            //this.CurrentController = new GameWindowController(_inputHandler, _view, _uiTextures, _gameModel);
+            //this.CurrentController = new GameWindowController(_inputHandler, _view, _uiTextures, GameModel.GetInstance());
             this.CurrentController = new MenuWindowController(_inputHandler, _view, _uiTextures);
             this.NextController = this.CurrentController;
 

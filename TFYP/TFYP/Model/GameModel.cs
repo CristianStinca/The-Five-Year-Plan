@@ -96,7 +96,7 @@ namespace TFYP.Model
             // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
             try
             {
-                AddToMap(_x, _y, zone);
+                AddToMap(_y, _x, zone);
                 foreach (Road tmp in Roads)
                 {
                     tmp.checkForZones();
@@ -343,8 +343,9 @@ namespace TFYP.Model
             return min;
         }
 
-        
-
-
+        public Buildable GetMapElementAt(int x, int y)
+        {
+            return map[y, x];
+        }
     }
 }
