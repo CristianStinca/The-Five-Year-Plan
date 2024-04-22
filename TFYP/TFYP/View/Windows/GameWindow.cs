@@ -41,6 +41,9 @@ namespace TFYP.View.Windows
 
         List<IRenderable> mapRend = new List<IRenderable>();
         List<IRenderable> screenWindow = new List<IRenderable>();
+        List<IRenderable> menuWindow = new List<IRenderable>();
+
+        bool is_menu_active = false;
 
         private bool is2D = false;
 
@@ -63,6 +66,12 @@ namespace TFYP.View.Windows
 
         Button perspectiveButton;
 
+        Button s_newgame;
+        Button s_save;
+        Button s_load;
+        Button s_setting;
+        Button s_exit;
+
         public event UIButtonPressedHandler UIResidentialZoneButtonPressed;
         public event UIButtonPressedHandler UIIndustrialZoneButtonPressed;
         public event UIButtonPressedHandler UICommertialZoneButtonPressed;
@@ -80,6 +89,12 @@ namespace TFYP.View.Windows
         public event UIButtonPressedHandler UISpeedX3Pressed;
 
         public event UIButtonPressedHandler UIChangePerspectivePressed;
+
+        public event UIButtonPressedHandler UIMenuNewGameButtonPressed;
+        public event UIButtonPressedHandler UIMenuSaveGameButtonPressed;
+        public event UIButtonPressedHandler UIMenuLoadGameButtonPressed;
+        public event UIButtonPressedHandler UIMenuOpenSettingsButtonPressed;
+        public event UIButtonPressedHandler UIMenuExitButtonPressed;
 
         #endregion
 
@@ -145,7 +160,7 @@ namespace TFYP.View.Windows
 
         public void OnTilePressed(int col, int row, int x, int y, string btn)
         {
-            if (!screenRect.Contains(x, y) || IsOnUIElement(x, y))
+            if (!screenRect.Contains(x, y) || IsOnUIElement(x, y) || is_menu_active)
             {
                 return;
             }
@@ -182,20 +197,20 @@ namespace TFYP.View.Windows
             RenderableList buttonsBar = new (30, 20, 30);
 
             delRoad = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Demolish_Road_Button")));
-            delRoad.ButtonPressed += (string name) => UIDeleteButtonPressed.Invoke();
+            delRoad.ButtonPressed += (string name) => NotifyEvent(UIDeleteButtonPressed);
             buttonsBar.AddElement(delRoad);
 
             RenderableList zonesList = new RenderableList(10, 20, 30);
             zonesList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Zones", new Vector2(20, 30), Color.Black));
 
             resZone = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Residential_Zone_Button")));
-            resZone.ButtonPressed += (string name) => UIResidentialZoneButtonPressed.Invoke();
+            resZone.ButtonPressed += (string name) => NotifyEvent(UIResidentialZoneButtonPressed);
             zonesList.AddElement(resZone);
             indZone = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Industrial_Zone_Button")));
-            indZone.ButtonPressed += (string name) => UIIndustrialZoneButtonPressed.Invoke();
+            indZone.ButtonPressed += (string name) => NotifyEvent(UIIndustrialZoneButtonPressed);
             zonesList.AddElement(indZone);
             commZone = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Commertial_Zone_Button")));
-            commZone.ButtonPressed += (string name) => UICommertialZoneButtonPressed.Invoke();
+            commZone.ButtonPressed += (string name) => NotifyEvent(UICommertialZoneButtonPressed);
             zonesList.AddElement(commZone);
             //delZone = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Erase_Zone_Button")));
             //delZone.ButtonPressed += UIButtonPressed;
@@ -206,7 +221,7 @@ namespace TFYP.View.Windows
             RenderableList roadList = new RenderableList(10, 20, 30);
             roadList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Roads", new Vector2(20, 30), Color.Black));
             buildRoad = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Build_Road_Button")));
-            buildRoad.ButtonPressed += (string name) => UIBuildRoadButtonPressed.Invoke();
+            buildRoad.ButtonPressed += (string name) => NotifyEvent(UIBuildRoadButtonPressed);
             roadList.AddElement(buildRoad);
 
             buttonsBar.AddElement(roadList);
@@ -214,13 +229,13 @@ namespace TFYP.View.Windows
             RenderableList specialsList = new RenderableList(10, 20, 30);
             specialsList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Specials", new Vector2(20, 30), Color.Black));
             police = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Police_Button")));
-            police.ButtonPressed += (string name) => UIPoliceButtonPressed.Invoke();
+            police.ButtonPressed += (string name) => NotifyEvent(UIPoliceButtonPressed);
             specialsList.AddElement(police);
             stadium = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Stadium_Button")));
-            stadium.ButtonPressed += (string name) => UIStadiumButtonPressed.Invoke();
+            stadium.ButtonPressed += (string name) => NotifyEvent(UIStadiumButtonPressed);
             specialsList.AddElement(stadium);
             school = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/School_Button")));
-            school.ButtonPressed += (string name) => UISchoolButtonPressed.Invoke();
+            school.ButtonPressed += (string name) => NotifyEvent(UISchoolButtonPressed);
             specialsList.AddElement(school);
 
             buttonsBar.AddElement(specialsList);
@@ -233,26 +248,73 @@ namespace TFYP.View.Windows
             ElementsInWindow.Add(buttonBack);
 
             stopTime = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/stop_button"), new Vector2(buttonBack.Position.X + 10, buttonBack.Position.Y + 7)));
-            stopTime.ButtonPressed += (string name) => UIStopSpeedPressed.Invoke();
+            stopTime.ButtonPressed += (string name) => NotifyEvent(UIStopSpeedPressed);
             ElementsInWindow.Add(stopTime.ToIRenderable());
 
             timeX1 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/speed_1"), new Vector2(stopTime.Position.X + stopTime.SourceRectangle.Width + 9, buttonBack.Position.Y + 7)));
-            timeX1.ButtonPressed += (string name) => UISpeedX1Pressed.Invoke();
+            timeX1.ButtonPressed += (string name) => NotifyEvent(UISpeedX1Pressed);
             ElementsInWindow.Add(timeX1.ToIRenderable());
 
             timeX2 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/speed_2"), new Vector2(timeX1.Position.X + timeX1.SourceRectangle.Width + 7, buttonBack.Position.Y + 7)));
-            timeX2.ButtonPressed += (string name) => UISpeedX2Pressed.Invoke();
+            timeX2.ButtonPressed += (string name) => NotifyEvent(UISpeedX2Pressed);
             ElementsInWindow.Add(timeX2.ToIRenderable());
 
             timeX3 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/speed_3"), new Vector2(timeX2.Position.X + timeX2.SourceRectangle.Width + 7, buttonBack.Position.Y + 7)));
-            timeX3.ButtonPressed += (string name) => UISpeedX3Pressed.Invoke();
+            timeX3.ButtonPressed += (string name) => NotifyEvent(UISpeedX3Pressed);
             ElementsInWindow.Add(timeX3.ToIRenderable());
 
             Texture2D perspectiveButtonTexture = Globals.Content.Load<Texture2D>("Buttons/Switch_Perspective_Button");
             perspectiveButton = AddButton(new Sprite(perspectiveButtonTexture, new Vector2(Globals.Graphics.PreferredBackBufferWidth - perspectiveButtonTexture.Width - 20, Globals.Graphics.PreferredBackBufferHeight - perspectiveButtonTexture.Height - 30)));
             _UIElementsContainers.Add(perspectiveButton.CollisionRectangle);
-            perspectiveButton.ButtonPressed += (string name) => ChangePerspective();
+            perspectiveButton.ButtonPressed += (string name) => { if (!is_menu_active) ChangePerspective(); };
             ElementsInWindow.Add(perspectiveButton.ToIRenderable());
+            
+            RenderableContainer menuContainer = new(0, 0, ESize.AllScreen);
+            Sprite menuBackground = new Sprite(Globals.Content.Load<Texture2D>("Menu/game_menu_back"));
+            menuContainer.AddElement(EVPosition.Center, EHPosition.Center, menuBackground);
+
+            RenderableList menuList = new(10, 0, 0);
+            s_newgame = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Small_NewGame_Button")));
+            menuList.AddElement(s_newgame);
+            s_newgame.ButtonPressed += (string name) => NotifyMenuEvent(UIMenuNewGameButtonPressed);
+            s_save = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Small_Save_Button")));
+            menuList.AddElement(s_save);
+            s_save.ButtonPressed += (string name) => NotifyMenuEvent(UIMenuSaveGameButtonPressed);
+            s_load = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Small_Load_Button")));
+            menuList.AddElement(s_load);
+            s_load.ButtonPressed += (string name) => NotifyMenuEvent(UIMenuLoadGameButtonPressed);
+            s_setting = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Small_Settings_Button")));
+            menuList.AddElement(s_setting);
+            s_setting.ButtonPressed += (string name) => NotifyMenuEvent(UIMenuOpenSettingsButtonPressed);
+            s_exit = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Small_Exit_Button")));
+            menuList.AddElement(s_exit);
+            s_exit.ButtonPressed += (string name) => NotifyMenuEvent(UIMenuExitButtonPressed);
+
+            menuContainer.AddElement(EVPosition.Center, EHPosition.Center, menuList);
+
+            menuWindow.AddRange(menuContainer.ToIRenderable());
+        }
+
+        private void NotifyEvent(UIButtonPressedHandler eve)
+        {
+            if (!is_menu_active)
+                eve.Invoke();
+        }
+
+        private void NotifyMenuEvent(UIButtonPressedHandler eve)
+        {
+            if (is_menu_active)
+                eve.Invoke();
+        }
+
+        public void DrawMenu()
+        {
+            is_menu_active = true;
+        }
+
+        public void CleanMenu()
+        {
+            is_menu_active = false;
         }
 
         public enum EPrintInfo
@@ -341,6 +403,9 @@ namespace TFYP.View.Windows
             }
 
             renderer.DrawState(screenWindow);
+
+            if (is_menu_active)
+                renderer.DrawState(menuWindow);
 
             base.Draw(renderer);
         }
