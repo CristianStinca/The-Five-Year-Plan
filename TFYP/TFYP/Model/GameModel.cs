@@ -97,10 +97,30 @@ namespace TFYP.Model
                 foreach (Road tmp in Roads)
                 {
                     tmp.checkForZones();
-                    if (map[_x, _y].Type == EBuildable.Industrial || map[_x, _y].Type == EBuildable.Service || map[_x, _y].Type == EBuildable.Residential)
+                    foreach (var b in tmp.connected)
                     {
-                        //bool con = tmp.connection(map[_x, _y]);
-                        
+                        if (b.Type.Equals(EBuildable.Residential) || b.Type.Equals(EBuildable.Industrial) || b.Type.Equals(EBuildable.Service))
+                        {
+                            b.AddOutgoingRoad(tmp);
+                        }
+                    }
+                }
+                
+                
+
+
+                foreach (var i in CityRegistry.Zones) {
+                    foreach (var tmp in CityRegistry.Zones) {
+                        if (!tmp.Equals(i)) {
+                            foreach (var r in i.GetOutgoing()) 
+                            {
+                                if (r.connection(tmp)) {
+                                    i.AddConnectedZone(tmp);
+                                    tmp.AddConnectedZone(i);
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -160,28 +180,32 @@ namespace TFYP.Model
                     this.RemoveFromMap(_x,_y);
                     break;
                 case EBuildable.PoliceStation:
-                    CityRegistry.AddFacility(new PoliceStation(t, zone));
+                    PoliceStation s = new PoliceStation(t, zone);
+                    CityRegistry.AddFacility(s);
                     Statistics.Budget.UpdateBalance(-Constants.PoliceStationBuildCost);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.PoliceStationMaintenanceFee);
-                    map[_x, _y] = new PoliceStation(t, zone);
+                    map[_x, _y] = s;
                     break;
                 case EBuildable.Residential:
-                    CityRegistry.AddZone(new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost));
+                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost);
+                    CityRegistry.AddZone(z);
                     Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
-                    map[_x, _y] = new Zone(EBuildable.Residential,t , Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime,  Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost);
+                    map[_x, _y] = z;
                     break;
                 case EBuildable.Service:
-                    CityRegistry.AddZone(new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost));
+                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost);
+                    CityRegistry.AddZone(z1);
                     Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
-                    map[_x, _y] = new Zone(EBuildable.Service,t , Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost);
+                    map[_x, _y] = z1;
                     break;
                 case EBuildable.Industrial:
-                    CityRegistry.AddZone(new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost));
+                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost);
+                    CityRegistry.AddZone(z2);
                     Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
-                    map[_x, _y] = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost);
+                    map[_x, _y] = z2;
                     break;
                 case EBuildable.Road:
                     Road r = new Road(t, EBuildable.Road);
@@ -191,7 +215,9 @@ namespace TFYP.Model
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.RoadMaintenanceFee);
                     break;
                 case EBuildable.University:
-                    CityRegistry.AddFacility(new University(t));
+                    University u = new University(t);
+                    CityRegistry.AddFacility(u);
+                    map[_x, _y] = u;
                     Statistics.Budget.UpdateBalance(-Constants.UniversityBuildCost);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
                     break;
@@ -199,7 +225,6 @@ namespace TFYP.Model
                         CityRegistry.AddFacility(new School(t));
                         Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost);
                         CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
-
                         if (!(map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x,_y].Type.Equals(EBuildable.None))) {
                             throw new Exception("second tile was alradsy filled");
                         }

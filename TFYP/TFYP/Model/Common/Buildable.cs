@@ -15,7 +15,7 @@ namespace TFYP.Model.Common
     public class Buildable
     {
 
-        public List<Vector2> Coor {  get; }
+        public List<Vector2> Coor { get; }
         public EBuildable Type { get; set; }
         public int ConstructionCost { get; set; }
         public int InfluenceRadius { get; set; }
@@ -24,10 +24,10 @@ namespace TFYP.Model.Common
         public int MaintenanceCost { get; set; }
         private bool isBuilt;
         public List<Citizen> citizens;
-        
+
 
         // Main constructor
-        public Buildable(List<Vector2> _coor, EBuildable _type, int constructionCost = 0, int maintenanceCost = 0, int influenceRadius = 0, int capacity=0, int timeToBuild=0)
+        public Buildable(List<Vector2> _coor, EBuildable _type, int constructionCost = 0, int maintenanceCost = 0, int influenceRadius = 0, int capacity = 0, int timeToBuild = 0)
         {
             Coor = _coor;
             Type = _type;
@@ -38,7 +38,7 @@ namespace TFYP.Model.Common
             TimeToBuild = timeToBuild;
             isBuilt = false;
             citizens = new List<Citizen>();
-            
+
         }
 
         public virtual void startBuilding() { }
@@ -52,8 +52,10 @@ namespace TFYP.Model.Common
         {
             this.isBuilt = true;
         }
+        public virtual void AddOutgoingRoad(Road r)
+        {
 
-
+        }
     }
 
 }

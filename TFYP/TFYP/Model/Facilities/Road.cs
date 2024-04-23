@@ -50,28 +50,28 @@ namespace TFYP.Model.Facilities
 
         public bool connection(Buildable dest) {
             HashSet<Buildable> visited = new HashSet<Buildable>();
-            Queue<Buildable> queue = new Queue<Buildable>();
+            Queue<Road> queue = new Queue<Road>();
 
             visited.Add(this);
             queue.Enqueue(this);
 
             while (queue.Count > 0)
             {
-                Buildable currentBuildable = queue.Dequeue();
+                Road currentRoad = queue.Dequeue();
 
                 
-                if (currentBuildable == dest)
+                if (currentRoad.isConnected(dest))
                 {
                     return true;
                 }
 
-                
-                foreach (Buildable neighbor in ((Road)currentBuildable).connected)
+
+                foreach (Buildable neighbor in currentRoad.connected) 
                 {
-                    if (!visited.Contains(neighbor))
+                    if (!visited.Contains(neighbor) && neighbor.Type.Equals(EBuildable.Road))
                     {
                         visited.Add(neighbor);
-                        queue.Enqueue(neighbor);
+                        queue.Enqueue((Road)neighbor);
                     }
                 }
             }

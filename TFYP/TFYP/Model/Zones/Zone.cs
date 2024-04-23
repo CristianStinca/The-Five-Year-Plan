@@ -32,6 +32,8 @@ namespace TFYP.Model.Zones
         //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
         public ZoneLevel Level { get; private set; }
         public bool IsConnected { get; private set; }//ეს უნდა დაიმპლემენტდეს გზების ლოგიკის მერე!
+        private List<Zone> conncetedZone= new List<Zone>();
+        private List<Road> outGoing = new List<Road>();
 
 
         public int NCitizensInZone
@@ -48,6 +50,9 @@ namespace TFYP.Model.Zones
             IsConnected = false;
         }
 
+        public List<Road> GetOutgoing() {
+            return this.outGoing;
+        }
         //TO DO: Need to implement method for finding paths and set Connected for every zone
 
         
@@ -165,6 +170,16 @@ namespace TFYP.Model.Zones
             return upgradeCost;
         }
 
+        public void AddConnectedZone(Zone z) {
+            this.conncetedZone.Add(z);
+            this.conncetedZone = this.conncetedZone.Distinct().ToList();
+        }
+
+
+        public override void AddOutgoingRoad(Road r) {
+            this.outGoing.Add(r);
+            this.outGoing=this.outGoing.Distinct().ToList();
+        }
 
 
 
