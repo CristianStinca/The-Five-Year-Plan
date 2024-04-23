@@ -56,6 +56,7 @@ namespace TFYP.Model.Common
         {
 
         }
+        public virtual void AddConnectedZone(Zone z) { }
     }
 
 }

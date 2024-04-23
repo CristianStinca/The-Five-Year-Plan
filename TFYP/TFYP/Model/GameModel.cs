@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using TFYP.Model.Disasters;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using MonoGame.Extended.Tiled;
 using System.Reflection.Emit;
 
 
@@ -108,8 +109,62 @@ namespace TFYP.Model
                         }
                     }
                 }
-                
-                
+
+                foreach (var z in CityRegistry.Zones)
+                {
+                    for(int i=0; i<z.Coor.Count; i++)
+                    {
+                        var tmp= z.Coor[i];
+                        if (!z.Coor.Contains(new Vector2((tmp.X+1), tmp.Y)))
+                        {
+                            if (this.map[(int)tmp.X+1, (int)tmp.Y].Type.Equals(z.Type)) {
+                                z.Coor.Add(new Vector2((tmp.X + 1),tmp.Y));
+                            }
+                        }
+                        if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y)))
+                        {
+                            if (this.map[(int)tmp.X - 1, (int)tmp.Y].Type.Equals(z.Type))
+                            {
+                                z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y));
+                            }
+                        }
+                        if (tmp.X % 2 == 0)
+                        {
+                            if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y - 1)))
+                            {
+                                if (this.map[(int)tmp.X - 1, (int)tmp.Y-1].Type.Equals(z.Type))
+                                {
+                                    z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y-1));
+                                }
+                            }
+                            if (!z.Coor.Contains(new Vector2((tmp.X + 1), tmp.Y - 1)))
+                            {
+                                if (this.map[(int)tmp.X + 1, (int)tmp.Y - 1].Type.Equals(z.Type))
+                                {
+                                    z.Coor.Add(new Vector2((tmp.X + 1), tmp.Y - 1));
+                                }
+                            }
+                        }
+                        else {
+                            if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y + 1)))
+                            {
+                                if (this.map[(int)tmp.X - 1, (int)tmp.Y+1].Type.Equals(z.Type))
+                                {
+                                    z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y+1));
+                                }
+                            }
+                            if (!z.Coor.Contains(new Vector2((tmp.X + 1), tmp.Y + 1)))
+                            {
+                                if (this.map[(int)tmp.X + 1, (int)tmp.Y + 1].Type.Equals(z.Type))
+                                {
+                                    z.Coor.Add(new Vector2((tmp.X + 1), tmp.Y + 1));
+                                }
+                            }
+
+                        }
+                    }
+                }
+
 
 
                 foreach (var i in CityRegistry.Zones) {
@@ -126,7 +181,21 @@ namespace TFYP.Model
                         }
                     }
                 }
+                foreach (var i in CityRegistry.Zones) {
+                    var Connection = i.GetConnectedZones();
+                    foreach (var tmp in i.Coor) {
+                        if (!i.Equals(map[(int)tmp.X, (int)tmp.Y]))
+                        {
+                            foreach (var z in Connection)
+                            {
+                                map[(int)tmp.X, (int)tmp.Y].AddConnectedZone(z);
+                            }
+                        }
+                    }
+                }
             }
+
+
             catch (Exception ex) {
                 Debug.WriteLine(ex);    
             }
@@ -240,6 +309,8 @@ namespace TFYP.Model
 
             }
         }
+
+
 
 
         public IEnumerable<Zone> GetAllZones()
