@@ -375,14 +375,17 @@ namespace TFYP.Model
             bool highSatisfaction = Statistics.Satisfaction >= Constants.SatisfactionUpperLimit;
 
             // Check for free workplaces near available residential zones
-            bool freeWorkplacesAvailable = CityRegistry.GetFreeWorkplacesNearResidentialZones(this);
+            bool freeWorkplacesAvailable = CityRegistry.GetFreeWorkplacesNearResidentialZones();
 
             // Check for absence of industrial buildings near these zones
-            bool noNearbyIndustries = CityRegistry.NoIndustriesNearResidentialZones(this);
+            bool noNearbyIndustries = CityRegistry.NoIndustriesNearResidentialZones();
 
             return highSatisfaction && freeWorkplacesAvailable && noNearbyIndustries;
         }
 
-
+        public void RemoveDissatisfiedCitizens()
+        {        
+        
+        }
     }
 }

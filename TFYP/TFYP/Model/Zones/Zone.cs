@@ -31,6 +31,8 @@ namespace TFYP.Model.Zones
 
         //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
         public ZoneLevel Level { get; private set; }
+        public bool IsConnected { get; private set; }//ეს უნდა დაიმპლემენტდეს გზების ლოგიკის მერე!
+
 
         public int NCitizensInZone
         {
@@ -43,21 +45,18 @@ namespace TFYP.Model.Zones
             Health = 100;
             canStartBuilding = false;
             Level = ZoneLevel.One;
+            IsConnected = false;
         }
 
         //TO DO: Need to implement method for finding paths and set Connected for every zone
 
-        //isactive ლოგიკა გვაქ და ეს აღარ გვინდა
-        /*
-        public void RemoveCitizen(Citizen citizen, GameModel _gameModel)
+        
+
+
+        public bool HasFreeCapacity()
         {
-            citizens.Remove(citizen);
-            //Statistics.Population -= 1;
-            //_gameModel.CityStatistics.SetCitySatisfaction(_gameModel);
-        }*/
-
-
-
+            return Capacity > NCitizensInZone;
+        }
 
         public float GetIncome(Budget budget)
         {
@@ -126,25 +125,9 @@ namespace TFYP.Model.Zones
         }
 
 
-        //ყველაფერს თუ იზაქთივის ლოგიკაზე გადავაწყობთ ამას აღარ გამოვიყენებთ
         public void AddCitizen(Citizen citizen, GameModel _gameModel)
         {
-            if (citizen == null)
-                throw new ArgumentNullException(nameof(citizen), "Citizen cannot be null.");
-
-            if (!citizen.IsActive)
-                throw new InvalidOperationException("Cannot add an inactive citizen.");
-
-            if (citizens.Count >= Capacity)
-                throw new InvalidOperationException("Cannot add new citizen; zone capacity reached.");
-
-            if (citizens.Contains(citizen))
-                throw new InvalidOperationException("Citizen is already in the zone.");
-
             citizens.Add(citizen);
-
-            //this.statistics.Population += 1; 
-
         }
 
         public double UpgradeZone()

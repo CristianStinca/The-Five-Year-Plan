@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using TFYP.Model.Facilities;
 using TFYP.Model.Zones;
 using TFYP.Model.Common;
+using Microsoft.Xna.Framework;
 
 namespace TFYP.Model.City
 {
     public class CityRegistry
     {
+        
         public Statistics Statistics { get; private set; }
         public List<Zone> Zones { get; private set; }
         public List<Facility> Facilities { get; private set; }
@@ -80,46 +82,56 @@ namespace TFYP.Model.City
         }
 
 
+        //These 2 methods are to check for conditions, if new citizens are eligible to move in city
 
-
-        public bool GetFreeWorkplacesNearResidentialZones(GameModel gm)
+        public bool GetFreeWorkplacesNearResidentialZones()
         {
-            /*
-            const int proximityThreshold = 10; 
-
-            foreach (var residential in Zones.OfType<ResidentialZone>())
+            int workplaceSearchRadius = 5;
+            foreach (var residentialZone in Zones.Where(z => z.Type == EBuildable.Residential))
             {
-                foreach (var residential in Zones.OfType<ResidentialZone>().Where(f => f.HasFreeCapacity))
+                foreach (var residentialPos in residentialZone.Coor)
                 {
-                    if (gm.CalculateDistanceBetweenZones(residential, facility) < proximityThreshold)
+                    foreach (var workZone in Zones.Where(z => z.Type == EBuildable.Industrial || z.Type == EBuildable.Service))
                     {
-                        return true;
+                        foreach (var workPos in workZone.Coor)
+                        {
+                            double distance = Vector2.Distance(residentialPos, workPos);
+                            if (distance <= workplaceSearchRadius && workZone.HasFreeCapacity())
+                            {
+                                return true;
+                            }
+                        }
                     }
                 }
-            }*/
+            }
             return false;
-            
         }
 
-        // Method to check for absence of industrial buildings near residential zones
-        public bool NoIndustriesNearResidentialZones(GameModel gm)
-        {
-            /*
-            const int proximityThreshold = 10; // Define what "near" means in terms of distance
 
-            foreach (var residential in Zones.OfType<ResidentialZone>())
+        // Method to check the absence of industrial buildings near residential zones
+        public bool NoIndustriesNearResidentialZones()
+        {
+            int industryProximityRadius = 5;//ეს შეიძლება შესაცვლელი გახდეს
+            foreach (var residentialZone in Zones.Where(z => z.Type == EBuildable.Residential))
             {
-                foreach (var industry in Facilities.OfType<IndustrialZone>())
+                foreach (var residentialPos in residentialZone.Coor)
                 {
-                    if (CalculateDistanceBetweenZones(residential, industry) < proximityThreshold)
+                    foreach (var industrialZone in Zones.Where(z => z.Type == EBuildable.Industrial))
                     {
-                        return false; // Found an industry near a residential zone
+                        foreach (var industrialPos in industrialZone.Coor)
+                        {
+                            double distance = Vector2.Distance(residentialPos, industrialPos);
+                            if (distance <= industryProximityRadius)
+                            {
+                                return false;
+                            }
+                        }
                     }
                 }
-            }*/
-            return true; // No industries near any residential zones
-            
+            }
+            return true;
         }
+
 
 
     }

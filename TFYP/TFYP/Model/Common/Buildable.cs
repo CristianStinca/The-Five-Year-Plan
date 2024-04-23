@@ -38,6 +38,7 @@ namespace TFYP.Model.Common
             TimeToBuild = timeToBuild;
             isBuilt = false;
             citizens = new List<Citizen>();
+            
         }
 
         public virtual void startBuilding() { }
