@@ -39,7 +39,7 @@ namespace TFYP.Model.Common
         {
             Zone closestZone = null;
             int closestDistance = 1000;//just starting with big integer
-            foreach (var workZone in gm.Zones.Where(z => z.Type == EBuildable.Industrial || z.Type == EBuildable.Service))
+            foreach (var workZone in gm.CityRegistry.Zones.Where(z => z.Type == EBuildable.Industrial || z.Type == EBuildable.Service))
             {
                 int distanceToWork = gm.CalculateDistanceBetweenZones(livingPlace, workZone);
                 if (distanceToWork < closestDistance)

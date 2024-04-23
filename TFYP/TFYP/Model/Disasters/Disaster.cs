@@ -30,7 +30,7 @@ namespace TFYP.Model.Disasters
 
         public void ApplyEffects(GameModel gameModel)
         {
-            foreach(var zone in gameModel.Zones)
+            foreach(var zone in gameModel.CityRegistry.Zones)
             {
                 // Check if the zone is within the effect radius of the disaster
                 if (IsWithinEffectRadius(zone))

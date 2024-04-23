@@ -61,7 +61,7 @@ namespace TFYP.Model.Common
         public double ComputeRevenue(GameModel gm)
         {
             // Sum the TaxAmount for only active citizens
-            return gm.Citizens.Where(citizen => citizen.IsActive).Sum(citizen => citizen.TaxAmount(this));
+            return gm.CityRegistry.Citizens.Where(citizen => citizen.IsActive).Sum(citizen => citizen.TaxAmount(this));
         }
 
 

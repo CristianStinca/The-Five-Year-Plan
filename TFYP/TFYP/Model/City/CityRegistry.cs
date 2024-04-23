@@ -16,12 +16,14 @@ namespace TFYP.Model.City
         
         public Statistics Statistics { get; private set; }
         public List<Zone> Zones { get; private set; }
+        public List<Citizen> Citizens { get; private set; }
         public List<Facility> Facilities { get; private set; }
         
         public CityRegistry(Statistics statistics)
         {
             Statistics = statistics;
             Zones = new List<Zone>();
+            Citizens = new List<Citizen>();
             Facilities = new List<Facility>();
         }
 
