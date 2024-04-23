@@ -178,7 +178,21 @@ namespace TFYP.Model
                         }
                     }
                 }
+                foreach (var i in CityRegistry.Zones) {
+                    var Connection = i.GetConnectedZones();
+                    foreach (var tmp in i.Coor) {
+                        if (!i.Equals(map[(int)tmp.X, (int)tmp.Y]))
+                        {
+                            foreach (var z in Connection)
+                            {
+                                map[(int)tmp.X, (int)tmp.Y].AddConnectedZone(z);
+                            }
+                        }
+                    }
+                }
             }
+
+
             catch (Exception ex) {
                 Debug.WriteLine(ex);    
             }
