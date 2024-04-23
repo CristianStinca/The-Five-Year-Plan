@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using TFYP.Model.Disasters;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using System.Reflection.Emit;
 
 
 namespace TFYP.Model
@@ -19,11 +20,13 @@ namespace TFYP.Model
     /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
     
     [Serializable]
-    public class GameModel
+    public class GameModel : ISteppable
     {       
         private static GameModel instance = null;
         private static int _mapH, _mapW;
         public Buildable[,] map;
+
+        public DateTime GameTime { get; private set; }
 
         public DateTime CreationDate; // DateTime built-in in c#
         public Statistics Statistics { get; private set; }
@@ -43,7 +46,7 @@ namespace TFYP.Model
             CityRegistry = new CityRegistry(Statistics);
             CreationDate = DateTime.Now; // Year, Month, Day - we will change date later
             Roads = new List<Road>();
-
+            GameTime = DateTime.Now;
 
             InitializeMap();
             InitializeMaxValues();
@@ -398,22 +401,37 @@ namespace TFYP.Model
             return highSatisfaction && freeWorkplacesAvailable && noNearbyIndustries;
         }
 
-        public void RemoveDissatisfiedCitizens()
-        {        
         
+
+        private void CitizenshipManipulation() 
+        {
+            if (AreNewCitizensEligible())
+            {
+                CitizenLifecycle.CreateYoungCitizen(this);
+            }
+            
+            //ეს ლოგიკა როცა ახალი ხალხი მოდის რადგან მაღალია სეთისფექშენ, დასამატებელია ლოგიკა როცა იმდენად დაბალია რომ
+            //პირიქით, ხალხი ტოვებს ქალაქს!! აქვე დაამატე
         }
 
+        private void CitizenshipEducationUpdate()
+        {
+            foreach (Citizen citizen in CityRegistry.GetAllCitizens())
+            {
+                if (citizen.EducationLevel == EducationLevel.Primary)
+                {
+                    citizen.EducationLevel = (CitizenLifecycle.GetEducationLevel(this, citizen.LivingPlace));
+                }
+            }
+        }
 
-
-
-
-
-
-
-
-
-
-
+        private void UpdateCityBalance()
+        {
+            double revenue = Statistics.Budget.ComputeRevenue(this);
+            double spend = Statistics.Budget.MaintenanceFeeForEverything;
+            Statistics.Budget.Balance += revenue;
+            Statistics.Budget.Balance -= spend;
+        }
 
 
 
@@ -434,5 +452,23 @@ namespace TFYP.Model
         {
             // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
         }
+
+
+        private void UpdateCityState()
+        {
+            // Placeholder for all update functions
+            UpdateCityBalance();
+            CitizenshipManipulation();
+            CitizenshipEducationUpdate();
+            // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
+        }
+
+        public void Step()
+        {
+            // Advance game time by one day every step
+            GameTime = GameTime.AddDays(1);
+            UpdateCityState();
+        }
+
     }
 }

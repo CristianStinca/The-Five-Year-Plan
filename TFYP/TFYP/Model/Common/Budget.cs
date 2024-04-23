@@ -12,7 +12,7 @@ namespace TFYP.Model.Common
     public class Budget
     {
 
-        public double Balance { get; private set; }
+        public double Balance { get; set; }
         public double CurrentTaxRate { get; private set; }
         public double MaintenanceFeeForEverything { get; private set; }
         public DateTime DateOfStartingLoan { get; private set; }

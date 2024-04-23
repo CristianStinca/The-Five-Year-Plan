@@ -24,9 +24,5 @@ namespace TFYP.Model.Zones
             get { return EBuildable.Industrial; }
         }
 
-        //TO DO - pollution effect
-
-
-
     }
 }

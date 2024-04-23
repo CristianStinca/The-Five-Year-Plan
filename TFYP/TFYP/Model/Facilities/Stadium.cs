@@ -23,15 +23,5 @@ namespace TFYP.Model.Facilities
             TimeToBuild = Constants.StadiumConstructionTime;
         }
         
-
-        public void IncreaseSatisfaction(Zone zone, GameModel gm)
-        {
-
-        }
-
-        public void DecreaseSatisfaction(Zone zone, GameModel gm)
-        {
-
-        }
     }
 }

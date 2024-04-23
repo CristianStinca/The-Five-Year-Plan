@@ -45,7 +45,7 @@ namespace TFYP.Model.Common
         public Zone LivingPlace { get; private set; }
         public int Age { get; private set; }
         public bool IsWorking { get; private set; }
-        public EducationLevel EducationLevel { get; private set; }
+        public EducationLevel EducationLevel { get; set; }
         public float TaxPaidThisYear { get; private set; }
         public float Satisfaction { get; private set; }
         public bool IsActive { get; private set; } = true;

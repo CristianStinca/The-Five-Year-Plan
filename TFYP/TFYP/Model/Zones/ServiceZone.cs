@@ -10,7 +10,7 @@ using Microsoft.Xna.Framework;
 
 namespace TFYP.Model.Zones
 {
-    public class ServiceZone : Zone  // TO DO: implement logic around free work places in service zone!!!
+    public class ServiceZone : Zone 
     {
         public ServiceZone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
         : base(type, coor, influenceRadius, timeToBuild, capacity, maintenanceCost, buildCost)

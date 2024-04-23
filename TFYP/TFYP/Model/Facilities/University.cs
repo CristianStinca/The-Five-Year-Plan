@@ -12,7 +12,7 @@ namespace TFYP.Model.Facilities
             MaintenanceCost = Constants.UniversityMaintenanceFee;
             ConstructionCost = Constants.UniversityBuildCost;
             GraduationTime = Constants.UniversityGraduationTime;
-            TimeToBuild = Constants.UniversityConstructionTime; // Must be added in Constants.cs
+            TimeToBuild = Constants.UniversityConstructionTime; 
         }
     }
 }
