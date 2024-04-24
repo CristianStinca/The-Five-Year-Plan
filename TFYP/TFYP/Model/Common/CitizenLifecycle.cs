@@ -39,14 +39,19 @@ namespace TFYP.Model.Common
         {
             Zone closestZone = null;
             int closestDistance = 1000;//just starting with big integer
-            foreach (var workZone in gm.CityRegistry.Zones.Where(z => z.Type == EBuildable.Industrial || z.Type == EBuildable.Service))
+            List<Zone> ConnectedZones = livingPlace.GetConnectedZones();
+            foreach (var workZone in ConnectedZones)
             {
-                int distanceToWork = gm.CalculateDistanceBetweenZones(livingPlace, workZone);
-                if (distanceToWork < closestDistance)
+                if(workZone.Type == EBuildable.Industrial || workZone.Type == EBuildable.Service)
                 {
-                    closestDistance = distanceToWork;
-                    closestZone = workZone;
+                    int distanceToWork = gm.CalculateDistanceBetweenZones(livingPlace, workZone);
+                    if (distanceToWork < closestDistance)
+                    {
+                        closestDistance = distanceToWork;
+                        closestZone = workZone;
+                    }
                 }
+                
             }
             return closestZone;
         }

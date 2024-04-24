@@ -209,6 +209,9 @@ namespace TFYP.Model.Zones
                    $"Active Citizens Details: [{string.Join(", ", citizensInfo)}]";
         }
 
+        /*
+         dictionary --> key is field, value is the actual value, 
 
+         */
     }
 }

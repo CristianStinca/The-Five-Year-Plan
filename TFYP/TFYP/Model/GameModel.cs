@@ -478,10 +478,14 @@ namespace TFYP.Model
         {
             if (AreNewCitizensEligible())
             {
-                CitizenLifecycle.CreateYoungCitizen(this);
+                for(int i = 0; i < CitizenLifecycle.StartingNrCitizens; i++)
+                {
+                    CitizenLifecycle.CreateYoungCitizen(this);
+                }
             }
             
-            //ეს ლოგიკა როცა ახალი ხალხი მოდის რადგან მაღალია სეთისფექშენ, დასამატებელია ლოგიკა როცა იმდენად დაბალია რომ
+            //ეს ლოგიკა როცა ახალი ხალხი მოდის რადგან მაღალია სეთისფექშენ, დასამატებელია ლოგიკა როცა
+            //იმდენად დაბალია რომ
             //პირიქით, ხალხი ტოვებს ქალაქს!! აქვე დაამატე
         }
 
@@ -545,7 +549,7 @@ namespace TFYP.Model
             Statistics.CalculateCitySatisfaction(this);
         }
 
-        private void UpdateCityState()
+        public void UpdateCityState()
         {
             // Placeholder for all update functions
             CitizenshipManipulation();

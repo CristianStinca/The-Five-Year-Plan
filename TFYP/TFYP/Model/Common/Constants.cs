@@ -41,7 +41,7 @@ namespace TFYP.Model.Common
 
 
         // GENERAL CONSTANTS
-        public const int CityBaseTax = 100;
+        public const int CityBaseTax = 750;
         public const int InitialBalance = 1000000;
 
 
