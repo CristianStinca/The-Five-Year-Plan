@@ -58,6 +58,7 @@ namespace TFYP.View.Windows
         Button police;
         Button stadium;
         Button school;
+        Button budget;
 
         Button stopTime;
         Button timeX1;
@@ -82,6 +83,7 @@ namespace TFYP.View.Windows
         public event UIButtonPressedHandler UIPoliceButtonPressed;
         public event UIButtonPressedHandler UIStadiumButtonPressed;
         public event UIButtonPressedHandler UISchoolButtonPressed;
+        public event UIButtonPressedHandler UIBudgetButtonPressed;
 
         public event UIButtonPressedHandler UIStopSpeedPressed;
         public event UIButtonPressedHandler UISpeedX1Pressed;
@@ -194,7 +196,7 @@ namespace TFYP.View.Windows
             gameScreenRect.X = BackgroundButtonTab.Texture.Width;
             gameScreenRect.Width -= BackgroundButtonTab.Texture.Width;
 
-            RenderableList buttonsBar = new (30, 20, 30);
+            RenderableList buttonsBar = new (20, 20, 30);
 
             delRoad = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Demolish_Road_Button")));
             delRoad.ButtonPressed += (string name) => NotifyEvent(UIDeleteButtonPressed);
@@ -237,6 +239,9 @@ namespace TFYP.View.Windows
             school = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/School_Button")));
             school.ButtonPressed += (string name) => NotifyEvent(UISchoolButtonPressed);
             specialsList.AddElement(school);
+            budget = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/budget_button")));
+            budget.ButtonPressed += (string name) => NotifyEvent(UIBudgetButtonPressed);
+            specialsList.AddElement(budget);
 
             buttonsBar.AddElement(specialsList);
 
