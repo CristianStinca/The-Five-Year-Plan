@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,10 +29,10 @@ namespace TFYP.Controller
             WindowController.OnChangeToLoadsWindow += () => this.NextController = new SavesMenuWindowController(_inputHandler, _view, _uiTextures);
         }
 
-        public void Update()
+        public void Update(GameTime gameTime)
         {
             // reads the state of the model and instructs the view of what to do
-            this.CurrentController.Update();
+            this.CurrentController.Update(gameTime);
 
             // due to some events, the NextController migth be changed, therefore we will update the information
             // for the sake of moduleness, we will keep a controler for each view
