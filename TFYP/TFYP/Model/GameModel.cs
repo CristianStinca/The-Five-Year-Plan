@@ -616,23 +616,31 @@ namespace TFYP.Model
             Statistics.CalculateCitySatisfaction(this);
         }
 
-        private void UpdateCityState()
+        double elapsedTime = 0;
+
+        public void UpdateCityState(GameTime gameTime)
         {
-            // Placeholder for all update functions
-            CitizenshipManipulation();
-            CitizenshipEducationUpdate();
-            UpdateZoneBuildingStatus();
-            UpdateCitySatisfaction();
+            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+            if (elapsedTime > 5)
+            {
+                elapsedTime = 0;
 
-            UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR????
+                // Placeholder for all update functions
+                CitizenshipManipulation();
+                CitizenshipEducationUpdate();
+                UpdateZoneBuildingStatus();
+                UpdateCitySatisfaction();
 
-            // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
+                UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR????
+                GameTime = GameTime.AddDays(1);
+
+                // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
+            }
         }
 
         public void Step()
         {
             // Advance game time by one day every step
-            GameTime = GameTime.AddDays(1);
             UpdateCityState();
         }
 
