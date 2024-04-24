@@ -108,6 +108,7 @@ namespace TFYP.Controller.WindowsControllers
             base.Update(gameTime);
             //var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
             //Debug.WriteLine($"Delta: {delta}");
+            _gameModel.UpdateCityState(gameTime);
 
             var map = _gameModel.map;
             ISprite[,] out_map = new ISprite[map.GetLength(0), map.GetLength(1)];
