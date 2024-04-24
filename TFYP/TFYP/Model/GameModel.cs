@@ -12,17 +12,15 @@ using Microsoft.Xna.Framework;
 using TFYP.Model.Disasters;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
-using MonoGame.Extended.Tiled;
-using System.Reflection.Emit;
 
 
 namespace TFYP.Model
 {
-    // IN GAMEMODEL WHEN WE WILL REMOVE SOMETHING - ZONE/FACILITY/ROAD, we need to call Budget.RemoveFromMaintenanceFee method
+    /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
 
     [Serializable]
-    public class GameModel : ISteppable
-    {       
+    public class GameModel
+    {
         private static GameModel instance = null;
         private static int _mapH, _mapW;
         public Buildable[,] map;
@@ -37,6 +35,7 @@ namespace TFYP.Model
         public double MaxDistance { get; private set; }
         public float MaxTax { get; private set; }
 
+
         private GameModel(int _mapH, int _mapW)
         {
             MAP_H = _mapH;
@@ -47,7 +46,7 @@ namespace TFYP.Model
             CityRegistry = new CityRegistry(Statistics);
             CreationDate = DateTime.Now; // Year, Month, Day - we will change date later
             Roads = new List<Road>();
-            GameTime = DateTime.Now;
+
 
             InitializeMap();
             InitializeMaxValues();
@@ -55,10 +54,12 @@ namespace TFYP.Model
 
         private void InitializeMap()
         {
-            for (int i = 0; i < map.GetLength(0); i++) {
-                for (int j = 0; j < map.GetLength(1); j++) {
-                    
-                    map[i, j] = new Buildable(new List<Vector2> { new Vector2(i, j)}, EBuildable.None);
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+
+                    map[i, j] = new Buildable(new List<Vector2> { new Vector2(i, j) }, EBuildable.None);
                 }
             }
         }
@@ -70,10 +71,11 @@ namespace TFYP.Model
             MaxTax = 50; // --> we will change in future
         }
 
-        public static GameModel GetInstance() {
+        public static GameModel GetInstance()
+        {
             if (instance == null)
-            { 
-                instance= new GameModel(20, 20);
+            {
+                instance = new GameModel(20, 20);
             }
             return instance;
         }
@@ -90,130 +92,46 @@ namespace TFYP.Model
             get { return _mapW; }
             set { _mapW = value; }
         }
-        
+
+        //Adds the zone to the city
         public void AddZone(int _x, int _y, EBuildable zone)
         {
             // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
             try
             {
                 AddToMap(_y, _x, zone);
-
                 foreach (Road tmp in Roads)
                 {
                     tmp.checkForZones();
-                    foreach (var b in tmp.connected)
+                    if (map[_x, _y].Type == EBuildable.Industrial || map[_x, _y].Type == EBuildable.Service || map[_x, _y].Type == EBuildable.Residential)
                     {
-                        if (b.Type.Equals(EBuildable.Residential) || b.Type.Equals(EBuildable.Industrial) || b.Type.Equals(EBuildable.Service))
-                        {
-                            b.AddOutgoingRoad(tmp);
-                        }
-                    }
-                }
+                        //bool con = tmp.connection(map[_x, _y]);
 
-                foreach (var z in CityRegistry.Zones)
-                {
-                    for(int i=0; i<z.Coor.Count; i++)
-                    {
-                        var tmp= z.Coor[i];
-                        if (!z.Coor.Contains(new Vector2((tmp.X+1), tmp.Y)))
-                        {
-                            if (this.map[(int)tmp.X+1, (int)tmp.Y].Type.Equals(z.Type)) {
-                                z.Coor.Add(new Vector2((tmp.X + 1),tmp.Y));
-                            }
-                        }
-                        if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y)))
-                        {
-                            if (this.map[(int)tmp.X - 1, (int)tmp.Y].Type.Equals(z.Type))
-                            {
-                                z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y));
-                            }
-                        }
-                        if (tmp.X % 2 == 0)
-                        {
-                            if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y - 1)))
-                            {
-                                if (this.map[(int)tmp.X - 1, (int)tmp.Y-1].Type.Equals(z.Type))
-                                {
-                                    z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y-1));
-                                }
-                            }
-                            if (!z.Coor.Contains(new Vector2((tmp.X + 1), tmp.Y - 1)))
-                            {
-                                if (this.map[(int)tmp.X + 1, (int)tmp.Y - 1].Type.Equals(z.Type))
-                                {
-                                    z.Coor.Add(new Vector2((tmp.X + 1), tmp.Y - 1));
-                                }
-                            }
-                        }
-                        else {
-                            if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y + 1)))
-                            {
-                                if (this.map[(int)tmp.X - 1, (int)tmp.Y+1].Type.Equals(z.Type))
-                                {
-                                    z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y+1));
-                                }
-                            }
-                            if (!z.Coor.Contains(new Vector2((tmp.X + 1), tmp.Y + 1)))
-                            {
-                                if (this.map[(int)tmp.X + 1, (int)tmp.Y + 1].Type.Equals(z.Type))
-                                {
-                                    z.Coor.Add(new Vector2((tmp.X + 1), tmp.Y + 1));
-                                }
-                            }
-
-                        }
-                    }
-                }
-
-
-
-                foreach (var i in CityRegistry.Zones) {
-                    foreach (var tmp in CityRegistry.Zones) {
-                        if (!tmp.Equals(i)) {
-                            foreach (var r in i.GetOutgoing()) 
-                            {
-                                if (r.connection(tmp)) {
-                                    i.AddConnectedZone(tmp);
-                                    tmp.AddConnectedZone(i);
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-                foreach (var i in CityRegistry.Zones) {
-                    var Connection = i.GetConnectedZones();
-                    foreach (var tmp in i.Coor) {
-                        if (!i.Equals(map[(int)tmp.X, (int)tmp.Y]))
-                        {
-                            foreach (var z in Connection)
-                            {
-                                map[(int)tmp.X, (int)tmp.Y].AddConnectedZone(z);
-                            }
-                        }
                     }
                 }
             }
-
-
-            catch (Exception ex) {
-                Debug.WriteLine(ex);    
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
             }
-            
+            //cityRegistry.AddZone(zone);
+            //cityRegistry.UpdateBalance(-zone.GetOneTimeCost(), GetCurrentDate());
         }
-        private void AddToMap(int _x, int _y, EBuildable zone) {
+        private void AddToMap(int _x, int _y, EBuildable zone)
+        {
 
+            //left as x and y for now, can be changed to coordinate later
+
+            //map[_x, _y] = new Buildable(new Vector2(_x, _y), zone.type);
             List<Vector2> t = new List<Vector2>();
             t.Add((new Vector2(_x, _y)));
 
 
             switch (zone)
             {
-                
+
                 case EBuildable.Stadium:
-                    CityRegistry.AddFacility(new Stadium(t, zone));
-                    Statistics.Budget.UpdateBalance(-Constants.StadiumBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
+
                     Stadium stad;
                     if (_x % 2 == 0)
                     {
@@ -223,12 +141,12 @@ namespace TFYP.Model
                         }
                         t.Add(new Vector2(_x + 1, _y));
                         t.Add(new Vector2(_x - 1, _y));
-                        t.Add(new Vector2(_x, _y+1));
+                        t.Add(new Vector2(_x, _y + 1));
                         stad = new Stadium(t, zone);
                         map[_x, _y] = stad;
                         map[_x + 1, _y] = stad;
                         map[_x - 1, _y] = stad;
-                        map[_x, _y +1] = stad;
+                        map[_x, _y + 1] = stad;
                     }
                     else
                     {
@@ -249,139 +167,43 @@ namespace TFYP.Model
                     break;
 
                 case EBuildable.None:
-                    this.RemoveFromMap(_x,_y);
+                    this.RemoveFromMap(_x, _y);
                     break;
                 case EBuildable.PoliceStation:
-                    if(!map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        break;
-                    }
-                    PoliceStation s = new PoliceStation(t, zone);
-                    CityRegistry.AddFacility(s);
-                    Statistics.Budget.UpdateBalance(-Constants.PoliceStationBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.PoliceStationMaintenanceFee);
-                    map[_x, _y] = s;
+                    map[_x, _y] = new PoliceStation(t, zone);
                     break;
                 case EBuildable.Residential:
-                    if (!map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        break;
-                    }
-                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, DateTime.Now);
-                    CityRegistry.AddZone(z);
-                    Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
-                    map[_x, _y] = z;
+                    map[_x, _y] = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, DateTime.Now);
                     break;
                 case EBuildable.Service:
-                    if (!map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        break;
-                    }
-                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, DateTime.Now);
-                    CityRegistry.AddZone(z1);
-                    Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
-                    map[_x, _y] = z1;
+                    map[_x, _y] = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, DateTime.Now);
                     break;
                 case EBuildable.Industrial:
-                    if (!map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        break;
-                    }
-                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, DateTime.Now);
-                    CityRegistry.AddZone(z2);
-                    Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
-                    map[_x, _y] = z2;
+                    map[_x, _y] = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, DateTime.Now);
                     break;
                 case EBuildable.Road:
-                    if (!map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        break;
-                    }
                     Road r = new Road(t, EBuildable.Road);
                     map[_x, _y] = r;
                     Roads.Add(r);
-                    Statistics.Budget.UpdateBalance(-Constants.RoadBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.RoadMaintenanceFee);
-                    break;
-                case EBuildable.University:
-                    if (!map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        break;
-                    }
-                    University u = new University(t);
-                    CityRegistry.AddFacility(u);
-                    map[_x, _y] = u;
-                    Statistics.Budget.UpdateBalance(-Constants.UniversityBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
+
+
                     break;
                 case EBuildable.School:
-                    CityRegistry.AddFacility(new School(t));
-                    Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
-                    if(_x % 2 == 0)
+
+
+                    if (!(map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None)))
                     {
-                        if(map[_x - 1, _y - 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                        {
-                            t.Add(new Vector2(_x - 1, _y - 1));
-                            School tmp = new School(t);
-                            map[_x, _y] = tmp;
-                            map[_x - 1, _y - 1] = tmp;
-                            break;
-                        }
-                        else if(map[_x + 1, _y - 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                        {
-                            t.Add(new Vector2(_x + 1, _y - 1));
-                            School tmp = new School(t);
-                            map[_x, _y] = tmp;
-                            map[_x + 1, _y - 1] = tmp;
-                            break;
-                        }
+                        throw new Exception("second tile was alradsy filled");
                     }
-                    else
-                    {
-                        if (map[_x - 1, _y + 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                        {
-                            t.Add(new Vector2(_x - 1, _y + 1));
-                            School tmp = new School(t);
-                            map[_x, _y] = tmp;
-                            map[_x - 1, _y + 1] = tmp;
-                            break;
-                        }
-                        else if (map[_x + 1, _y + 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                        {
-                            t.Add(new Vector2(_x + 1, _y + 1));
-                            School tmp = new School(t);
-                            map[_x, _y] = tmp;
-                            map[_x + 1, _y + 1] = tmp;
-                            break;
-                        }
-                    }
-                    if (map[_x - 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        t.Add(new Vector2(_x - 1, _y));
-                        School tmp = new School(t);
-                        map[_x, _y] = tmp;
-                        map[_x - 1, _y] = tmp;
-                        break;
-                    }
-                    else if (map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        t.Add(new Vector2(_x + 1, _y));
-                        School tmp = new School(t);
-                        map[_x, _y] = tmp;
-                        map[_x + 1, _y] = tmp;
-                        break;
-                    }
-                    throw new Exception("second tile was alradsy filled");
+                    t.Add(new Vector2(_x + 1, _y));
+                    School tmp = new School(t);
+                    map[_x, _y] = tmp;
+                    map[_x + 1, _y] = tmp;
+
                     break;
 
             }
         }
-
-
 
 
         public IEnumerable<Zone> GetAllZones()
@@ -397,13 +219,29 @@ namespace TFYP.Model
                 }
             }
         }
+        public void ApplyDisasterToZone(Disaster disaster, Zone zone)
+        {
+            // Check if the zone is within the effect radius of the disaster
+            // If so, apply the disaster effects to the zone and its citizens
+        }
+        // Example method to trigger a disaster
+        public void TriggerDisaster(Disaster disaster)
+        {
+            
+        }
+        // we might also need a method to update the game world after the disaster effects
+        public void UpdateAfterDisaster()
+        {
+            // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
+        }
 
-        private void RemoveFromMap(int _x, int _y) {
+        private void RemoveFromMap(int _x, int _y)
+        {
             var obj = map[_x, _y];
             if (!map[_x, _y].Type.Equals(EBuildable.Road))
             {
-                obj.Coor.ForEach(c => map[(int)c.X,(int)c.Y]=new Buildable(new List<Vector2> { c },EBuildable.None));      
-               
+                obj.Coor.ForEach(c => map[(int)c.X, (int)c.Y] = new Buildable(new List<Vector2> { c }, EBuildable.None));
+
             }
         }
 
@@ -462,13 +300,15 @@ namespace TFYP.Model
         {
             float minDistance = float.MaxValue;
 
+            // Iterate over every cell in your grid map
             for (int i = 0; i < MAP_H; i++)
             {
                 for (int j = 0; j < MAP_W; j++)
                 {
+                    // Check if the current cell is an Industrial area
                     if (map[i, j].Type == EBuildable.Industrial)
                     {
-                        float distance = Math.Abs(zoneCoordinate.X - i) + Math.Abs(zoneCoordinate.Y - j); 
+                        float distance = Math.Abs(zoneCoordinate.X - i) + Math.Abs(zoneCoordinate.Y - j); // Manhattan distance
                         if (distance < minDistance)
                         {
                             minDistance = distance;
@@ -482,6 +322,9 @@ namespace TFYP.Model
 
 
         //this is for citizen satisfaction, to measure the distance between his workplace and livingplace
+        //i think it is not necessary to calculate it using roads - მოკლედ ანუ იქნებ მაგ ორს შორის პირდაპირ მანძილს
+        //რომ ვპოულობ გზა არც გადის, მაგრამ მარტივად შეგვიძლია ასე გამოვთვალოთ ჩემი აზრით რადგან მაინც სეთისფექშენის
+        //დასათვლელად ვიყენებთ ამ პარამეტრს მხოლოდ - კრისთან გადაამოწმე
         public int CalculateDistanceBetweenZones(Zone zone1, Zone zone2)
         {
             if (zone1 == null || zone2 == null)
@@ -498,12 +341,13 @@ namespace TFYP.Model
                 foreach (Vector2 pos2 in position2)
                 {
                     int distance = (int)(Math.Abs(pos1.X - pos2.X) + Math.Abs(pos1.Y - pos2.Y));
-                    if (distance < min) {
+                    if (distance < min)
+                    {
                         min = distance;
                     }
                 }
             }
-            
+
 
             return min;
         }
@@ -520,11 +364,9 @@ namespace TFYP.Model
             Zone zone = map[x, y] as Zone;
             if (zone != null)
             {
-                Statistics.Budget.RemoveFromMaintenanceFee(zone.MaintenanceCost);//remove old maintenanceCost before upgrade  
+
                 upgradeCost = zone.UpgradeZone();
                 CityRegistry.SetBalance(-upgradeCost, GameTime);
-                Statistics.Budget.AddToMaintenanceFee(zone.MaintenanceCost);//add new maintenanceCost after upgrade
-
             }
 
         }
@@ -543,17 +385,32 @@ namespace TFYP.Model
             return highSatisfaction && freeWorkplacesAvailable && noNearbyIndustries;
         }
 
-        
 
-        private void CitizenshipManipulation() 
+
+        private void CitizenshipManipulation()
         {
             if (AreNewCitizensEligible())
             {
-                CitizenLifecycle.CreateYoungCitizen(this);
+                for (int i = 0; i < CitizenLifecycle.StartingNrCitizens; i++)
+                {
+                    CitizenLifecycle.CreateYoungCitizen(this);
+                }
             }
-            
-            //ეს ლოგიკა როცა ახალი ხალხი მოდის რადგან მაღალია სეთისფექშენ, დასამატებელია ლოგიკა როცა იმდენად დაბალია რომ
+
+            //ეს ლოგიკა როცა ახალი ხალხი მოდის რადგან მაღალია სეთისფექშენ, დასამატებელია ლოგიკა როცა
+            //იმდენად დაბალია რომ
             //პირიქით, ხალხი ტოვებს ქალაქს!! აქვე დაამატე
+        }
+
+
+
+
+
+        
+
+        public void UpdateCitySatisfaction()
+        {
+            Statistics.CalculateCitySatisfaction(this);
         }
 
         private void CitizenshipEducationUpdate()
@@ -566,23 +423,7 @@ namespace TFYP.Model
                 }
             }
         }
-        /*
-        private double computeSpend()
-        {
-            double spend = 0;
-            foreach (var zone in CityRegistry.Zones)
-            {
-                spend += zone.MaintenanceCost;
-            }
-            foreach (var facility in CityRegistry.Facilities)
-            {
-                spend += facility.MaintenanceCost;
-            }
-            spend += Roads.Count * Constants.RoadMaintenanceFee;
 
-            return spend;
-        }
-        */
         private void UpdateCityBalance()
         {
             double revenue = Statistics.Budget.ComputeRevenue(this);
@@ -592,148 +433,6 @@ namespace TFYP.Model
         }
 
 
-
-
-        //FOR DISASTER FEATURE --> WILL BE IMPLEMENTED IN THE END!
-        public void ApplyDisasterToZone(Disaster disaster, Zone zone)
-        {
-            // Check if the zone is within the effect radius of the disaster
-            // If so, apply the disaster effects to the zone and its citizens
-        }
-        // Example method to trigger a disaster
-        public void TriggerDisaster(Disaster disaster)
-        {
-            
-        }
-        // we might also need a method to update the game world after the disaster effects
-        public void UpdateAfterDisaster()
-        {
-            // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
-        }
-
-        public void UpdateCitySatisfaction()
-        {
-            Statistics.CalculateCitySatisfaction(this);
-        }
-
-        private void UpdateCityState()
-        {
-            // Placeholder for all update functions
-            CitizenshipManipulation();
-            CitizenshipEducationUpdate();
-            UpdateZoneBuildingStatus();
-            UpdateCitySatisfaction();
-
-            UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR????
-
-            // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
-        }
-
-        public void Step()
-        {
-            // Advance game time by one day every step
-            GameTime = GameTime.AddDays(1);
-            UpdateCityState();
-        }
-
-        public List<Zone> GetZonesThatAreStillBuilding()
-        {
-            List<Zone> stillBuilding = new List<Zone>();
-            foreach (Zone zone in GetAllZones())
-            {
-                if (!zone.IsBuilt)
-                {
-                    stillBuilding.Add(zone);
-                }
-            }
-            return stillBuilding;
-        }
-
-        private void UpdateZoneBuildingStatus()
-        {
-            DateTime gameCurrentTime = GameModel.GetInstance().GameTime; 
-
-            foreach (Zone zone in GetZonesThatAreStillBuilding())
-            {
-                TimeSpan dateDifference = gameCurrentTime - zone.DayOfBuildStart;
-                int daysDifference = dateDifference.Days;
-
-                if (daysDifference >= zone.TimeToBuild)
-                {
-                    zone.finishBuilding(); 
-                }
-            }
-        }
-
-
-
-                upgradeCost = zone.UpgradeZone();
-                CityRegistry.SetBalance(-upgradeCost);
-            }
-
-        }
-
-        public bool AreNewCitizensEligible()
-        {
-            // Check general satisfaction level
-            bool highSatisfaction = Statistics.Satisfaction >= Constants.SatisfactionUpperLimit;
-
-            // Check for free workplaces near available residential zones
-            bool freeWorkplacesAvailable = CityRegistry.GetFreeWorkplacesNearResidentialZones();
-
-            // Check for absence of industrial buildings near these zones
-            bool noNearbyIndustries = CityRegistry.NoIndustriesNearResidentialZones();
-
-            return highSatisfaction && freeWorkplacesAvailable && noNearbyIndustries;
-        }
-
-        
-
-        private void CitizenshipManipulation() 
-        {
-            if (AreNewCitizensEligible())
-            {
-                for(int i = 0; i < CitizenLifecycle.StartingNrCitizens; i++)
-                {
-                    CitizenLifecycle.CreateYoungCitizen(this);
-                }
-            }
-            
-            //ეს ლოგიკა როცა ახალი ხალხი მოდის რადგან მაღალია სეთისფექშენ, დასამატებელია ლოგიკა როცა
-            //იმდენად დაბალია რომ
-            //პირიქით, ხალხი ტოვებს ქალაქს!! აქვე დაამატე
-        }
-
-
-            }
-
-        }
-        // Example method to trigger a disaster
-        public void TriggerDisaster(Disaster disaster)
-        {
-            
-        }
-        // we might also need a method to update the game world after the disaster effects
-        public void UpdateAfterDisaster()
-        {
-            // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
-        }
-
-        public void PauseGame()
-        {
-            Timer.Instance.StopTimer();
-            // Additional logic to display pause menu - if we will need it
-        }
-
-        public void ResumeGame()
-        {
-            Timer.Instance.StartTimer();
-            // Additional logic to hide pause menu and return to the game 
-        }
-        public void UpdateCitySatisfaction()
-        {
-            Statistics.CalculateCitySatisfaction(this);
-        }
 
         public void UpdateCityState()
         {
@@ -746,12 +445,6 @@ namespace TFYP.Model
             UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR????
 
             // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
-        //For persistence feature:
-        public void SaveGame()
-        {
-            Timer.Instance.StopTimer();
-            // Logic to serialize and save the game state
-            Timer.Instance.StartTimer(); // restart timer if we want the game to resume immediately after saving
         }
 
         public void Step()
@@ -776,7 +469,7 @@ namespace TFYP.Model
 
         private void UpdateZoneBuildingStatus()
         {
-            DateTime gameCurrentTime = GameModel.GetInstance().GameTime; 
+            DateTime gameCurrentTime = GameModel.GetInstance().GameTime;
 
             foreach (Zone zone in GetZonesThatAreStillBuilding())
             {
@@ -785,7 +478,7 @@ namespace TFYP.Model
 
                 if (daysDifference >= zone.TimeToBuild)
                 {
-                    zone.finishBuilding(); 
+                    zone.finishBuilding();
                 }
             }
         }
@@ -819,5 +512,11 @@ namespace TFYP.Model
             // Logic to deserialize and load the game state
             Timer.Instance.StartTimer(); // Restart timer after loading is complete
         }
+
+
+
+
+
     }
+
 }
