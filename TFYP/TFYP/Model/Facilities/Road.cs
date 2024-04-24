@@ -30,14 +30,14 @@ namespace TFYP.Model.Facilities
             connected.Clear();
             if ((int)this.Coor[0].X % 2 == 0)
             {
-                connected.Add(gm.map[(int)this.Coor[0].X - 1, (int)Coor[0].Y-1]);
+                connected.Add(gm.map[(int)this.Coor[0].X - 1, (int)Coor[0].Y - 1]);
                 connected.Add(gm.map[(int)this.Coor[0].X + 1, (int)Coor[0].Y - 1]);
-                connected.Add(gm.map[(int)Coor[0].X-1 , (int)Coor[0].Y]);
-                connected.Add(gm.map[(int)Coor[0].X+1, (int)Coor[0].Y]);
+                connected.Add(gm.map[(int)Coor[0].X - 1, (int)Coor[0].Y]);
+                connected.Add(gm.map[(int)Coor[0].X + 1, (int)Coor[0].Y]);
             }
             else
             {
-                connected.Add(gm.map[(int)this.Coor[0].X - 1, (int)Coor[0].Y+1]);
+                connected.Add(gm.map[(int)this.Coor[0].X - 1, (int)Coor[0].Y + 1]);
                 connected.Add(gm.map[(int)this.Coor[0].X + 1, (int)Coor[0].Y + 1]);
                 connected.Add(gm.map[(int)Coor[0].X + 1, (int)Coor[0].Y]);
                 connected.Add(gm.map[(int)Coor[0].X - 1, (int)Coor[0].Y]);

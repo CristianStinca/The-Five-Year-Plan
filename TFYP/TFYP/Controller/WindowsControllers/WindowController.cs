@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -52,7 +53,7 @@ namespace TFYP.Controller.WindowsControllers
             OnChangeToLoadsWindow.Invoke();
         }
 
-        public virtual void Update()
+        public virtual void Update(GameTime gameTime)
         {
             this._inputHandler.Update();
         }
