@@ -267,7 +267,7 @@ namespace TFYP.Model
                     {
                         break;
                     }
-                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost);
+                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, DateTime.Now);
                     CityRegistry.AddZone(z);
                     Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
@@ -278,7 +278,7 @@ namespace TFYP.Model
                     {
                         break;
                     }
-                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost);
+                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, DateTime.Now);
                     CityRegistry.AddZone(z1);
                     Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
@@ -289,7 +289,7 @@ namespace TFYP.Model
                     {
                         break;
                     }
-                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost);
+                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, DateTime.Now);
                     CityRegistry.AddZone(z2);
                     Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
@@ -319,7 +319,7 @@ namespace TFYP.Model
                     break;
                 case EBuildable.School:
                     CityRegistry.AddFacility(new School(t));
-                    Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost);
+                    Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
                     if(_x % 2 == 0)
                     {
