@@ -43,7 +43,7 @@ namespace TFYP.View.UIElements
 
         public UIObjects()
         {
-            EmptyTile = CreateSprite("Grasses/plain_grass");
+            EmptyTile = CreateSprite("Grasses/grass1");
             StadiumTile = CreateSprite("Tiles/stadium_tile");
             SchoolTile = CreateSprite("Tiles/school");
             PoliceTile = CreateSprite("Tiles/police_station");

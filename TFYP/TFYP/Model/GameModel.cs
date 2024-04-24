@@ -621,12 +621,16 @@ namespace TFYP.Model
         }
 
         double elapsedTime = 0;
+        double totalElapsedTime = 0;
 
         public void UpdateCityState(GameTime gameTime)
         {
             elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            if (elapsedTime > 5)
+            totalElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+            //Debug.WriteLine($"Time: {gameTime.ElapsedGameTime.TotalMilliseconds}s");
+            if (elapsedTime > 5000)
             {
+                Debug.WriteLine($"Time: {(int)(totalElapsedTime / 5000)} Days gone...");
                 elapsedTime = 0;
 
                 // Placeholder for all update functions
@@ -635,9 +639,9 @@ namespace TFYP.Model
                 UpdateZoneBuildingStatus();
                 UpdateCitySatisfaction();
 
-                UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR????
                 GameTime = GameTime.AddDays(1);
 
+                UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR???? IDK
                 // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
             }
         }
@@ -645,7 +649,7 @@ namespace TFYP.Model
         public void Step()
         {
             // Advance game time by one day every step
-            UpdateCityState();
+            //UpdateCityState();
         }
 
         public List<Zone> GetZonesThatAreStillBuilding()
