@@ -24,8 +24,18 @@ namespace TFYP.View.UIElements
         public Sprite SchoolTile { get; set; }
         public Sprite PoliceTile { get; set; }
         public Sprite ResidentialTile { get; set; }
+        public Sprite ResidentialTile11 { get; set; }
+        public Sprite ResidentialTile12 { get; set; }
+        public Sprite ResidentialTile13 { get; set; }
         public Sprite IndustrialTile { get; set; }
+        public Sprite IndustrialTile11 { get; set; }
+        public Sprite IndustrialTile12 { get; set; }
+        public Sprite IndustrialTile13 { get; set; }
         public Sprite ServiceTile { get; set; }
+        public Sprite ServiceTile11 { get; set; }
+        public Sprite ServiceTile12 { get; set; }
+        public Sprite ServiceTile13 { get; set; }
+
         public Sprite RoadTile { get; set; }
         public Sprite DoneResidentialTile { get; set; }
 
@@ -37,10 +47,19 @@ namespace TFYP.View.UIElements
             StadiumTile = CreateSprite("Tiles/stadium_tile");
             SchoolTile = CreateSprite("Tiles/school");
             PoliceTile = CreateSprite("Tiles/police_station");
-            ResidentialTile = CreateSprite("Grasses/plain_grass"); // must be changed
-            IndustrialTile = CreateSprite("Tiles/school"); // must be changed
-            ServiceTile = CreateSprite("Tiles/empty_tile"); // must be changed
-            RoadTile = CreateSprite("Roads/road2"); // must be changed this is just for testing
+            ResidentialTile = CreateSprite("Zones/residential_empty");
+            ResidentialTile11 = CreateSprite("Zones/residential11");
+            ResidentialTile12 = CreateSprite("Zones/residential12");
+            ResidentialTile13 = CreateSprite("Zones/residential13");
+            IndustrialTile = CreateSprite("Zones/industrial_empty");
+            IndustrialTile11 = CreateSprite("Zones/industrial11");
+            IndustrialTile12 = CreateSprite("Zones/industrial12");
+            IndustrialTile13 = CreateSprite("Zones/industrial13");
+            ServiceTile = CreateSprite("Zones/service_empty");
+            ServiceTile11 = CreateSprite("Zones/service11");
+            ServiceTile12 = CreateSprite("Zones/service12");
+            ServiceTile13 = CreateSprite("Zones/service13");
+            RoadTile = CreateSprite("Roads/road2");
             DoneResidentialTile = CreateSprite("Tiles/police_station");
 
         }

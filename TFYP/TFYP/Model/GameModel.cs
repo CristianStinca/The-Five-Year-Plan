@@ -252,6 +252,10 @@ namespace TFYP.Model
                     this.RemoveFromMap(_x,_y);
                     break;
                 case EBuildable.PoliceStation:
+                    if(!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
                     PoliceStation s = new PoliceStation(t, zone);
                     CityRegistry.AddFacility(s);
                     Statistics.Budget.UpdateBalance(-Constants.PoliceStationBuildCost, GameTime);
@@ -259,27 +263,43 @@ namespace TFYP.Model
                     map[_x, _y] = s;
                     break;
                 case EBuildable.Residential:
-                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, DateTime.Now);
+                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
+                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost);
                     CityRegistry.AddZone(z);
                     Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
                     map[_x, _y] = z;
                     break;
                 case EBuildable.Service:
-                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, DateTime.Now);
+                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
+                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost);
                     CityRegistry.AddZone(z1);
                     Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
                     map[_x, _y] = z1;
                     break;
                 case EBuildable.Industrial:
-                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, DateTime.Now);
+                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
+                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost);
                     CityRegistry.AddZone(z2);
                     Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
                     map[_x, _y] = z2;
                     break;
                 case EBuildable.Road:
+                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
                     Road r = new Road(t, EBuildable.Road);
                     map[_x, _y] = r;
                     Roads.Add(r);
@@ -287,6 +307,10 @@ namespace TFYP.Model
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.RoadMaintenanceFee);
                     break;
                 case EBuildable.University:
+                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
                     University u = new University(t);
                     CityRegistry.AddFacility(u);
                     map[_x, _y] = u;
@@ -294,17 +318,64 @@ namespace TFYP.Model
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
                     break;
                 case EBuildable.School:
-                        CityRegistry.AddFacility(new School(t));
-                        Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost, GameTime);
-                        CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
-                        if (!(map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x,_y].Type.Equals(EBuildable.None))) {
-                            throw new Exception("second tile was alradsy filled");
+                    CityRegistry.AddFacility(new School(t));
+                    Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
+                    if(_x % 2 == 0)
+                    {
+                        if(map[_x - 1, _y - 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                        {
+                            t.Add(new Vector2(_x - 1, _y - 1));
+                            School tmp = new School(t);
+                            map[_x, _y] = tmp;
+                            map[_x - 1, _y - 1] = tmp;
+                            break;
                         }
+                        else if(map[_x + 1, _y - 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                        {
+                            t.Add(new Vector2(_x + 1, _y - 1));
+                            School tmp = new School(t);
+                            map[_x, _y] = tmp;
+                            map[_x + 1, _y - 1] = tmp;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (map[_x - 1, _y + 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                        {
+                            t.Add(new Vector2(_x - 1, _y + 1));
+                            School tmp = new School(t);
+                            map[_x, _y] = tmp;
+                            map[_x - 1, _y + 1] = tmp;
+                            break;
+                        }
+                        else if (map[_x + 1, _y + 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                        {
+                            t.Add(new Vector2(_x + 1, _y + 1));
+                            School tmp = new School(t);
+                            map[_x, _y] = tmp;
+                            map[_x + 1, _y + 1] = tmp;
+                            break;
+                        }
+                    }
+                    if (map[_x - 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        t.Add(new Vector2(_x - 1, _y));
+                        School tmp = new School(t);
+                        map[_x, _y] = tmp;
+                        map[_x - 1, _y] = tmp;
+                        break;
+                    }
+                    else if (map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                    {
                         t.Add(new Vector2(_x + 1, _y));
                         School tmp = new School(t);
                         map[_x, _y] = tmp;
                         map[_x + 1, _y] = tmp;
-                     
+                        break;
+                    }
+                    throw new Exception("second tile was alradsy filled");
                     break;
 
             }
