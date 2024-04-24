@@ -259,21 +259,21 @@ namespace TFYP.Model
                     map[_x, _y] = s;
                     break;
                 case EBuildable.Residential:
-                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost);
+                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, DateTime.Now);
                     CityRegistry.AddZone(z);
                     Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
                     map[_x, _y] = z;
                     break;
                 case EBuildable.Service:
-                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost);
+                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, DateTime.Now);
                     CityRegistry.AddZone(z1);
                     Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
                     map[_x, _y] = z1;
                     break;
                 case EBuildable.Industrial:
-                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost);
+                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, DateTime.Now);
                     CityRegistry.AddZone(z2);
                     Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
@@ -531,6 +531,7 @@ namespace TFYP.Model
             UpdateCityBalance();
             CitizenshipManipulation();
             CitizenshipEducationUpdate();
+            UpdateZoneBuildingStatus();
             // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
         }
 
@@ -541,5 +542,63 @@ namespace TFYP.Model
             UpdateCityState();
         }
 
+        public List<Zone> GetZonesThatAreStillBuilding()
+        {
+            List<Zone> stillBuilding = new List<Zone>();
+            foreach (Zone zone in GetAllZones())
+            {
+                if (!zone.IsBuilt)
+                {
+                    stillBuilding.Add(zone);
+                }
+            }
+            return stillBuilding;
+        }
+
+        private void UpdateZoneBuildingStatus()
+        {
+            DateTime gameCurrentTime = GameModel.GetInstance().GameTime; 
+
+            foreach (Zone zone in GetZonesThatAreStillBuilding())
+            {
+                TimeSpan dateDifference = gameCurrentTime - zone.DayOfBuildStart;
+                int daysDifference = dateDifference.Days;
+
+                if (daysDifference >= zone.TimeToBuild)
+                {
+                    zone.finishBuilding(); 
+                }
+            }
+        }
+
+
+
+
+        public void PauseGame()
+        {
+            Timer.Instance.StopTimer();
+            // Additional logic to display pause menu - if we will need it
+        }
+
+        public void ResumeGame()
+        {
+            Timer.Instance.StartTimer();
+            // Additional logic to hide pause menu and return to the game 
+        }
+
+        //For persistence feature:
+        public void SaveGame()
+        {
+            Timer.Instance.StopTimer();
+            // Logic to serialize and save the game state
+            Timer.Instance.StartTimer(); // restart timer if we want the game to resume immediately after saving
+        }
+
+        public void LoadGame()
+        {
+            Timer.Instance.StopTimer();
+            // Logic to deserialize and load the game state
+            Timer.Instance.StartTimer(); // Restart timer after loading is complete
+        }
     }
 }

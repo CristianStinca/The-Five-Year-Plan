@@ -25,7 +25,8 @@ namespace TFYP.Model.Zones
                 10, // example value for `timeToBuild`, will change later 
                 Constants.ResidentialZoneCapacity,
                 Constants.ResidentialZoneMaintenanceCost,
-                Constants.ResidentialZoneBuildCost
+                Constants.ResidentialZoneBuildCost,
+                DateTime.Now
             );
         }
     }

@@ -35,19 +35,31 @@ namespace TFYP.Model.Zones
         private List<Zone> conncetedZone= new List<Zone>();
         private List<Road> outGoing = new List<Road>();
 
+        public DateTime DayOfBuildStart { get; private set; }
+        public int TimeToBuild { get; set; }
+        public bool IsBuilt { get; set; }
+
+        // when timer has gone through the days needed it will call this function to register that building is done
+        public void finishBuilding()
+        {
+            IsBuilt = true;
+        }
 
         public int NCitizensInZone
         {
             get { return citizens.Count(c => c.IsActive); } 
         }
 
-        public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
+        public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost, DateTime dayOfBuildStart)
             : base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
         {
             Health = 100;
             canStartBuilding = false;
             Level = ZoneLevel.One;
             IsConnected = false;
+            TimeToBuild = timeToBuild;
+            IsBuilt = false;
+            DayOfBuildStart = dayOfBuildStart;
         }
 
         public List<Road> GetOutgoing() {
@@ -184,6 +196,19 @@ namespace TFYP.Model.Zones
         public List<Zone> GetConnectedZones() {
             return this.conncetedZone;
         }
+
+
+        public override string ToString()
+        {
+            var citizensInfo = citizens.Where(c => c.IsActive).Select(c => c.ToString()).ToArray();
+
+            return $"Zone Details:\n" +
+                   $"Type: {Type}, Level: {Level}, Health: {Health}%\n" +
+                   $"Is Building Started: {(canStartBuilding ? "Yes" : "No")}, Is Connected: {(IsConnected ? "Yes" : "No")}\n" +
+                   $"Number of Citizens: {NCitizensInZone}, Capacity: {Capacity}\n" +
+                   $"Active Citizens Details: [{string.Join(", ", citizensInfo)}]";
+        }
+
 
     }
 }

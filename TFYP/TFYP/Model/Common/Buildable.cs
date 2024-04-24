@@ -20,10 +20,9 @@ namespace TFYP.Model.Common
         public int ConstructionCost { get; set; }
         public int InfluenceRadius { get; set; }
         public int Capacity { get; set; }
-        public int TimeToBuild { get; set; }
-        public int MaintenanceCost { get; set; }
-        private bool isBuilt;
+        
         public List<Citizen> citizens;
+        public int MaintenanceCost { get; set; }
 
 
         // Main constructor
@@ -35,8 +34,6 @@ namespace TFYP.Model.Common
             InfluenceRadius = influenceRadius;
             MaintenanceCost = maintenanceCost;
             Capacity = capacity;
-            TimeToBuild = timeToBuild;
-            isBuilt = false;
             citizens = new List<Citizen>();
 
         }
@@ -47,11 +44,6 @@ namespace TFYP.Model.Common
 
         public virtual bool checkToBuild() { return true; }
 
-        // when timer has gone through the days needed it will call this function to register that building is done
-        public void finishBuilding()
-        {
-            this.isBuilt = true;
-        }
         public virtual void AddOutgoingRoad(Road r)
         {
 

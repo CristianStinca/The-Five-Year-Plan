@@ -21,7 +21,6 @@ namespace TFYP.Model.Facilities
             MaintenanceCost = Constants.PoliceStationMaintenanceFee;
             ConstructionCost = Constants.PoliceStationBuildCost;
             InfluenceRadius = Constants.PoliceStationEffectRadius;
-            TimeToBuild = Constants.PoliceConstructionTime;
         }
         
 

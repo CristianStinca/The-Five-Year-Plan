@@ -20,7 +20,6 @@ namespace TFYP.Model.Facilities
             MaintenanceCost = Constants.StadiumMaintenanceFee;
             ConstructionCost = Constants.StadiumBuildCost;
             InfluenceRadius = Constants.StadiumEffectRadius;
-            TimeToBuild = Constants.StadiumConstructionTime;
         }
         
     }

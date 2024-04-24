@@ -13,8 +13,8 @@ namespace TFYP.Model.Zones
 {
     public class IndustrialZone : Zone 
     {
-        public IndustrialZone(EBuildable type, List<Vector2> coor,int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
-        : base(type, coor, influenceRadius, timeToBuild, capacity, maintenanceCost, buildCost)
+        public IndustrialZone(EBuildable type, List<Vector2> coor,int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost, DateTime dayOfBuildStart)
+        : base(type, coor, influenceRadius, timeToBuild, capacity, maintenanceCost, buildCost, dayOfBuildStart)
         {
 
         }
