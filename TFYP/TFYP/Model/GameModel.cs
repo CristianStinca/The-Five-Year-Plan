@@ -18,8 +18,8 @@ using System.Reflection.Emit;
 
 namespace TFYP.Model
 {
-    /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
-    
+    // IN GAMEMODEL WHEN WE WILL REMOVE SOMETHING - ZONE/FACILITY/ROAD, we need to call Budget.RemoveFromMaintenanceFee method
+
     [Serializable]
     public class GameModel : ISteppable
     {       
@@ -42,7 +42,7 @@ namespace TFYP.Model
             MAP_H = _mapH;
             MAP_W = _mapW;
             map = new Buildable[_mapH, _mapW];
-            Budget budget = new Budget(Constants.InitialBalance, Constants.CityBaseTax);
+            Budget budget = new Budget();
             Statistics = new Statistics(budget);
             CityRegistry = new CityRegistry(Statistics);
             CreationDate = DateTime.Now; // Year, Month, Day - we will change date later
@@ -212,7 +212,7 @@ namespace TFYP.Model
                 
                 case EBuildable.Stadium:
                     CityRegistry.AddFacility(new Stadium(t, zone));
-                    Statistics.Budget.UpdateBalance(-Constants.StadiumBuildCost);
+                    Statistics.Budget.UpdateBalance(-Constants.StadiumBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
                     Stadium stad;
                     if (_x % 2 == 0)
@@ -254,28 +254,28 @@ namespace TFYP.Model
                 case EBuildable.PoliceStation:
                     PoliceStation s = new PoliceStation(t, zone);
                     CityRegistry.AddFacility(s);
-                    Statistics.Budget.UpdateBalance(-Constants.PoliceStationBuildCost);
+                    Statistics.Budget.UpdateBalance(-Constants.PoliceStationBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.PoliceStationMaintenanceFee);
                     map[_x, _y] = s;
                     break;
                 case EBuildable.Residential:
                     Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, DateTime.Now);
                     CityRegistry.AddZone(z);
-                    Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost);
+                    Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
                     map[_x, _y] = z;
                     break;
                 case EBuildable.Service:
                     Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, DateTime.Now);
                     CityRegistry.AddZone(z1);
-                    Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost);
+                    Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
                     map[_x, _y] = z1;
                     break;
                 case EBuildable.Industrial:
                     Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, DateTime.Now);
                     CityRegistry.AddZone(z2);
-                    Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost);
+                    Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
                     map[_x, _y] = z2;
                     break;
@@ -283,19 +283,19 @@ namespace TFYP.Model
                     Road r = new Road(t, EBuildable.Road);
                     map[_x, _y] = r;
                     Roads.Add(r);
-                    Statistics.Budget.UpdateBalance(-Constants.RoadBuildCost);
+                    Statistics.Budget.UpdateBalance(-Constants.RoadBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.RoadMaintenanceFee);
                     break;
                 case EBuildable.University:
                     University u = new University(t);
                     CityRegistry.AddFacility(u);
                     map[_x, _y] = u;
-                    Statistics.Budget.UpdateBalance(-Constants.UniversityBuildCost);
+                    Statistics.Budget.UpdateBalance(-Constants.UniversityBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
                     break;
                 case EBuildable.School:
                         CityRegistry.AddFacility(new School(t));
-                        Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost);
+                        Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost, GameTime);
                         CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
                         if (!(map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x,_y].Type.Equals(EBuildable.None))) {
                             throw new Exception("second tile was alradsy filled");
@@ -449,10 +449,10 @@ namespace TFYP.Model
             Zone zone = map[x, y] as Zone;
             if (zone != null)
             {
-
+                Statistics.Budget.RemoveFromMaintenanceFee(zone.MaintenanceCost);//remove old maintenanceCost before upgrade  
                 upgradeCost = zone.UpgradeZone();
-                CityRegistry.SetBalance(-upgradeCost);
-
+                CityRegistry.SetBalance(-upgradeCost, GameTime);
+                Statistics.Budget.AddToMaintenanceFee(zone.MaintenanceCost);//add new maintenanceCost after upgrade
 
             }
 
@@ -495,7 +495,23 @@ namespace TFYP.Model
                 }
             }
         }
+        /*
+        private double computeSpend()
+        {
+            double spend = 0;
+            foreach (var zone in CityRegistry.Zones)
+            {
+                spend += zone.MaintenanceCost;
+            }
+            foreach (var facility in CityRegistry.Facilities)
+            {
+                spend += facility.MaintenanceCost;
+            }
+            spend += Roads.Count * Constants.RoadMaintenanceFee;
 
+            return spend;
+        }
+        */
         private void UpdateCityBalance()
         {
             double revenue = Statistics.Budget.ComputeRevenue(this);
@@ -524,14 +540,21 @@ namespace TFYP.Model
             // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
         }
 
+        public void UpdateCitySatisfaction()
+        {
+            Statistics.CalculateCitySatisfaction(this);
+        }
 
         private void UpdateCityState()
         {
             // Placeholder for all update functions
-            UpdateCityBalance();
             CitizenshipManipulation();
             CitizenshipEducationUpdate();
             UpdateZoneBuildingStatus();
+            UpdateCitySatisfaction();
+
+            UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR????
+
             // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
         }
 

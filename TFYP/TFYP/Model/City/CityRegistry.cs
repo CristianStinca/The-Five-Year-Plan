@@ -73,14 +73,14 @@ namespace TFYP.Model.City
 
 
         // budget
-        public void SetBalance(double amount) // adds value (if negative, subtracts) from the balance
+        public void SetBalance(double amount, DateTime time) // adds value (if negative, subtracts) from the balance
         {
-            Statistics.Budget.UpdateBalance(amount);
+            Statistics.Budget.UpdateBalance(amount, time);
         }
 
-        public void ChangeTaxRate(double newRate)
+        public void ChangeTax(double newRate)
         {
-            Statistics.Budget.SetCurrentTaxRate(newRate);
+            Statistics.Budget.UpdateTax(newRate);
         }
 
 

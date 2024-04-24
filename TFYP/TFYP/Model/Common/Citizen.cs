@@ -145,7 +145,7 @@ namespace TFYP.Model.Common
         {
             // Calculating tax based on some constant base tax, the current tax rate, and an additional value based on education
 
-            float tax = (float)(Constants.CityBaseTax * budget.CurrentTaxRate + EducationLevel.GetEducationValue());
+            float tax = (float)(Constants.CityBaseTax * budget.CurrentTax + EducationLevel.GetEducationValue());
             TaxPaidThisYear = tax; // Assuming tax is paid annually
             return tax;
 

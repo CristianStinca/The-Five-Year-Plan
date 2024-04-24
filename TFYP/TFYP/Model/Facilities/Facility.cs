@@ -14,7 +14,6 @@ namespace TFYP.Model.Facilities
     {
         public int CurrentCapacity { get; set; }
 
-        // did not remove this just in case...
         public Facility(List<Vector2> _coor, EBuildable _type) : base(_coor, _type)
         {
             CurrentCapacity = 0;

@@ -17,7 +17,7 @@ namespace TFYP.Model.City
         public int IndustrialZoneCount { get; private set; }
         public int ServiceZoneCount { get; private set; }
         public double BudgetEffect { get; }
-        public double TaxEffect { get => 1 / (Budget.CurrentTaxRate > 0 ? Budget.CurrentTaxRate : 1); }
+        public double TaxEffect { get => 1 / (Budget.CurrentTax > 0 ? Budget.CurrentTax : 1); }
 
         public Statistics(Budget budget)
         {
@@ -32,7 +32,7 @@ namespace TFYP.Model.City
             IndustrialZoneCount = cityRegistry.Zones.OfType<ServiceZone>().Count();
         }
 
-        private void CalculateCitySatisfaction(GameModel gm)
+        public void CalculateCitySatisfaction(GameModel gm)
         {
             double totalSatisfactionInZone = gm.CityRegistry.Zones.Sum(zone => zone.GetZoneSatisfaction(gm));
             int zoneCount = gm.CityRegistry.Zones.Count;
