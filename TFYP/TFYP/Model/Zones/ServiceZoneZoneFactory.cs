@@ -26,7 +26,8 @@ namespace TFYP.Model.Zones
                 10, 
                 Constants.ServiceZoneCapacity, 
                 Constants.ServiceZoneMaintenanceCost, 
-                Constants.ServiceZoneBuildCost 
+                Constants.ServiceZoneBuildCost,
+                DateTime.Now
             );
         }
     }

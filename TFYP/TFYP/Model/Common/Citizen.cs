@@ -45,7 +45,7 @@ namespace TFYP.Model.Common
         public Zone LivingPlace { get; private set; }
         public int Age { get; private set; }
         public bool IsWorking { get; private set; }
-        public EducationLevel EducationLevel { get; private set; }
+        public EducationLevel EducationLevel { get; set; }
         public float TaxPaidThisYear { get; private set; }
         public float Satisfaction { get; private set; }
         public bool IsActive { get; private set; } = true;
@@ -77,7 +77,7 @@ namespace TFYP.Model.Common
             workPlace.AddCitizen(this, gm);
         }
 
-        public void IncAge()//სად გამოვიყენებთ?
+        public void IncAge()
         {
             Age++;
         }
@@ -109,8 +109,9 @@ namespace TFYP.Model.Common
                            ((livingPlaceSatisfaction + workPlaceSatisfaction) / 2 * Constants.ZoneSatisfactionWeight) +
                            cityFinancialHealthEffect;
 
-            // Clamp satisfaction between 0 and 1
-            Satisfaction = Math.Clamp(Satisfaction, 0f, 1f);
+
+            Satisfaction = Math.Clamp(Satisfaction * 100, 0f, 100f);
+
         }
 
         private float CalculateIndustrialProximityEffect(Zone livingPlace, GameModel gm)
@@ -144,7 +145,7 @@ namespace TFYP.Model.Common
         {
             // Calculating tax based on some constant base tax, the current tax rate, and an additional value based on education
 
-            float tax = (float)(Constants.CityBaseTax * budget.CurrentTaxRate + EducationLevel.GetEducationValue());
+            float tax = (float)(Constants.CityBaseTax * budget.CurrentTax + EducationLevel.GetEducationValue());
             TaxPaidThisYear = tax; // Assuming tax is paid annually
             return tax;
 

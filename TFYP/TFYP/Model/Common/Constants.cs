@@ -67,5 +67,10 @@ namespace TFYP.Model.Common
         public const float baseZoneSatisfaction = 60.0f;
 
 
+        public const int SatisfactionLowerLimit = 25;
+        public const int SatisfactionUpperLimit = 75;
+
+
+
     }
 }

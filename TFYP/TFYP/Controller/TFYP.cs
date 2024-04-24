@@ -69,7 +69,7 @@ namespace TFYP.Controller
             // (checking for collisions, gathering input, playing audio, etc.).
 
             // Updates the logic of the controller (mainly key presses and instructions of what to draw)
-            this._controller.Update();
+            this._controller.Update(gameTime);
 
             // Updates the internal state of the view
             this._view.Update();

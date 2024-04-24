@@ -28,29 +28,52 @@ namespace TFYP.Model.Zones
         // Tracking the citizens within the zone
         private bool canStartBuilding;
         private List<Citizen> citizens = new List<Citizen>();
-        //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
-        public ZoneLevel Level { get; private set; } 
 
-        public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost)
+        //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
+        public ZoneLevel Level { get; private set; }
+        public bool IsConnected { get; private set; }//ეს უნდა დაიმპლემენტდეს გზების ლოგიკის მერე!
+        private List<Zone> conncetedZone= new List<Zone>();
+        private List<Road> outGoing = new List<Road>();
+
+        public DateTime DayOfBuildStart { get; private set; }
+        public int TimeToBuild { get; set; }
+        public bool IsBuilt { get; set; }
+
+        // when timer has gone through the days needed it will call this function to register that building is done
+        public void finishBuilding()
+        {
+            IsBuilt = true;
+        }
+
+        public int NCitizensInZone
+        {
+            get { return citizens.Count(c => c.IsActive); } 
+        }
+
+        public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost, DateTime dayOfBuildStart)
             : base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
         {
             Health = 100;
             canStartBuilding = false;
             Level = ZoneLevel.One;
+            IsConnected = false;
+            TimeToBuild = timeToBuild;
+            IsBuilt = false;
+            DayOfBuildStart = dayOfBuildStart;
         }
 
+        public List<Road> GetOutgoing() {
+            return this.outGoing;
+        }
         //TO DO: Need to implement method for finding paths and set Connected for every zone
 
+        
 
-        public void RemoveCitizen(Citizen citizen, GameModel _gameModel)
+
+        public bool HasFreeCapacity()
         {
-            citizens.Remove(citizen);
-            //Statistics.Population -= 1;
-            //_gameModel.CityStatistics.SetCitySatisfaction(_gameModel);
+            return Capacity > NCitizensInZone;
         }
-
-
-
 
         public float GetIncome(Budget budget)
         {
@@ -100,7 +123,7 @@ namespace TFYP.Model.Zones
             var mindistInd = this.Coor.Min(s=>gm.GetDistanceToNearestIndustrialArea(s));
             double industrialEffect = -CalculateDistanceEffect(50, mindistInd, 0.7);
 
-            double freeWorkplaceEffect = (Capacity - citizens.Count) * 10; // more free capacity increases satisfaction
+            double freeWorkplaceEffect = (Capacity - NCitizensInZone) * 10; // more free capacity increases satisfaction
 
             double citizenSatisfaction = citizens.Any(c => c.IsActive)
                 ? citizens.Where(c => c.IsActive).Average(c => c.Satisfaction)
@@ -113,28 +136,15 @@ namespace TFYP.Model.Zones
                                        freeWorkplaceEffect +
                                        citizenSatisfaction;
 
+           
             return Math.Clamp(totalSatisfaction, 0, 100);
 
         }
 
+
         public void AddCitizen(Citizen citizen, GameModel _gameModel)
         {
-            if (citizen == null)
-                throw new ArgumentNullException(nameof(citizen), "Citizen cannot be null.");
-
-            if (!citizen.IsActive)
-                throw new InvalidOperationException("Cannot add an inactive citizen.");
-
-            if (citizens.Count >= Capacity)
-                throw new InvalidOperationException("Cannot add new citizen; zone capacity reached.");
-
-            if (citizens.Contains(citizen))
-                throw new InvalidOperationException("Citizen is already in the zone.");
-
             citizens.Add(citizen);
-
-            //this.statistics.Population += 1; 
-
         }
 
         public double UpgradeZone()
@@ -172,7 +182,32 @@ namespace TFYP.Model.Zones
             return upgradeCost;
         }
 
+        public override void AddConnectedZone(Zone z) {
+            this.conncetedZone.Add(z);
+            this.conncetedZone = this.conncetedZone.Distinct().ToList();
+        }
 
+
+        public override void AddOutgoingRoad(Road r) {
+            this.outGoing.Add(r);
+            this.outGoing=this.outGoing.Distinct().ToList();
+        }
+
+        public List<Zone> GetConnectedZones() {
+            return this.conncetedZone;
+        }
+
+
+        public override string ToString()
+        {
+            var citizensInfo = citizens.Where(c => c.IsActive).Select(c => c.ToString()).ToArray();
+
+            return $"Zone Details:\n" +
+                   $"Type: {Type}, Level: {Level}, Health: {Health}%\n" +
+                   $"Is Building Started: {(canStartBuilding ? "Yes" : "No")}, Is Connected: {(IsConnected ? "Yes" : "No")}\n" +
+                   $"Number of Citizens: {NCitizensInZone}, Capacity: {Capacity}\n" +
+                   $"Active Citizens Details: [{string.Join(", ", citizensInfo)}]";
+        }
 
         /*
          dictionary --> key is field, value is the actual value, 

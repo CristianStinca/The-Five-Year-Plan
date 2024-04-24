@@ -18,6 +18,8 @@ using TFYP.View.Renders;
 using TFYP.View.UIElements;
 using TFYP.View.Windows;
 using static TFYP.View.Windows.GameWindow;
+using static TFYP.View.Windows.Window;
+using MonoGame.Extended.Timers;
 
 namespace TFYP.Controller.WindowsControllers
 {
@@ -32,7 +34,9 @@ namespace TFYP.Controller.WindowsControllers
         View.Windows.GameWindow _gw_view;
 
         private EBuildable? _activeZone;
+        private Buildable? _selectedZone;
 
+        private bool _menu_is_active = false;
         public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
             : base(inputHandler, _view, _uiTextures)
         {
@@ -76,27 +80,34 @@ namespace TFYP.Controller.WindowsControllers
                     {
                         _gameModel.AddZone(x, y, (EBuildable)_activeZone);
                     }
+                    else
+                    {
+                        _selectedZone = _gameModel.GetMapElementAt(x, y);
+                        Buildable z = (Buildable)_selectedZone;
+                        RandomName rn = new(new Random());
+                        _gw_view.PrintInfo(Tuple.Create(_selectedZone.Type.ToString(), EPrintInfo.Title),
+                                           Tuple.Create("Capacity", EPrintInfo.Normal),
+                                           Tuple.Create("Residents", EPrintInfo.Normal),
+                                           Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
+                                           Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
+                                           Tuple.Create(rn.Generate(), EPrintInfo.Sublist)
+                        );
+                    }
                     break;
 
                 case "R":
                     Debug.WriteLine($"X: {x}, Y: {y}");
 
-                    RandomName rn = new(new Random());
-                    _gw_view.PrintInfo(Tuple.Create("Zone", EPrintInfo.Title),
-                                       Tuple.Create("Capacity", EPrintInfo.Normal),
-                                       Tuple.Create("Residents", EPrintInfo.Normal),
-                                       Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
-                                       Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
-                                       Tuple.Create(rn.Generate(), EPrintInfo.Sublist)
-                    );
                     _activeZone = null;
                     break;
             }
         }
 
-        public override void Update()
+        public override void Update(GameTime gameTime)
         {
-            base.Update();
+            base.Update(gameTime);
+            //var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //Debug.WriteLine($"Delta: {delta}");
 
             var map = _gameModel.map;
             ISprite[,] out_map = new ISprite[map.GetLength(0), map.GetLength(1)];
@@ -122,7 +133,13 @@ namespace TFYP.Controller.WindowsControllers
             {
                 if (key.Button == Keys.Escape && key.ButtonState == Utils.KeyState.Clicked)
                 {
-                    OnExitPressed();
+                    //OnExitPressed();
+                    if (_menu_is_active)
+                        _gw_view.CleanMenu();
+                    else
+                        _gw_view.DrawMenu();
+
+                    _menu_is_active = !_menu_is_active;
                 }
                 else if (key.Button == Keys.Up && key.ButtonState == Utils.KeyState.Held)
                 {
@@ -215,11 +232,20 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.UIPoliceButtonPressed += () => { _activeZone = EBuildable.PoliceStation; Debug.WriteLine("Selected PoliceStation."); };
             _gw_view.UIStadiumButtonPressed += () => { _activeZone = EBuildable.Stadium; Debug.WriteLine("Selected Stadium."); };
             _gw_view.UISchoolButtonPressed += () => { _activeZone = EBuildable.School; Debug.WriteLine("Selected School."); };
+            _gw_view.UIBudgetButtonPressed += () => { Debug.WriteLine(_gameModel.Statistics.Budget.Balance); };
+
             _gw_view.UIStopSpeedPressed += () => Debug.WriteLine("Stop Speed!");
             _gw_view.UISpeedX1Pressed += () => Debug.WriteLine("Speed X1!");
             _gw_view.UISpeedX2Pressed += () => Debug.WriteLine("Speed X2!");
             _gw_view.UISpeedX3Pressed += () => Debug.WriteLine("Speed X3!");
-        }
+
+            // TODO: from menu go back to game
+            _gw_view.UIMenuNewGameButtonPressed += ToGameWindow;
+            _gw_view.UIMenuSaveGameButtonPressed += ToLoadsWindow;
+            _gw_view.UIMenuLoadGameButtonPressed += ToLoadsWindow;
+            _gw_view.UIMenuOpenSettingsButtonPressed += ToSettingsWindow;
+            _gw_view.UIMenuExitButtonPressed += () => base.OnExitPressed();
+    }
 
         #endregion
     }

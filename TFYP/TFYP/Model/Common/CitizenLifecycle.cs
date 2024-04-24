@@ -43,13 +43,13 @@ namespace TFYP.Model.Common
             foreach (var workZone in ConnectedZones)
             {
                 if(workZone.Type == EBuildable.Industrial || workZone.Type == EBuildable.Service)
+            {
+                int distanceToWork = gm.CalculateDistanceBetweenZones(livingPlace, workZone);
+                if (distanceToWork < closestDistance)
                 {
-                    int distanceToWork = gm.CalculateDistanceBetweenZones(livingPlace, workZone);
-                    if (distanceToWork < closestDistance)
-                    {
-                        closestDistance = distanceToWork;
-                        closestZone = workZone;
-                    }
+                    closestDistance = distanceToWork;
+                    closestZone = workZone;
+                }
                 }
                 
             }

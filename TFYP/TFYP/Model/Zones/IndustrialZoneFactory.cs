@@ -26,7 +26,8 @@ namespace TFYP.Model.Zones
                 10,
                 Constants.IndustrialZoneCapacity, 
                 Constants.IndustrialZoneMaintenanceCost, 
-                Constants.IndustrialZoneBuildCost  
+                Constants.IndustrialZoneBuildCost,
+                DateTime.Now
             );
         }
     }

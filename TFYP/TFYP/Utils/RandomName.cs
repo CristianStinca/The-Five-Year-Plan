@@ -5,6 +5,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using TFYP.Resources.JSON;
 
 namespace TFYP.Utils
 {
@@ -13,23 +14,6 @@ namespace TFYP.Utils
     /// </summary>
     public class RandomName
     {  
-        /// <summary>
-        /// Class for holding the lists of names from names.json
-        /// </summary>
-        class NameList
-        {
-            public string[] boys { get; set; }
-            public string[] girls { get; set; }
-            public string[] last { get; set; }
-
-            public NameList()
-            {
-                boys = new string[] { };
-                girls = new string[] { };
-                last = new string[] { };
-            }
-        }
-
         Random rand;
         List<string> Male;
         List<string> Female;
@@ -42,19 +26,8 @@ namespace TFYP.Utils
         public RandomName(Random rand)
         {
             this.rand = rand;
-            NameList l = new NameList();
-
-            JsonSerializer serializer = new JsonSerializer();
-            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", "..", "..", "Resources", "names.json");
-
-            filePath = Path.GetFullPath(filePath);
-
-
-            using (StreamReader reader = new StreamReader(filePath))
-            using (JsonReader jreader = new JsonTextReader(reader))
-            {
-                l = serializer.Deserialize<NameList>(jreader);
-            }
+            string s = typeof(Program).Assembly.FullName;
+            NameList l = Globals.Content.Load<NameList>("names");
 
             Male = new List<string>(l.boys);
             Female = new List<string>(l.girls);
