@@ -363,11 +363,138 @@ namespace TFYP.Model
 
                 upgradeCost = zone.UpgradeZone();
                 CityRegistry.SetBalance(-upgradeCost);
+            }
+
+        }
+
+        public bool AreNewCitizensEligible()
+        {
+            // Check general satisfaction level
+            bool highSatisfaction = Statistics.Satisfaction >= Constants.SatisfactionUpperLimit;
+
+            // Check for free workplaces near available residential zones
+            bool freeWorkplacesAvailable = CityRegistry.GetFreeWorkplacesNearResidentialZones();
+
+            // Check for absence of industrial buildings near these zones
+            bool noNearbyIndustries = CityRegistry.NoIndustriesNearResidentialZones();
+
+            return highSatisfaction && freeWorkplacesAvailable && noNearbyIndustries;
+        }
+
+        
+
+        private void CitizenshipManipulation() 
+        {
+            if (AreNewCitizensEligible())
+            {
+                for(int i = 0; i < CitizenLifecycle.StartingNrCitizens; i++)
+                {
+                    CitizenLifecycle.CreateYoungCitizen(this);
+                }
+            }
+            
+            //ეს ლოგიკა როცა ახალი ხალხი მოდის რადგან მაღალია სეთისფექშენ, დასამატებელია ლოგიკა როცა
+            //იმდენად დაბალია რომ
+            //პირიქით, ხალხი ტოვებს ქალაქს!! აქვე დაამატე
+        }
 
 
             }
 
         }
+        // Example method to trigger a disaster
+        public void TriggerDisaster(Disaster disaster)
+        {
+            
+        }
+        // we might also need a method to update the game world after the disaster effects
+        public void UpdateAfterDisaster()
+        {
+            // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
+        }
 
+        public void UpdateCitySatisfaction()
+        {
+            Statistics.CalculateCitySatisfaction(this);
+        }
+
+        public void UpdateCityState()
+        {
+            // Placeholder for all update functions
+            CitizenshipManipulation();
+            CitizenshipEducationUpdate();
+            UpdateZoneBuildingStatus();
+            UpdateCitySatisfaction();
+
+            UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR????
+
+            // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
+        }
+
+        public void Step()
+        {
+            // Advance game time by one day every step
+            GameTime = GameTime.AddDays(1);
+            UpdateCityState();
+        }
+
+        public List<Zone> GetZonesThatAreStillBuilding()
+        {
+            List<Zone> stillBuilding = new List<Zone>();
+            foreach (Zone zone in GetAllZones())
+            {
+                if (!zone.IsBuilt)
+                {
+                    stillBuilding.Add(zone);
+                }
+            }
+            return stillBuilding;
+        }
+
+        private void UpdateZoneBuildingStatus()
+        {
+            DateTime gameCurrentTime = GameModel.GetInstance().GameTime; 
+
+            foreach (Zone zone in GetZonesThatAreStillBuilding())
+            {
+                TimeSpan dateDifference = gameCurrentTime - zone.DayOfBuildStart;
+                int daysDifference = dateDifference.Days;
+
+                if (daysDifference >= zone.TimeToBuild)
+                {
+                    zone.finishBuilding(); 
+                }
+            }
+        }
+
+
+
+
+        public void PauseGame()
+        {
+            Timer.Instance.StopTimer();
+            // Additional logic to display pause menu - if we will need it
+        }
+
+        public void ResumeGame()
+        {
+            Timer.Instance.StartTimer();
+            // Additional logic to hide pause menu and return to the game 
+        }
+
+        //For persistence feature:
+        public void SaveGame()
+        {
+            Timer.Instance.StopTimer();
+            // Logic to serialize and save the game state
+            Timer.Instance.StartTimer(); // restart timer if we want the game to resume immediately after saving
+        }
+
+        public void LoadGame()
+        {
+            Timer.Instance.StopTimer();
+            // Logic to deserialize and load the game state
+            Timer.Instance.StartTimer(); // Restart timer after loading is complete
+        }
     }
 }
