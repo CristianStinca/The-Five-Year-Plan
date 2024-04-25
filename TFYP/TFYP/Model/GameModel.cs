@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using TFYP.Model.Disasters;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using System.Globalization;
 
 
 namespace TFYP.Model
@@ -298,11 +299,16 @@ namespace TFYP.Model
                     map[_x, _y] = z2;
                     break;
                 case EBuildable.Road:
-                    Road r = new Road(t, EBuildable.Road);
-                    map[_x, _y] = r;
-                    Roads.Add(r);
-                    Statistics.Budget.UpdateBalance(-Constants.RoadBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.RoadMaintenanceFee);
+                    if (map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        Road r = new Road(t, EBuildable.Road);
+                        map[_x, _y] = r;
+                        Roads.Add(r);
+                        this.Roads = this.Roads.Distinct().ToList();
+                        Statistics.Budget.UpdateBalance(-Constants.RoadBuildCost, GameTime);
+                        CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.RoadMaintenanceFee);
+                    }
+                    
                     break;
                 case EBuildable.University:
                     if (!map[_x, _y].Type.Equals(EBuildable.None))
@@ -412,10 +418,49 @@ namespace TFYP.Model
         private void RemoveFromMap(int _x, int _y)
         {
             var obj = map[_x, _y];
-            if (!map[_x, _y].Type.Equals(EBuildable.Road))
+            if (obj.Type.Equals(EBuildable.Road))
+            {
+                map[_x, _y] = new Buildable(new List<Vector2> { new Vector2(_x, _y) }, EBuildable.None);
+                this.Roads.ForEach(x => x.checkForZones());
+                bool test = true;
+                foreach (var tmp in CityRegistry.Zones)
+                {
+                    foreach (var z in tmp.GetConnectedZones())
+                    {
+                        foreach (var i in tmp.GetOutgoing())
+                        {
+                            if (!i.connection(z))
+                            {
+                                test = false;
+                            }
+                            else {
+                                test = true;
+                                break;
+                            }
+                        }
+                        if (!test)
+                        {
+                            break;
+                        }
+                    }
+                    if (!test)
+                    {
+                        break;
+                    }
+                }
+                if (!test)
+                {
+                    map[_x, _y] = obj;
+                }
+                else {
+                    this.Roads.Remove((Road)obj);
+                    this.Roads=this.Roads.Distinct().ToList();
+                    this.Roads.ForEach(x=>x.checkForZones());
+                }
+            }
+            else
             {
                 obj.Coor.ForEach(c => map[(int)c.X, (int)c.Y] = new Buildable(new List<Vector2> { c }, EBuildable.None));
-
             }
         }
 
