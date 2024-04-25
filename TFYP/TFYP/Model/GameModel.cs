@@ -12,13 +12,11 @@ using Microsoft.Xna.Framework;
 using TFYP.Model.Disasters;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
-using MonoGame.Extended.Tiled;
-using System.Reflection.Emit;
 
 
 namespace TFYP.Model
 {
-    // IN GAMEMODEL WHEN WE WILL REMOVE SOMETHING - ZONE/FACILITY/ROAD, we need to call Budget.RemoveFromMaintenanceFee method
+    /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
 
     [Serializable]
     public class GameModel : ISteppable
@@ -37,6 +35,7 @@ namespace TFYP.Model
         public double MaxDistance { get; private set; }
         public float MaxTax { get; private set; }
 
+
         private GameModel(int _mapH, int _mapW)
         {
             MAP_H = _mapH;
@@ -47,7 +46,7 @@ namespace TFYP.Model
             CityRegistry = new CityRegistry(Statistics);
             CreationDate = DateTime.Now; // Year, Month, Day - we will change date later
             Roads = new List<Road>();
-            GameTime = DateTime.Now;
+
 
             InitializeMap();
             InitializeMaxValues();
@@ -55,10 +54,12 @@ namespace TFYP.Model
 
         private void InitializeMap()
         {
-            for (int i = 0; i < map.GetLength(0); i++) {
-                for (int j = 0; j < map.GetLength(1); j++) {
-                    
-                    map[i, j] = new Buildable(new List<Vector2> { new Vector2(i, j)}, EBuildable.None);
+            for (int i = 0; i < map.GetLength(0); i++)
+            {
+                for (int j = 0; j < map.GetLength(1); j++)
+                {
+
+                    map[i, j] = new Buildable(new List<Vector2> { new Vector2(i, j) }, EBuildable.None);
                 }
             }
         }
@@ -70,10 +71,11 @@ namespace TFYP.Model
             MaxTax = 50; // --> we will change in future
         }
 
-        public static GameModel GetInstance() {
+        public static GameModel GetInstance()
+        {
             if (instance == null)
-            { 
-                instance= new GameModel(20, 20);
+            {
+                instance = new GameModel(20, 20);
             }
             return instance;
         }
@@ -296,10 +298,6 @@ namespace TFYP.Model
                     map[_x, _y] = z2;
                     break;
                 case EBuildable.Road:
-                    if (!map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        break;
-                    }
                     Road r = new Road(t, EBuildable.Road);
                     map[_x, _y] = r;
                     Roads.Add(r);
@@ -382,8 +380,6 @@ namespace TFYP.Model
         }
 
 
-
-
         public IEnumerable<Zone> GetAllZones()
         {
             for (int i = 0; i < _mapH; i++)
@@ -397,13 +393,29 @@ namespace TFYP.Model
                 }
             }
         }
+        public void ApplyDisasterToZone(Disaster disaster, Zone zone)
+        {
+            // Check if the zone is within the effect radius of the disaster
+            // If so, apply the disaster effects to the zone and its citizens
+        }
+        // Example method to trigger a disaster
+        public void TriggerDisaster(Disaster disaster)
+        {
+            
+        }
+        // we might also need a method to update the game world after the disaster effects
+        public void UpdateAfterDisaster()
+        {
+            // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
+        }
 
-        private void RemoveFromMap(int _x, int _y) {
+        private void RemoveFromMap(int _x, int _y)
+        {
             var obj = map[_x, _y];
             if (!map[_x, _y].Type.Equals(EBuildable.Road))
             {
-                obj.Coor.ForEach(c => map[(int)c.X,(int)c.Y]=new Buildable(new List<Vector2> { c },EBuildable.None));      
-               
+                obj.Coor.ForEach(c => map[(int)c.X, (int)c.Y] = new Buildable(new List<Vector2> { c }, EBuildable.None));
+
             }
         }
 
@@ -462,13 +474,15 @@ namespace TFYP.Model
         {
             float minDistance = float.MaxValue;
 
+            // Iterate over every cell in your grid map
             for (int i = 0; i < MAP_H; i++)
             {
                 for (int j = 0; j < MAP_W; j++)
                 {
+                    // Check if the current cell is an Industrial area
                     if (map[i, j].Type == EBuildable.Industrial)
                     {
-                        float distance = Math.Abs(zoneCoordinate.X - i) + Math.Abs(zoneCoordinate.Y - j); 
+                        float distance = Math.Abs(zoneCoordinate.X - i) + Math.Abs(zoneCoordinate.Y - j); // Manhattan distance
                         if (distance < minDistance)
                         {
                             minDistance = distance;
@@ -482,6 +496,9 @@ namespace TFYP.Model
 
 
         //this is for citizen satisfaction, to measure the distance between his workplace and livingplace
+        //i think it is not necessary to calculate it using roads - მოკლედ ანუ იქნებ მაგ ორს შორის პირდაპირ მანძილს
+        //რომ ვპოულობ გზა არც გადის, მაგრამ მარტივად შეგვიძლია ასე გამოვთვალოთ ჩემი აზრით რადგან მაინც სეთისფექშენის
+        //დასათვლელად ვიყენებთ ამ პარამეტრს მხოლოდ - კრისთან გადაამოწმე
         public int CalculateDistanceBetweenZones(Zone zone1, Zone zone2)
         {
             if (zone1 == null || zone2 == null)
@@ -498,12 +515,13 @@ namespace TFYP.Model
                 foreach (Vector2 pos2 in position2)
                 {
                     int distance = (int)(Math.Abs(pos1.X - pos2.X) + Math.Abs(pos1.Y - pos2.Y));
-                    if (distance < min) {
+                    if (distance < min)
+                    {
                         min = distance;
                     }
                 }
             }
-            
+
 
             return min;
         }
@@ -543,9 +561,9 @@ namespace TFYP.Model
             return highSatisfaction && freeWorkplacesAvailable && noNearbyIndustries;
         }
 
-        
 
-        private void CitizenshipManipulation() 
+
+        private void CitizenshipManipulation()
         {
             if (AreNewCitizensEligible())
             {
@@ -560,6 +578,17 @@ namespace TFYP.Model
             //პირიქით, ხალხი ტოვებს ქალაქს!! აქვე დაამატე
         }
 
+
+
+
+
+        
+
+        public void UpdateCitySatisfaction()
+        {
+            Statistics.CalculateCitySatisfaction(this);
+        }
+
         private void CitizenshipEducationUpdate()
         {
             foreach (Citizen citizen in CityRegistry.GetAllCitizens())
@@ -570,23 +599,7 @@ namespace TFYP.Model
                 }
             }
         }
-        /*
-        private double computeSpend()
-        {
-            double spend = 0;
-            foreach (var zone in CityRegistry.Zones)
-            {
-                spend += zone.MaintenanceCost;
-            }
-            foreach (var facility in CityRegistry.Facilities)
-            {
-                spend += facility.MaintenanceCost;
-            }
-            spend += Roads.Count * Constants.RoadMaintenanceFee;
 
-            return spend;
-        }
-        */
         private void UpdateCityBalance()
         {
             double revenue = Statistics.Budget.ComputeRevenue(this);
@@ -596,29 +609,6 @@ namespace TFYP.Model
         }
 
 
-
-
-        //FOR DISASTER FEATURE --> WILL BE IMPLEMENTED IN THE END!
-        public void ApplyDisasterToZone(Disaster disaster, Zone zone)
-        {
-            // Check if the zone is within the effect radius of the disaster
-            // If so, apply the disaster effects to the zone and its citizens
-        }
-        // Example method to trigger a disaster
-        public void TriggerDisaster(Disaster disaster)
-        {
-            
-        }
-        // we might also need a method to update the game world after the disaster effects
-        public void UpdateAfterDisaster()
-        {
-            // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
-        }
-
-        public void UpdateCitySatisfaction()
-        {
-            Statistics.CalculateCitySatisfaction(this);
-        }
 
         double elapsedTime = 0;
         double totalElapsedTime = 0;
@@ -667,7 +657,7 @@ namespace TFYP.Model
 
         private void UpdateZoneBuildingStatus()
         {
-            DateTime gameCurrentTime = GameModel.GetInstance().GameTime; 
+            DateTime gameCurrentTime = GameModel.GetInstance().GameTime;
 
             foreach (Zone zone in GetZonesThatAreStillBuilding())
             {
@@ -676,7 +666,7 @@ namespace TFYP.Model
 
                 if (daysDifference >= zone.TimeToBuild)
                 {
-                    zone.finishBuilding(); 
+                    zone.finishBuilding();
                 }
             }
         }
