@@ -433,31 +433,18 @@ namespace TFYP.Model
         }
 
 
-
-        double elapsedTime = 0;
-        double totalElapsedTime = 0;
-
-        public void UpdateCityState(GameTime gameTime)
+        public void UpdateCityState()
         {
-            elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            totalElapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-            //Debug.WriteLine($"Time: {gameTime.ElapsedGameTime.TotalMilliseconds}s");
-            if (elapsedTime > 5000)
-            {
-                Debug.WriteLine($"Time: {(int)(totalElapsedTime / 5000)} Days gone...");
-                elapsedTime = 0;
+            // Placeholder for all update functions
+            CitizenshipManipulation();
+            CitizenshipEducationUpdate();
+            UpdateZoneBuildingStatus();
+            UpdateCitySatisfaction();
 
-                // Placeholder for all update functions
-                CitizenshipManipulation();
-                CitizenshipEducationUpdate();
-                UpdateZoneBuildingStatus();
-                UpdateCitySatisfaction();
+            GameTime = GameTime.AddDays(1);
 
-                GameTime = GameTime.AddDays(1);
-
-                UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR???? IDK
-                // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
-            }
+            UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR???? IDK
+            // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
         }
 
         public void Step()

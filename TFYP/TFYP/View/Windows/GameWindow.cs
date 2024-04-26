@@ -274,7 +274,7 @@ namespace TFYP.View.Windows
             perspectiveButton.ButtonPressed += (string name) => { if (!is_menu_active) ChangePerspective(); };
             ElementsInWindow.Add(perspectiveButton.ToIRenderable());
             
-            RenderableContainer menuContainer = new(0, 0, ESize.AllScreen);
+            RenderableContainer menuContainer = new(0, 0, ESize.AllScreen, new Color(Color.Gray, 0.1f));
             Sprite menuBackground = new Sprite(Globals.Content.Load<Texture2D>("Menu/game_menu_back"));
             menuContainer.AddElement(EVPosition.Center, EHPosition.Center, menuBackground);
 

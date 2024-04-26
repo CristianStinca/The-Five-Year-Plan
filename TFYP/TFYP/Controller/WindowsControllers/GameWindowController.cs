@@ -35,8 +35,15 @@ namespace TFYP.Controller.WindowsControllers
 
         private EBuildable? _activeZone;
         private Buildable? _selectedZone;
+        private bool _win_is_open = false;
 
         private bool _menu_is_active = false;
+
+        private int speed = 1;
+        private bool stop = false;
+
+        private double elapsedTime = 0;
+
         public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
             : base(inputHandler, _view, _uiTextures)
         {
@@ -74,24 +81,39 @@ namespace TFYP.Controller.WindowsControllers
             switch (btn)
             {
                 case "L":
-                    _gw_view.DeleteInfo();
+                    //_gw_view.DeleteInfo();
 
                     if (_activeZone != null)
                     {
+                        //_win_is_open = false;
                         _gameModel.AddZone(x, y, (EBuildable)_activeZone);
                     }
-                    else
+                    else if (!_win_is_open)
                     {
+                        //_win_is_open = true;
                         _selectedZone = _gameModel.GetMapElementAt(x, y);
                         Buildable z = (Buildable)_selectedZone;
                         RandomName rn = new(new Random());
-                        _gw_view.PrintInfo(Tuple.Create(_selectedZone.Type.ToString(), EPrintInfo.Title),
-                                           Tuple.Create("Capacity", EPrintInfo.Normal),
-                                           Tuple.Create("Residents", EPrintInfo.Normal),
-                                           Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
-                                           Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
-                                           Tuple.Create(rn.Generate(), EPrintInfo.Sublist)
-                        );
+
+                        if (z is Zone)
+                        {
+                            Zone zn = (Zone)z;
+                            _gw_view.PrintInfo(Tuple.Create(_selectedZone.Type.ToString(), EPrintInfo.Title),
+                                               Tuple.Create("Level: " + zn.Level.ToString(), EPrintInfo.Normal),
+                                               Tuple.Create("Number of citizens: " + zn.NCitizensInZone.ToString() + " / " + zn.Capacity.ToString(), EPrintInfo.Normal),
+                                               Tuple.Create("Satisfaction: " + zn.GetZoneSatisfaction(_gameModel), EPrintInfo.Normal)
+                            );
+                        }
+                        else
+                        {
+                            _gw_view.PrintInfo(Tuple.Create(_selectedZone.Type.ToString(), EPrintInfo.Title),
+                                               Tuple.Create("Cap", EPrintInfo.Normal),
+                                               Tuple.Create("Residents", EPrintInfo.Normal),
+                                               Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
+                                               Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
+                                               Tuple.Create(rn.Generate(), EPrintInfo.Sublist)
+                            );
+                        }
                     }
                     break;
 
@@ -99,6 +121,7 @@ namespace TFYP.Controller.WindowsControllers
                     Debug.WriteLine($"X: {x}, Y: {y}");
 
                     _activeZone = null;
+                    //_win_is_open = false;
                     break;
             }
         }
@@ -106,9 +129,19 @@ namespace TFYP.Controller.WindowsControllers
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            //var delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            //Debug.WriteLine($"Delta: {delta}");
-            _gameModel.UpdateCityState(gameTime);
+
+            if (!stop)
+            {
+                elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds * this.speed;
+
+                if (elapsedTime > 5000)
+                {
+                    elapsedTime = 0;
+
+                    //update the model every 5 seconds on normal speed
+                    _gameModel.UpdateCityState();
+                }
+            }
 
             var map = _gameModel.map;
             ISprite[,] out_map = new ISprite[map.GetLength(0), map.GetLength(1)];
@@ -235,10 +268,10 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.UISchoolButtonPressed += () => { _activeZone = EBuildable.School; Debug.WriteLine("Selected School."); };
             _gw_view.UIBudgetButtonPressed += () => { Debug.WriteLine(_gameModel.Statistics.Budget.Balance); };
 
-            _gw_view.UIStopSpeedPressed += () => Debug.WriteLine("Stop Speed!");
-            _gw_view.UISpeedX1Pressed += () => Debug.WriteLine("Speed X1!");
-            _gw_view.UISpeedX2Pressed += () => Debug.WriteLine("Speed X2!");
-            _gw_view.UISpeedX3Pressed += () => Debug.WriteLine("Speed X3!");
+            _gw_view.UIStopSpeedPressed += () => stop = true;
+            _gw_view.UISpeedX1Pressed += () => { speed = 1; stop = false; };
+            _gw_view.UISpeedX2Pressed += () => { speed = 2; stop = false; };
+            _gw_view.UISpeedX3Pressed += () => { speed = 3; stop = false; };
 
             // TODO: from menu go back to game
             _gw_view.UIMenuNewGameButtonPressed += ToGameWindow;
