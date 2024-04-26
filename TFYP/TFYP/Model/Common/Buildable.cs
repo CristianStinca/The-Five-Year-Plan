@@ -15,7 +15,7 @@ namespace TFYP.Model.Common
     public class Buildable
     {
 
-        public List<Vector2> Coor { get; }
+        public List<Vector2> Coor { get; set; }
         public EBuildable Type { get; set; }
         public int ConstructionCost { get; set; }
         public int InfluenceRadius { get; set; }
@@ -49,6 +49,7 @@ namespace TFYP.Model.Common
 
         }
         public virtual void AddConnectedZone(Zone z) { }
+        public virtual void ClearConnectedZone() { }
     }
 
 }

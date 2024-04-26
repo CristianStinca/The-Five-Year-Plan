@@ -182,6 +182,12 @@ namespace TFYP.Model.Zones
             return upgradeCost;
         }
 
+
+        public override void ClearConnectedZone()
+        {
+            this.conncetedZone.Clear();
+        }
+
         public override void AddConnectedZone(Zone z) {
             this.conncetedZone.Add(z);
             this.conncetedZone = this.conncetedZone.Distinct().ToList();

@@ -168,8 +168,6 @@ namespace TFYP.Model
                     }
                 }
 
-
-
                 foreach (var i in CityRegistry.Zones) {
                     foreach (var tmp in CityRegistry.Zones) {
                         if (!tmp.Equals(i)) {
@@ -197,8 +195,6 @@ namespace TFYP.Model
                     }
                 }
             }
-
-
             catch (Exception ex) {
                 Debug.WriteLine(ex);    
             }
@@ -414,32 +410,75 @@ namespace TFYP.Model
         {
             // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
         }
-
+        /// <summary>
+        /// removing the tile fomr the map making it Ebuildable.None
+        /// it's the outer function calling inner fucntions when needed like remove Zone or remove road
+        /// </summary>
+        /// <param name="_x"> x coridnate fo the removed </param>
+        /// <param name="_y">y coridnate of the removed tile</param>
         private void RemoveFromMap(int _x, int _y)
         {
             var obj = map[_x, _y];
             if (obj.Type.Equals(EBuildable.Road))
             {
-                map[_x, _y] = new Buildable(new List<Vector2> { new Vector2(_x, _y) }, EBuildable.None);
-                this.Roads.ForEach(x => x.checkForZones());
-                bool test = true;
-                foreach (var tmp in CityRegistry.Zones)
+                this.RemoveRoad(_x, _y);
+            }
+            else if (obj.GetType().Equals(typeof(Zone)))
+            {
+                RemoveZone(_x, _y);
+            }
+            else {
+                RemoveFacility(_x, _y);
+            }
+        }
+
+        /// <summary>
+        /// remove one til eof ht zone without removing the entire zone itself
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        private void RemoveZone(int _x, int _y) {
+            var obj = map[_x, _y];
+            Zone z = (Zone)obj;
+            this.CityRegistry.Zones.Remove(z);
+            map[_x, _y] = new Buildable(new List<Vector2>() { new Vector2(_x, _y) },EBuildable.None);
+            obj.Coor.Remove(new Vector2(_x, _y));
+            foreach (var i in obj.Coor) {
+                var t = map[(int)i.X, (int)i.Y];
+                t.Coor = obj.Coor;
+            }
+
+            foreach (var i in CityRegistry.Zones) {
+                i.ClearConnectedZone();
+            }
+
+        }
+
+
+        /// <summary>
+        /// checking if after the removal of the road the connected zones will be connected or the connection will be severed 
+        /// making decision to procceed with the removal according to the result
+        /// </summary>
+        /// <param name="_x"></param>
+        /// <param name="_y"></param>
+        private void RemoveRoad(int _x, int _y) {
+            var obj= map[_x, _y];
+            map[_x, _y] = new Buildable(new List<Vector2> { new Vector2(_x, _y) }, EBuildable.None);
+            this.Roads.ForEach(x => x.checkForZones());
+            bool test = true;
+            foreach (var tmp in CityRegistry.Zones)
+            {
+                foreach (var z in tmp.GetConnectedZones())
                 {
-                    foreach (var z in tmp.GetConnectedZones())
+                    foreach (var i in tmp.GetOutgoing())
                     {
-                        foreach (var i in tmp.GetOutgoing())
+                        if (!i.connection(z))
                         {
-                            if (!i.connection(z))
-                            {
-                                test = false;
-                            }
-                            else {
-                                test = true;
-                                break;
-                            }
+                            test = false;
                         }
-                        if (!test)
+                        else
                         {
+                            test = true;
                             break;
                         }
                     }
@@ -450,22 +489,29 @@ namespace TFYP.Model
                 }
                 if (!test)
                 {
-                    map[_x, _y] = obj;
+                    break;
                 }
-                else {
-                    this.Roads.Remove((Road)obj);
-                    this.Roads=this.Roads.Distinct().ToList();
-                    this.Roads.ForEach(x=>x.checkForZones());
-                }
+            }
+            if (!test)
+            {
+                map[_x, _y] = obj;
             }
             else
             {
-                obj.Coor.ForEach(c => map[(int)c.X, (int)c.Y] = new Buildable(new List<Vector2> { c }, EBuildable.None));
+                this.Roads.Remove((Road)obj);
+                this.Roads = this.Roads.Distinct().ToList();
+                this.Roads.ForEach(x => x.checkForZones());
             }
+        }
+        private void RemoveFacility(int _x, int _y) {
+            var obj = map[_x, _y];
+            obj.Coor.ForEach(c => map[(int)c.X, (int)c.Y] = new Buildable(new List<Vector2> { c }, EBuildable.None));
+
         }
 
 
         //These 3 helper functions to calculate zone sattisfaction!!
+
 
         public float GetDistanceToNearestPoliceStation(Vector2 zoneCoordinate)
         {
