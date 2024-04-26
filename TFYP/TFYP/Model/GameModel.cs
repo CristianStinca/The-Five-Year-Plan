@@ -12,6 +12,7 @@ using Microsoft.Xna.Framework;
 using TFYP.Model.Disasters;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
+using System.Globalization;
 
 
 namespace TFYP.Model
@@ -19,8 +20,8 @@ namespace TFYP.Model
     /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
 
     [Serializable]
-    public class GameModel
-    {
+    public class GameModel : ISteppable
+    {       
         private static GameModel instance = null;
         private static int _mapH, _mapW;
         public Buildable[,] map;
@@ -92,46 +93,130 @@ namespace TFYP.Model
             get { return _mapW; }
             set { _mapW = value; }
         }
-
-        //Adds the zone to the city
+        
         public void AddZone(int _x, int _y, EBuildable zone)
         {
             // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
             try
             {
                 AddToMap(_y, _x, zone);
+
                 foreach (Road tmp in Roads)
                 {
                     tmp.checkForZones();
-                    if (map[_x, _y].Type == EBuildable.Industrial || map[_x, _y].Type == EBuildable.Service || map[_x, _y].Type == EBuildable.Residential)
+                    foreach (var b in tmp.connected)
                     {
-                        //bool con = tmp.connection(map[_x, _y]);
+                        if (b.Type.Equals(EBuildable.Residential) || b.Type.Equals(EBuildable.Industrial) || b.Type.Equals(EBuildable.Service))
+                        {
+                            b.AddOutgoingRoad(tmp);
+                        }
+                    }
+                }
 
+                foreach (var z in CityRegistry.Zones)
+                {
+                    for(int i=0; i<z.Coor.Count; i++)
+                    {
+                        var tmp= z.Coor[i];
+                        if (!z.Coor.Contains(new Vector2((tmp.X+1), tmp.Y)))
+                        {
+                            if (this.map[(int)tmp.X+1, (int)tmp.Y].Type.Equals(z.Type)) {
+                                z.Coor.Add(new Vector2((tmp.X + 1),tmp.Y));
+                            }
+                        }
+                        if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y)))
+                        {
+                            if (this.map[(int)tmp.X - 1, (int)tmp.Y].Type.Equals(z.Type))
+                            {
+                                z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y));
+                            }
+                        }
+                        if (tmp.X % 2 == 0)
+                        {
+                            if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y - 1)))
+                            {
+                                if (this.map[(int)tmp.X - 1, (int)tmp.Y-1].Type.Equals(z.Type))
+                                {
+                                    z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y-1));
+                                }
+                            }
+                            if (!z.Coor.Contains(new Vector2((tmp.X + 1), tmp.Y - 1)))
+                            {
+                                if (this.map[(int)tmp.X + 1, (int)tmp.Y - 1].Type.Equals(z.Type))
+                                {
+                                    z.Coor.Add(new Vector2((tmp.X + 1), tmp.Y - 1));
+                                }
+                            }
+                        }
+                        else {
+                            if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y + 1)))
+                            {
+                                if (this.map[(int)tmp.X - 1, (int)tmp.Y+1].Type.Equals(z.Type))
+                                {
+                                    z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y+1));
+                                }
+                            }
+                            if (!z.Coor.Contains(new Vector2((tmp.X + 1), tmp.Y + 1)))
+                            {
+                                if (this.map[(int)tmp.X + 1, (int)tmp.Y + 1].Type.Equals(z.Type))
+                                {
+                                    z.Coor.Add(new Vector2((tmp.X + 1), tmp.Y + 1));
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+
+
+                foreach (var i in CityRegistry.Zones) {
+                    foreach (var tmp in CityRegistry.Zones) {
+                        if (!tmp.Equals(i)) {
+                            foreach (var r in i.GetOutgoing()) 
+                            {
+                                if (r.connection(tmp)) {
+                                    i.AddConnectedZone(tmp);
+                                    tmp.AddConnectedZone(i);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                foreach (var i in CityRegistry.Zones) {
+                    var Connection = i.GetConnectedZones();
+                    foreach (var tmp in i.Coor) {
+                        if (!i.Equals(map[(int)tmp.X, (int)tmp.Y]))
+                        {
+                            foreach (var z in Connection)
+                            {
+                                map[(int)tmp.X, (int)tmp.Y].AddConnectedZone(z);
+                            }
+                        }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
+
+
+            catch (Exception ex) {
+                Debug.WriteLine(ex);    
             }
-            //cityRegistry.AddZone(zone);
-            //cityRegistry.UpdateBalance(-zone.GetOneTimeCost(), GetCurrentDate());
+            
         }
-        private void AddToMap(int _x, int _y, EBuildable zone)
-        {
+        private void AddToMap(int _x, int _y, EBuildable zone) {
 
-            //left as x and y for now, can be changed to coordinate later
-
-            //map[_x, _y] = new Buildable(new Vector2(_x, _y), zone.type);
             List<Vector2> t = new List<Vector2>();
             t.Add((new Vector2(_x, _y)));
 
 
             switch (zone)
             {
-
+                
                 case EBuildable.Stadium:
-
+                    CityRegistry.AddFacility(new Stadium(t, zone));
+                    Statistics.Budget.UpdateBalance(-Constants.StadiumBuildCost, GameTime);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
                     Stadium stad;
                     if (_x % 2 == 0)
                     {
@@ -141,12 +226,12 @@ namespace TFYP.Model
                         }
                         t.Add(new Vector2(_x + 1, _y));
                         t.Add(new Vector2(_x - 1, _y));
-                        t.Add(new Vector2(_x, _y + 1));
+                        t.Add(new Vector2(_x, _y+1));
                         stad = new Stadium(t, zone);
                         map[_x, _y] = stad;
                         map[_x + 1, _y] = stad;
                         map[_x - 1, _y] = stad;
-                        map[_x, _y + 1] = stad;
+                        map[_x, _y +1] = stad;
                     }
                     else
                     {
@@ -167,39 +252,134 @@ namespace TFYP.Model
                     break;
 
                 case EBuildable.None:
-                    this.RemoveFromMap(_x, _y);
+                    this.RemoveFromMap(_x,_y);
                     break;
                 case EBuildable.PoliceStation:
-                    map[_x, _y] = new PoliceStation(t, zone);
+                    if(!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
+                    PoliceStation s = new PoliceStation(t, zone);
+                    CityRegistry.AddFacility(s);
+                    Statistics.Budget.UpdateBalance(-Constants.PoliceStationBuildCost, GameTime);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.PoliceStationMaintenanceFee);
+                    map[_x, _y] = s;
                     break;
                 case EBuildable.Residential:
-                    map[_x, _y] = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, DateTime.Now);
+                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
+                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, DateTime.Now);
+                    CityRegistry.AddZone(z);
+                    Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost, GameTime);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
+                    map[_x, _y] = z;
                     break;
                 case EBuildable.Service:
-                    map[_x, _y] = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, DateTime.Now);
+                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
+                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, DateTime.Now);
+                    CityRegistry.AddZone(z1);
+                    Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost, GameTime);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
+                    map[_x, _y] = z1;
                     break;
                 case EBuildable.Industrial:
-                    map[_x, _y] = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, DateTime.Now);
+                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
+                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, DateTime.Now);
+                    CityRegistry.AddZone(z2);
+                    Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost, GameTime);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
+                    map[_x, _y] = z2;
                     break;
                 case EBuildable.Road:
-                    Road r = new Road(t, EBuildable.Road);
-                    map[_x, _y] = r;
-                    Roads.Add(r);
-
-
+                    if (map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        Road r = new Road(t, EBuildable.Road);
+                        map[_x, _y] = r;
+                        Roads.Add(r);
+                        this.Roads = this.Roads.Distinct().ToList();
+                        Statistics.Budget.UpdateBalance(-Constants.RoadBuildCost, GameTime);
+                        CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.RoadMaintenanceFee);
+                    }
+                    
+                    break;
+                case EBuildable.University:
+                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        break;
+                    }
+                    University u = new University(t);
+                    CityRegistry.AddFacility(u);
+                    map[_x, _y] = u;
+                    Statistics.Budget.UpdateBalance(-Constants.UniversityBuildCost, GameTime);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
                     break;
                 case EBuildable.School:
-
-
-                    if (!(map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None)))
+                    CityRegistry.AddFacility(new School(t));
+                    Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost, GameTime);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
+                    if(_x % 2 == 0)
                     {
-                        throw new Exception("second tile was alradsy filled");
+                        if(map[_x - 1, _y - 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                        {
+                            t.Add(new Vector2(_x - 1, _y - 1));
+                            School tmp = new School(t);
+                            map[_x, _y] = tmp;
+                            map[_x - 1, _y - 1] = tmp;
+                            break;
+                        }
+                        else if(map[_x + 1, _y - 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                        {
+                            t.Add(new Vector2(_x + 1, _y - 1));
+                            School tmp = new School(t);
+                            map[_x, _y] = tmp;
+                            map[_x + 1, _y - 1] = tmp;
+                            break;
+                        }
                     }
-                    t.Add(new Vector2(_x + 1, _y));
-                    School tmp = new School(t);
-                    map[_x, _y] = tmp;
-                    map[_x + 1, _y] = tmp;
-
+                    else
+                    {
+                        if (map[_x - 1, _y + 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                        {
+                            t.Add(new Vector2(_x - 1, _y + 1));
+                            School tmp = new School(t);
+                            map[_x, _y] = tmp;
+                            map[_x - 1, _y + 1] = tmp;
+                            break;
+                        }
+                        else if (map[_x + 1, _y + 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                        {
+                            t.Add(new Vector2(_x + 1, _y + 1));
+                            School tmp = new School(t);
+                            map[_x, _y] = tmp;
+                            map[_x + 1, _y + 1] = tmp;
+                            break;
+                        }
+                    }
+                    if (map[_x - 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        t.Add(new Vector2(_x - 1, _y));
+                        School tmp = new School(t);
+                        map[_x, _y] = tmp;
+                        map[_x - 1, _y] = tmp;
+                        break;
+                    }
+                    else if (map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
+                    {
+                        t.Add(new Vector2(_x + 1, _y));
+                        School tmp = new School(t);
+                        map[_x, _y] = tmp;
+                        map[_x + 1, _y] = tmp;
+                        break;
+                    }
+                    throw new Exception("second tile was alradsy filled");
                     break;
 
             }
@@ -238,10 +418,49 @@ namespace TFYP.Model
         private void RemoveFromMap(int _x, int _y)
         {
             var obj = map[_x, _y];
-            if (!map[_x, _y].Type.Equals(EBuildable.Road))
+            if (obj.Type.Equals(EBuildable.Road))
+            {
+                map[_x, _y] = new Buildable(new List<Vector2> { new Vector2(_x, _y) }, EBuildable.None);
+                this.Roads.ForEach(x => x.checkForZones());
+                bool test = true;
+                foreach (var tmp in CityRegistry.Zones)
+                {
+                    foreach (var z in tmp.GetConnectedZones())
+                    {
+                        foreach (var i in tmp.GetOutgoing())
+                        {
+                            if (!i.connection(z))
+                            {
+                                test = false;
+                            }
+                            else {
+                                test = true;
+                                break;
+                            }
+                        }
+                        if (!test)
+                        {
+                            break;
+                        }
+                    }
+                    if (!test)
+                    {
+                        break;
+                    }
+                }
+                if (!test)
+                {
+                    map[_x, _y] = obj;
+                }
+                else {
+                    this.Roads.Remove((Road)obj);
+                    this.Roads=this.Roads.Distinct().ToList();
+                    this.Roads.ForEach(x=>x.checkForZones());
+                }
+            }
+            else
             {
                 obj.Coor.ForEach(c => map[(int)c.X, (int)c.Y] = new Buildable(new List<Vector2> { c }, EBuildable.None));
-
             }
         }
 
@@ -364,9 +583,11 @@ namespace TFYP.Model
             Zone zone = map[x, y] as Zone;
             if (zone != null)
             {
-
+                Statistics.Budget.RemoveFromMaintenanceFee(zone.MaintenanceCost);//remove old maintenanceCost before upgrade  
                 upgradeCost = zone.UpgradeZone();
                 CityRegistry.SetBalance(-upgradeCost, GameTime);
+                Statistics.Budget.AddToMaintenanceFee(zone.MaintenanceCost);//add new maintenanceCost after upgrade
+
             }
 
         }
@@ -511,11 +732,5 @@ namespace TFYP.Model
             // Logic to deserialize and load the game state
             Timer.Instance.StartTimer(); // Restart timer after loading is complete
         }
-
-
-
-
-
     }
-
 }
