@@ -33,11 +33,11 @@ namespace TFYP.View.Windows
 
             RenderableContainer container = new(0, 0, ESize.FitContent);
 
-            RenderableList menuList = new(70, 0, 0, EHPosition.Center);
+            RenderableVerticalList menuList = new(70, 0, 0, EHPosition.Center);
             Sprite title_btn = new Sprite(Globals.Content.Load<Texture2D>("Menu/Title"));
             menuList.AddElement(title_btn);
 
-            RenderableList menuListButtons = new(20, 0, 0);
+            RenderableVerticalList menuListButtons = new(20, 0, 0);
 
             new_btn = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/NewGame_Button")));
             new_btn.ButtonPressed += (string name) => UIMenuNewGameButtonPressed.Invoke();

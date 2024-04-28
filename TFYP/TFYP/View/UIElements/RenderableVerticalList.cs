@@ -9,7 +9,7 @@ using TFYP.View.Renders;
 
 namespace TFYP.View.UIElements
 {
-    internal class RenderableList : BaseRenderableObjectCollection
+    internal class RenderableVerticalList : BaseRenderableObjectCollection
     {
         protected int _space = 0;
         protected int _length = 0;
@@ -39,15 +39,15 @@ namespace TFYP.View.UIElements
         public int Length { get { return _length; } }
         public int Space { get { return _space; } }
 
-        public RenderableList(int space, Vector2 position) : base(position)
+        public RenderableVerticalList(int space, Vector2 position) : base(position)
         {
             _space = space;
             _position = position;
             _hPosition = null;
         }
 
-        public RenderableList(int space, int x, int y) : this(space, new Vector2(x, y)) { }
-        public RenderableList(int space, int x, int y, EHPosition horizontal_position) : this(space, new Vector2(x, y))
+        public RenderableVerticalList(int space, int x, int y) : this(space, new Vector2(x, y)) { }
+        public RenderableVerticalList(int space, int x, int y, EHPosition horizontal_position) : this(space, new Vector2(x, y))
         {
             _hPosition = horizontal_position;
         }

@@ -34,7 +34,7 @@ namespace TFYP.Controller.WindowsControllers
         View.Windows.GameWindow _gw_view;
 
         private EBuildable? _activeZone;
-        private Buildable? _selectedZone;
+        private Point? _selectedZone;
         private bool _win_is_open = false;
 
         private bool _menu_is_active = false;
@@ -91,29 +91,8 @@ namespace TFYP.Controller.WindowsControllers
                     else if (!_win_is_open)
                     {
                         //_win_is_open = true;
-                        _selectedZone = _gameModel.GetMapElementAt(x, y);
-                        Buildable z = (Buildable)_selectedZone;
-                        RandomName rn = new(new Random());
-
-                        if (z is Zone)
-                        {
-                            Zone zn = (Zone)z;
-                            _gw_view.PrintInfo(Tuple.Create(_selectedZone.Type.ToString(), EPrintInfo.Title),
-                                               Tuple.Create("Level: " + zn.Level.ToString(), EPrintInfo.Normal),
-                                               Tuple.Create("Number of citizens: " + zn.NCitizensInZone.ToString() + " / " + zn.Capacity.ToString(), EPrintInfo.Normal),
-                                               Tuple.Create("Satisfaction: " + zn.GetZoneSatisfaction(_gameModel), EPrintInfo.Normal)
-                            );
-                        }
-                        else
-                        {
-                            _gw_view.PrintInfo(Tuple.Create(_selectedZone.Type.ToString(), EPrintInfo.Title),
-                                               Tuple.Create("Cap", EPrintInfo.Normal),
-                                               Tuple.Create("Residents", EPrintInfo.Normal),
-                                               Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
-                                               Tuple.Create(rn.Generate(), EPrintInfo.Sublist),
-                                               Tuple.Create(rn.Generate(), EPrintInfo.Sublist)
-                            );
-                        }
+                        _selectedZone = new Point(x, y);
+                        _gw_view.is_tile_info_active = true;
                     }
                     break;
 
@@ -121,6 +100,8 @@ namespace TFYP.Controller.WindowsControllers
                     Debug.WriteLine($"X: {x}, Y: {y}");
 
                     _activeZone = null;
+                    _gw_view.DeleteInfo();
+                    _gw_view.is_tile_info_active = false;
                     //_win_is_open = false;
                     break;
             }
@@ -141,6 +122,16 @@ namespace TFYP.Controller.WindowsControllers
                     //update the model every 5 seconds on normal speed
                     _gameModel.UpdateCityState();
                 }
+            }
+
+            if (_gw_view.is_tile_info_active && _selectedZone != null)
+            {
+                SendTileInfo();
+            }
+
+            if (_gw_view.is_budget_active)
+            {
+                SendBudgetInfo();
             }
 
             var map = _gameModel.map;
@@ -194,6 +185,33 @@ namespace TFYP.Controller.WindowsControllers
 
                 _gw_view.SetFocusCoord(_initCoord - _focusCoord);
             }
+        }
+
+        private void SendTileInfo()
+        {
+            Point zn_point = (Point)_selectedZone;
+            Buildable z = (Buildable)_gameModel.GetMapElementAt(zn_point.X, zn_point.Y);
+            if (z is Zone)
+            {
+                Zone zn = (Zone)z;
+                _gw_view.PrintInfo(Tuple.Create(z.Type.ToString(), EPrintInfo.Title),
+                                   Tuple.Create("Level: " + zn.Level.ToString(), EPrintInfo.Normal),
+                                   Tuple.Create("Number of citizens: " + zn.NCitizensInZone.ToString() + " / " + zn.Capacity.ToString(), EPrintInfo.Normal),
+                                   Tuple.Create("Satisfaction: " + zn.GetZoneSatisfaction(_gameModel), EPrintInfo.Normal)
+                );
+            }
+            else
+            {
+                _gw_view.PrintInfo(Tuple.Create(z.Type.ToString(), EPrintInfo.Title),
+                                   Tuple.Create("Cap", EPrintInfo.Normal),
+                                   Tuple.Create("Residents", EPrintInfo.Normal)
+                );
+            }
+        }
+
+        private void SendBudgetInfo()
+        {
+            _gw_view.PrintStats(Tuple.Create("City budget: " + _gameModel.Statistics.Budget.Balance, EPrintInfo.Title));
         }
 
         /// <summary>
@@ -266,12 +284,12 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.UIPoliceButtonPressed += () => { _activeZone = EBuildable.PoliceStation; Debug.WriteLine("Selected PoliceStation."); };
             _gw_view.UIStadiumButtonPressed += () => { _activeZone = EBuildable.Stadium; Debug.WriteLine("Selected Stadium."); };
             _gw_view.UISchoolButtonPressed += () => { _activeZone = EBuildable.School; Debug.WriteLine("Selected School."); };
-            _gw_view.UIBudgetButtonPressed += () => { Debug.WriteLine(_gameModel.Statistics.Budget.Balance); };
+            _gw_view.UIBudgetButtonPressed += () => { Debug.WriteLine(_gameModel.Statistics.Budget.Balance); _gw_view.is_budget_active = true; };
 
-            _gw_view.UIStopSpeedPressed += () => stop = true;
-            _gw_view.UISpeedX1Pressed += () => { speed = 1; stop = false; };
-            _gw_view.UISpeedX2Pressed += () => { speed = 2; stop = false; };
-            _gw_view.UISpeedX3Pressed += () => { speed = 3; stop = false; };
+            _gw_view.UIStopSpeedPressed += () => { stop = true; Debug.WriteLine("Speed stop."); };
+            _gw_view.UISpeedX1Pressed += () => { speed = 1; stop = false; Debug.WriteLine("Speed X1."); };
+            _gw_view.UISpeedX2Pressed += () => { speed = 2; stop = false; Debug.WriteLine("Speed X2."); };
+            _gw_view.UISpeedX3Pressed += () => { speed = 3; stop = false; Debug.WriteLine("Speed X3."); };
 
             // TODO: from menu go back to game
             _gw_view.UIMenuNewGameButtonPressed += ToGameWindow;
