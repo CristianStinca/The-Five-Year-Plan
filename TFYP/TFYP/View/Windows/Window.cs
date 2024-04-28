@@ -43,7 +43,7 @@ namespace TFYP.View.Windows
             // base for updating the ui while the window is active
             foreach (Button btn in _UpdateingUIElements)
             {
-                btn.Update();
+                btn?.Update();
             }
         }
 
