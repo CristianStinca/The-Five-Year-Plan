@@ -317,6 +317,18 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Grasses/plain_grass.png;Grasses/plain_grass.png
 
+#begin ../Resources/Images/Grasses/plain_grass1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Grasses/plain_grass1.png;Grasses/plain_grass1.png
+
 #begin ../Resources/Images/Menu/back_Button.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -521,6 +533,126 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Menu/Title.png;Menu/Title.png
 
+#begin ../Resources/Images/Roads/curve1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/curve1.png;Roads/curve1.png
+
+#begin ../Resources/Images/Roads/curve2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/curve2.png;Roads/curve2.png
+
+#begin ../Resources/Images/Roads/curve3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/curve3.png;Roads/curve3.png
+
+#begin ../Resources/Images/Roads/curve4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/curve4.png;Roads/curve4.png
+
+#begin ../Resources/Images/Roads/deadend1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/deadend1.png;Roads/deadend1.png
+
+#begin ../Resources/Images/Roads/deadend2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/deadend2.png;Roads/deadend2.png
+
+#begin ../Resources/Images/Roads/deadend3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/deadend3.png;Roads/deadend3.png
+
+#begin ../Resources/Images/Roads/deadend4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/deadend4.png;Roads/deadend4.png
+
+#begin ../Resources/Images/Roads/eroad.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/eroad.png;Roads/eroad.png
+
+#begin ../Resources/Images/Roads/quadruple.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/quadruple.png;Roads/quadruple.png
+
 #begin ../Resources/Images/Roads/road1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -544,6 +676,54 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Roads/road2.png;Roads/road2.png
+
+#begin ../Resources/Images/Roads/triple1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/triple1.png;Roads/triple1.png
+
+#begin ../Resources/Images/Roads/triple2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/triple2.png;Roads/triple2.png
+
+#begin ../Resources/Images/Roads/triple3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/triple3.png;Roads/triple3.png
+
+#begin ../Resources/Images/Roads/triple4.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Roads/triple4.png;Roads/triple4.png
 
 #begin ../Resources/Images/StadiumParts/stadium_bottom.png
 /importer:TextureImporter
@@ -604,6 +784,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Tiles/empty_tile.png;Tiles/empty_tile.png
+
+#begin ../Resources/Images/Tiles/innac.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Tiles/innac.png;Tiles/innac.png
 
 #begin ../Resources/Images/Tiles/police_station_cars.png
 /importer:TextureImporter

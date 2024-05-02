@@ -36,8 +36,9 @@ namespace TFYP.View.UIElements
         public Sprite ServiceTile12 { get; set; }
         public Sprite ServiceTile13 { get; set; }
 
-        public Sprite RoadTile { get; set; }
+        public Sprite[] RoadTiles = new Sprite[16];
         public Sprite DoneResidentialTile { get; set; }
+        public Sprite Inaccessible { get; set; }
 
         #endregion
 
@@ -59,9 +60,25 @@ namespace TFYP.View.UIElements
             ServiceTile11 = CreateSprite("Zones/service11");
             ServiceTile12 = CreateSprite("Zones/service12");
             ServiceTile13 = CreateSprite("Zones/service13");
-            RoadTile = CreateSprite("Roads/road2");
             DoneResidentialTile = CreateSprite("Tiles/police_station");
+            Inaccessible = CreateSprite("Tiles/innac");
 
+            RoadTiles[0b_0000] = CreateSprite("Roads/eroad");
+            RoadTiles[0b_0001] = CreateSprite("Roads/deadend4");
+            RoadTiles[0b_0010] = CreateSprite("Roads/deadend1");
+            RoadTiles[0b_0011] = CreateSprite("Roads/curve1");
+            RoadTiles[0b_0100] = CreateSprite("Roads/deadend2");
+            RoadTiles[0b_0101] = CreateSprite("Roads/road1");
+            RoadTiles[0b_0110] = CreateSprite("Roads/curve4");
+            RoadTiles[0b_0111] = CreateSprite("Roads/triple2");
+            RoadTiles[0b_1000] = CreateSprite("Roads/deadend3");
+            RoadTiles[0b_1001] = CreateSprite("Roads/curve2");
+            RoadTiles[0b_1010] = CreateSprite("Roads/road2");
+            RoadTiles[0b_1011] = CreateSprite("Roads/triple3");
+            RoadTiles[0b_1100] = CreateSprite("Roads/curve3");
+            RoadTiles[0b_1101] = CreateSprite("Roads/triple4");
+            RoadTiles[0b_1110] = CreateSprite("Roads/triple1");
+            RoadTiles[0b_1111] = CreateSprite("Roads/quadruple");
         }
 
         private T ifLoaded<T>(T val)

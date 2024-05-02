@@ -20,6 +20,7 @@ namespace TFYP.Model.Common
         DoneResidential,
         Industrial,
         Service,
-        Road
+        Road,
+        Inaccessible
     }
 }
