@@ -59,8 +59,14 @@ namespace TFYP.Model
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-
-                    map[i, j] = new Buildable(new List<Vector2> { new Vector2(i, j) }, EBuildable.None);
+                    if (i <= 1 || j == 0 || i >= map.GetLength(0) - 2 || j == map.GetLength(1) - 1)
+                    {
+                        map[i, j] = new Buildable(new List<Vector2> { new Vector2(i, j) }, EBuildable.Inaccessible);
+                    }
+                    else
+                    {
+                        map[i, j] = new Buildable(new List<Vector2> { new Vector2(i, j) }, EBuildable.None);
+                    }
                 }
             }
         }
@@ -619,7 +625,14 @@ namespace TFYP.Model
 
         public Buildable GetMapElementAt(int x, int y)
         {
-            return map[y, x];
+            try
+            {
+                return map[y, x];
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                return null;
+            }
         }
 
         public void UpgradeZone(int x, int y)
@@ -779,6 +792,28 @@ namespace TFYP.Model
             Timer.Instance.StopTimer();
             // Logic to deserialize and load the game state
             Timer.Instance.StartTimer(); // Restart timer after loading is complete
+        }
+
+        public Buildable[] GetAdj(int i, int j)
+        {
+            Buildable[] arr = new Buildable[4];
+
+            if (j % 2 == 1)
+            {
+                arr[0] = map[i, j - 1];
+                arr[1] = map[i + 1, j - 1];
+                arr[2] = map[i + 1, j + 1];
+                arr[3] = map[i, j + 1];
+            }
+            else
+            {
+                arr[0] = map[i - 1, j - 1];
+                arr[1] = map[i, j - 1];
+                arr[2] = map[i, j + 1];
+                arr[3] = map[i - 1, j + 1];
+            }
+
+            return arr;
         }
     }
 }

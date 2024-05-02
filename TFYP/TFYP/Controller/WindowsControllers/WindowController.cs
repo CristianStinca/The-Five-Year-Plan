@@ -24,13 +24,13 @@ namespace TFYP.Controller.WindowsControllers
 
         protected InputHandler _inputHandler;
         protected View.View _view;
-        protected IUIElements _uiTextures;
+        protected UIObjects _uiTextures;
 
         public WindowController(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures)
         {
             this._inputHandler = _inputHandler;
             this._view = _view;
-            this._uiTextures = _uiTextures;
+            this._uiTextures = _uiTextures as UIObjects;
         }
 
         public static void ToGameWindow()

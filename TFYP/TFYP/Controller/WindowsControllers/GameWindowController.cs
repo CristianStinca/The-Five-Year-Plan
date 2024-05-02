@@ -51,7 +51,6 @@ namespace TFYP.Controller.WindowsControllers
             this._gameModel = _gameModel;
 
             _activeZone = null;
-            InitiateConverionDict();
 
             if (base._view.CurrentWindow.GetType().Name.CompareTo(typeof(View.Windows.GameWindow).Name) == 0)
             {
@@ -66,8 +65,9 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.TileButtonPressedInWindow += ClickInButton;
             //_gw_view.UIMenuNewGameButtonPressed += ToGameWindow;
             _screenLimits = _gw_view.ScreenLimit;
-            _focusCoord = new Vector2(_screenLimits.X, _screenLimits.Y);
+            _focusCoord = new Vector2(_screenLimits.X + _gw_view.ScreenLimit.Width / 2, _screenLimits.Y + _gw_view.ScreenLimit.Height / 2);
             _initCoord = new Vector2(_screenLimits.X, _screenLimits.Y);
+            _gw_view.SetFocusCoord(_initCoord - _focusCoord);
         }
 
         /// <summary>
@@ -144,7 +144,48 @@ namespace TFYP.Controller.WindowsControllers
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    out_map[i, j] = this.CreateUIElement(map[i, j].Type);
+                    ISprite sprite = _uiTextures.EmptyTile;
+
+                    switch (map[i, j].Type)
+                    {
+                        case EBuildable.Stadium:
+                            sprite = _uiTextures.StadiumTile;
+                            break;
+
+                        case EBuildable.School:
+                            sprite = _uiTextures.SchoolTile;
+                            break;
+
+                        case EBuildable.PoliceStation:
+                            sprite = _uiTextures.PoliceTile;
+                            break;
+
+                        case EBuildable.Residential:
+                            sprite = _uiTextures.ResidentialTile;
+                            break;
+
+                        case EBuildable.Industrial:
+                            sprite = _uiTextures.IndustrialTile;
+                            break;
+
+                        case EBuildable.Service:
+                            sprite = _uiTextures.ServiceTile;
+                            break;
+
+                        case EBuildable.Road:
+                            sprite = DecideRoad(j, i);
+                            break;
+
+                        case EBuildable.DoneResidential:
+                            sprite = _uiTextures.DoneResidentialTile;
+                            break;
+
+                        case EBuildable.Inaccessible:
+                            sprite = _uiTextures.Inaccessible;
+                            break;
+                    }
+
+                    out_map[i, j] = sprite;
                 }
             }
 
@@ -187,6 +228,45 @@ namespace TFYP.Controller.WindowsControllers
             }
         }
 
+        private Sprite DecideRoad(int x, int y)
+        {
+            byte dir = 0b_0000;
+            Buildable[] arr = GetAdj(x, y);
+            if (arr[0]?.Type == EBuildable.Road)
+                dir |= 0b_1000;
+            if (arr[1]?.Type == EBuildable.Road)
+                dir |= 0b_0100;
+            if (arr[2]?.Type == EBuildable.Road)
+                dir |= 0b_0010;
+            if (arr[3]?.Type == EBuildable.Road)
+                dir |= 0b_0001;
+
+            //Debug.WriteLine($"X: {x}, Y: {y}");
+            return _uiTextures.RoadTiles[dir];
+        }
+
+        private Buildable[] GetAdj(int x, int y)
+        {
+            Buildable[] arr = new Buildable[4];
+
+            if (y % 2 == 1)
+            {
+                arr[0] = _gameModel.GetMapElementAt(x, y - 1);
+                arr[1] = _gameModel.GetMapElementAt(x + 1, y - 1);
+                arr[2] = _gameModel.GetMapElementAt(x + 1, y + 1);
+                arr[3] = _gameModel.GetMapElementAt(x, y + 1);
+            }
+            else
+            {
+                arr[0] = _gameModel.GetMapElementAt(x - 1, y - 1);
+                arr[1] = _gameModel.GetMapElementAt(x, y - 1);
+                arr[2] = _gameModel.GetMapElementAt(x, y + 1);
+                arr[3] = _gameModel.GetMapElementAt(x - 1, y + 1);
+            }
+
+            return arr;
+        }
+
         private void SendTileInfo()
         {
             Point zn_point = (Point)_selectedZone;
@@ -194,6 +274,7 @@ namespace TFYP.Controller.WindowsControllers
             if (z is Zone)
             {
                 Zone zn = (Zone)z;
+
                 _gw_view.PrintInfo(Tuple.Create(z.Type.ToString(), EPrintInfo.Title),
                                    Tuple.Create("Level: " + zn.Level.ToString(), EPrintInfo.Normal),
                                    Tuple.Create("Number of citizens: " + zn.NCitizensInZone.ToString() + " / " + zn.Capacity.ToString(), EPrintInfo.Normal),
@@ -202,6 +283,12 @@ namespace TFYP.Controller.WindowsControllers
             }
             else
             {
+                if (z.Type == EBuildable.Inaccessible || z.Type == EBuildable.Road)
+                {
+                    _gw_view.DeleteInfo();
+                    return;
+                }
+
                 _gw_view.PrintInfo(Tuple.Create(z.Type.ToString(), EPrintInfo.Title),
                                    Tuple.Create("Cap", EPrintInfo.Normal),
                                    Tuple.Create("Residents", EPrintInfo.Normal)
@@ -232,45 +319,7 @@ namespace TFYP.Controller.WindowsControllers
             return false;
         }
 
-        #region MODEL_TO_VIEW_TYPE_CONVERSIONS
-
-        private Dictionary<EBuildable, ISprite> conversionDict;
-
-        /// <summary>
-        /// Initiates the dictionary for conversions between EBuildable and UITexture
-        /// </summary>
-        private void InitiateConverionDict()
-        {
-            conversionDict = new()
-            {
-                { EBuildable.None, _uiTextures.EmptyTile },
-                { EBuildable.Stadium, _uiTextures.StadiumTile },
-                { EBuildable.School, _uiTextures.SchoolTile },
-                { EBuildable.PoliceStation, _uiTextures.PoliceTile },
-                { EBuildable.Residential, _uiTextures.ResidentialTile },
-                { EBuildable.Industrial, _uiTextures.IndustrialTile },
-                { EBuildable.Service, _uiTextures.ServiceTile },
-                { EBuildable.Road, _uiTextures.RoadTile },
-                { EBuildable.DoneResidential,_uiTextures.DoneResidentialTile }
-
-            };
-        }
-
-        /// <summary>
-        /// Just a converter.
-        /// </summary>
-        /// <param name="from">An EBuildable object.</param>
-        /// <returns>A IRenderable object.</returns>
-        /// <exception cref="ArgumentException">Raises exception if the EBuildable is not in the dictionary.</exception>
-        private ISprite CreateUIElement(EBuildable from)
-        {
-            if (!conversionDict.ContainsKey(from))
-            {
-                throw new ArgumentException(from.ToString());
-            }
-
-            return conversionDict[from];
-        }
+        #region LINKING_VIEW_EVENTS
 
         private void LinkViewEvents()
         {
