@@ -28,12 +28,12 @@ namespace TFYP.View.Windows
 
             RenderableContainer container = new(0, 0, ESize.FitContent);
 
-            RenderableList menuList = new(70, 0, 0, EHPosition.Center);
+            RenderableVerticalList menuList = new(70, 0, 0, EHPosition.Center);
             //Text title = new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Choose save:", new Vector2(20, 30), Color.Black);
             Sprite title = new Sprite(Globals.Content.Load<Texture2D>("Menu/Settings"));
             menuList.AddElement(title);
 
-            RenderableList menuListButtons = new(20, 0, 0);
+            RenderableVerticalList menuListButtons = new(20, 0, 0);
 
             //slot1 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Slot1_Button")));
             //slot1.ButtonPressed += (string name) => UISavesMenuSlot1ButtonPressed.Invoke();

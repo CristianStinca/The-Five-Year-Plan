@@ -699,7 +699,9 @@ namespace TFYP.Model
             Statistics.Budget.Balance -= spend;
         }
 
-
+        /// <summary>
+        /// Function to be called for when a new day arrives.
+        /// </summary>
         public void UpdateCityState()
         {
             // Placeholder for all update functions

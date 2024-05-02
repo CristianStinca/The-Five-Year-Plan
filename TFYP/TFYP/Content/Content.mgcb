@@ -65,6 +65,18 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Buttons/ButtonsHolder.png;Buttons/ButtonsHolder.png
 
+#begin ../Resources/Images/Buttons/close_Button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Buttons/close_Button.png;Buttons/close_Button.png
+
 #begin ../Resources/Images/Buttons/Commertial_Zone_Button.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -292,18 +304,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Grasses/grass5.png;Grasses/grass5.png
-
-#begin ../Resources/Images/Grasses/plain_grass.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Grasses/plain_grass.png;Grasses/plain_grass.png
 
 #begin ../Resources/Images/Grasses/plain_grass.png
 /importer:TextureImporter
