@@ -749,6 +749,14 @@ namespace TFYP.Model
             }
         }
 
+        public void GenerateDisaster() {
+            int _X, _Y;
+            Random rnd = new Random();
+            _X=rnd.Next(20);
+            _Y = rnd.Next(20);
+            Disaster dis = new Disaster(5,new Vector2(_X, _Y));
+            dis.ApplyEffects(this);
+        }
 
 
 

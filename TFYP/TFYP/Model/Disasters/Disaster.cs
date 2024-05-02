@@ -20,11 +20,10 @@ namespace TFYP.Model.Disasters
         public Vector2 Location { get; set; }
         public DisasterType Type { get; set; }
 
-        public Disaster(string name, float effectRadius, DisasterType type, Vector2 location)
+        public Disaster( float effectRadius, Vector2 location)
         {
-            Name = name;
             EffectRadius = effectRadius;
-            Type = type;
+            Type = this.SelectType();
             Location = location;
         }
 
@@ -80,6 +79,12 @@ namespace TFYP.Model.Disasters
             return false;
         }
 
+        private DisasterType SelectType() {
+            Random random = new Random();
+            int selection = random.Next(4);
+            return (DisasterType)selection;   
+        }
+
         private void DamageBuildings(Zone zone, float damagePercent)
         {
             //foreach (var building in zone.Buildings)
@@ -111,10 +116,10 @@ namespace TFYP.Model.Disasters
     // Add/Change types
     public enum DisasterType
     {
-        Fire,
-        Flood,
-        Earthquake,
-        GodzillaAttack 
+        Fire=0,
+        Flood=1,
+        Earthquake=2,
+        GodzillaAttack=3 
     }
 
 
