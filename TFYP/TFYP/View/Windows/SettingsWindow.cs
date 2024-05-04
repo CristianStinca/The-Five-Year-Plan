@@ -9,6 +9,7 @@ using TFYP.View.UIElements.ClickableElements;
 using TFYP.View.UIElements;
 using Microsoft.Xna.Framework;
 using TFYP.View.Renders;
+using MonoGame.Extended.BitmapFonts;
 
 namespace TFYP.View.Windows
 {
@@ -29,21 +30,15 @@ namespace TFYP.View.Windows
             RenderableContainer container = new(0, 0, ESize.FitContent);
 
             RenderableVerticalList menuList = new(70, 0, 0, EHPosition.Center);
-            //Text title = new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Choose save:", new Vector2(20, 30), Color.Black);
+            //Text title = new BitmapText(Globals.Content.Load<BitmapFont>("UIButtonsText"), "Choose save:", new Vector2(20, 30), Color.Black);
             Sprite title = new Sprite(Globals.Content.Load<Texture2D>("Menu/Settings"));
             menuList.AddElement(title);
 
             RenderableVerticalList menuListButtons = new(20, 0, 0);
 
-            //slot1 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Slot1_Button")));
-            //slot1.ButtonPressed += (string name) => UISavesMenuSlot1ButtonPressed.Invoke();
-            //menuListButtons.AddElement(slot1);
-            //slot2 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Slot2_Button")));
-            //slot2.ButtonPressed += (string name) => UISavesMenuSlot2ButtonPressed.Invoke();
-            //menuListButtons.AddElement(slot2);
-            //slot3 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Slot3_Button")));
-            //slot3.ButtonPressed += (string name) => UISavesMenuSlot3ButtonPressed.Invoke();
-            //menuListButtons.AddElement(slot3);
+            menuListButtons.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/propaganda_60"), "[AWSD] - Movement", Vector2.Zero, new Color(222, 219, 0)));
+            menuListButtons.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/propaganda_60"), "[R] - Rotate", Vector2.Zero, new Color(222, 219, 0)));
+            menuListButtons.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/propaganda_60"), "[Esc] - Menu", Vector2.Zero, new Color(222, 219, 0)));
 
             menuList.AddElement(menuListButtons);
 

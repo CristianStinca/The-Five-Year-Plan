@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,9 +20,11 @@ namespace TFYP.View.UIElements
     {
         #region OBJECTS_DECLARATIONS
 
+        private List<Sprite> _emptyTiles = new();
         public Sprite EmptyTile { get; set; }
         public Sprite StadiumTile { get; set; }
         public Sprite SchoolTile { get; set; }
+        public Sprite SchoolTile_r { get; set; }
         public Sprite PoliceTile { get; set; }
         public Sprite ResidentialTile { get; set; }
         public Sprite ResidentialTile11 { get; set; }
@@ -42,11 +45,22 @@ namespace TFYP.View.UIElements
 
         #endregion
 
+        private OpenSimplexNoise noise;
+
         public UIObjects()
         {
+            noise = new OpenSimplexNoise();
+
             EmptyTile = CreateSprite("Grasses/grass1");
-            StadiumTile = CreateSprite("Tiles/stadium_tile");
-            SchoolTile = CreateSprite("Tiles/school");
+            _emptyTiles.Add(CreateSprite("Grasses/grass3"));
+            _emptyTiles.Add(CreateSprite("Grasses/grass1"));
+            _emptyTiles.Add(CreateSprite("Grasses/grass2"));
+            _emptyTiles.Add(CreateSprite("Grasses/grass5"));
+
+            //StadiumTile = CreateSprite("Tiles/stadium_tile");
+            StadiumTile = CreateSprite("StadiumParts/stadium_full");
+            SchoolTile = CreateSprite("Tiles/school_double");
+            SchoolTile_r = CreateSprite("Tiles/school_double_rotated");
             PoliceTile = CreateSprite("Tiles/police_station");
             ResidentialTile = CreateSprite("Zones/residential_empty");
             ResidentialTile11 = CreateSprite("Zones/residential11");
@@ -61,7 +75,8 @@ namespace TFYP.View.UIElements
             ServiceTile12 = CreateSprite("Zones/service12");
             ServiceTile13 = CreateSprite("Zones/service13");
             DoneResidentialTile = CreateSprite("Tiles/police_station");
-            Inaccessible = CreateSprite("Tiles/innac");
+            //Inaccessible = CreateSprite("Tiles/innac");
+            Inaccessible = CreateSprite("Grasses/grass4");
 
             RoadTiles[0b_0000] = CreateSprite("Roads/eroad");
             RoadTiles[0b_0001] = CreateSprite("Roads/deadend4");
@@ -81,6 +96,25 @@ namespace TFYP.View.UIElements
             RoadTiles[0b_1111] = CreateSprite("Roads/quadruple");
         }
 
+        public Sprite getGrass(int x, int y)
+        {
+            double level = noise.Evaluate(x, y) + 1;
+            int nr = _emptyTiles.Count;
+
+            if (nr == 0)
+                throw new ArgumentNullException();
+
+            for (int i = 1; i <= nr; i++)
+            {
+                if (level <= (i/(float)nr) * 2f)
+                {
+                    return _emptyTiles[i-1];
+                }
+            }
+
+            throw new ArithmeticException();
+        }
+
         private T ifLoaded<T>(T val)
         {
             if (!(val is object))
@@ -95,15 +129,6 @@ namespace TFYP.View.UIElements
 
             return val;
         }
-
-        //private static Button CreateButton(string buttonNormal, string buttonHover, Vector2 position)
-        //{
-        //    Texture2D startNormal = Globals.Content.Load<Texture2D>(buttonNormal);
-        //    Texture2D startHover = Globals.Content.Load<Texture2D>(buttonHover);
-        //    Sprite startSprite = new Sprite(startNormal, position);
-        //    Button newButton = new Button(startSprite, startHover, startNormal);
-        //    return newButton;
-        //}
 
         /// <summary>
         /// Creates a sprite from the given file.

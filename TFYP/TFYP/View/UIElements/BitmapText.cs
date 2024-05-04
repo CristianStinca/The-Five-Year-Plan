@@ -10,25 +10,25 @@ using TFYP.View.Renders;
 
 namespace TFYP.View.UIElements
 {
-    internal class Text : ITextRenderable
+    internal class BitmapText : ITextRenderable
     {
-        public SpriteFont Font { get; set; }
+        public BitmapFont BTFont { get; set; }
         public string TextString { get; set; }
         public Vector2 Position { get; set; }
         public Color Color { get; set; }
         public Rectangle SourceRectangle { get; set; }
         public Rectangle CollisionRectangle { get; set; }
-        public BitmapFont BTFont { get; set; }
+        public SpriteFont Font { get; set; }
 
-        public Text(SpriteFont font, string text, Vector2 position, Color color)
+        public BitmapText(BitmapFont font, string text, Vector2 position, Color color)
         {
-            this.Font = font;
-            this.BTFont = null;
+            this.Font = null;
+            this.BTFont = font;
             this.TextString = text;
             this.Position = position;
             this.Color = color;
-            this.SourceRectangle = new(Point.Zero, font.MeasureString(text).ToPoint());
-            this.CollisionRectangle = new ((int)position.X, (int)position.Y, SourceRectangle.Width, SourceRectangle.Height);
+            this.SourceRectangle = new(Point.Zero, ((Point)font.MeasureString(text)));
+            this.CollisionRectangle = new((int)position.X, (int)position.Y, SourceRectangle.Width, SourceRectangle.Height);
         }
 
         public object Clone()

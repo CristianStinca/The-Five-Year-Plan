@@ -35,7 +35,6 @@ namespace TFYP.Controller.WindowsControllers
 
         private EBuildable? _activeZone;
         private Point? _selectedZone;
-        private bool _win_is_open = false;
 
         private bool _menu_is_active = false;
 
@@ -43,6 +42,11 @@ namespace TFYP.Controller.WindowsControllers
         private bool stop = false;
 
         private double elapsedTime = 0;
+
+        private List<Point> HoveredTiles = new();
+
+        private Color hover_tint = Color.LightGray;
+        private bool rotate = true;
 
         public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
             : base(inputHandler, _view, _uiTextures)
@@ -63,6 +67,7 @@ namespace TFYP.Controller.WindowsControllers
 
             LinkViewEvents();
             _gw_view.TileButtonPressedInWindow += ClickInButton;
+            _gw_view.TileButtonHoverInWindow += HoverOverButton;
             //_gw_view.UIMenuNewGameButtonPressed += ToGameWindow;
             _screenLimits = _gw_view.ScreenLimit;
             _focusCoord = new Vector2(_screenLimits.X + _gw_view.ScreenLimit.Width / 2, _screenLimits.Y + _gw_view.ScreenLimit.Height / 2);
@@ -86,11 +91,10 @@ namespace TFYP.Controller.WindowsControllers
                     if (_activeZone != null)
                     {
                         //_win_is_open = false;
-                        _gameModel.AddZone(x, y, (EBuildable)_activeZone);
+                        _gameModel.AddZone(x, y, (EBuildable)_activeZone, rotate);
                     }
-                    else if (!_win_is_open)
+                    else
                     {
-                        //_win_is_open = true;
                         _selectedZone = new Point(x, y);
                         _gw_view.is_tile_info_active = true;
                     }
@@ -98,13 +102,19 @@ namespace TFYP.Controller.WindowsControllers
 
                 case "R":
                     Debug.WriteLine($"X: {x}, Y: {y}");
+                    //Debug.WriteLine($"i: {y}, j: {x}");
 
                     _activeZone = null;
                     _gw_view.DeleteInfo();
                     _gw_view.is_tile_info_active = false;
-                    //_win_is_open = false;
                     break;
             }
+        }
+
+        public void HoverOverButton(int x, int y)
+        {
+            HoveredTiles.Clear();
+            HoveredTiles.Add(new Point(x, y));
         }
 
         public override void Update(GameTime gameTime)
@@ -140,20 +150,83 @@ namespace TFYP.Controller.WindowsControllers
             // TODO: add an event/obs collection to model to avoid re-drawing of the matrix
 
             // trnsform the array of Buildable from the model to array of ViewObject for View
-            for (int i = 0; i < map.GetLength(0); i++)
+
+            hover_tint = Color.LightGray;
+            if (HoveredTiles.Count > 0)
+            {
+                Point hovered = HoveredTiles.ElementAt(0);
+                switch (_activeZone)
+                {
+                    case EBuildable.Stadium:
+                        HoveredTiles.Add(GetCoordAt(0b_1000, hovered));
+                        HoveredTiles.Add(GetCoordAt(0b_0100, hovered));
+                        HoveredTiles.Add(GetCoordAt(0b_0100, GetCoordAt(0b_1000, hovered)));
+                        break;
+
+                    case EBuildable.School:
+                        if (rotate)
+                            HoveredTiles.Add(GetCoordAt(0b_0100, hovered));
+                        else
+                            HoveredTiles.Add(GetCoordAt(0b_1000, hovered));
+                        break;
+
+                    case EBuildable.None:
+                        hover_tint = Color.Pink; break;
+                }
+            }
+
+            foreach (Point hovered in HoveredTiles)
+            {
+                if (_activeZone != null && _activeZone == EBuildable.None)
+                {
+                    if (_gameModel.GetMapElementAt(hovered).Type == EBuildable.None)
+                    {
+                        HoveredTiles.Clear();
+                        break;
+                    }
+                }
+                else 
+                {
+                    if (_gameModel.GetMapElementAt(hovered).Type != EBuildable.None)
+                    {
+                        HoveredTiles.Clear();
+                        break;
+                    }
+                }
+            }
+
+            List<Point> ignore_points = new();
+            for (int i = map.GetLength(0) - 1; i >= 0; i--)
             {
                 for (int j = 0; j < map.GetLength(1); j++)
                 {
-                    ISprite sprite = _uiTextures.EmptyTile;
+                    if (ignore_points.Contains(new Point(i, j)))
+                        continue;
 
-                    switch (map[i, j].Type)
+                    ISprite sprite = _uiTextures.EmptyTile;
+                    Buildable tile = map[i, j];
+
+                    float left_deviation = 0f;
+                    if (tile.Coor.Count > 1 && !(tile is Zone))
+                    {
+                        ignore_points.AddRange(tile.Coor.Select((coord) => coord.ToPoint()));
+
+                        int max = tile.Coor.FindAll((coord) => coord.Y <= j).Max((coord) => _gameModel.HorizontalDistance(i, j, (int)coord.X, (int)coord.Y));
+
+                        left_deviation = (max + 1) / 2f;
+                    }
+
+                    switch (tile.Type)
                     {
                         case EBuildable.Stadium:
                             sprite = _uiTextures.StadiumTile;
                             break;
 
                         case EBuildable.School:
-                            sprite = _uiTextures.SchoolTile;
+                            if (left_deviation <= 0f)
+                                sprite = _uiTextures.SchoolTile;
+                            else
+                                sprite = _uiTextures.SchoolTile_r;
                             break;
 
                         case EBuildable.PoliceStation:
@@ -185,9 +258,35 @@ namespace TFYP.Controller.WindowsControllers
                             break;
                     }
 
-                    out_map[i, j] = sprite;
+                    float deviation = (i % 2 == 1) ? (TILE_W * SCALE / 2f) : 0f;
+
+                    Sprite out_sprite = new Sprite(
+                        sprite.Texture,
+                        new Vector2(
+                            deviation + (j * TILE_W * SCALE) - (left_deviation * TILE_W * SCALE),
+                            (i * TILE_H * SCALE / 2) - ((sprite.Texture.Height - TILE_H) * SCALE)
+                        ),
+                        SCALE
+                    );
+
+                    if (HoveredTiles.Contains(new Point(j, i)))
+                    {
+                        switch (_activeZone)
+                        {
+                            case null:
+                                break;
+
+                            default:
+                                out_sprite.Tint = hover_tint;
+                                break;
+                        }
+                    }
+
+                    out_map[i, j] = out_sprite;
                 }
             }
+
+            HoveredTiles.Clear();
 
             // sending the new array to the View
             _gw_view.SendGameMap(out_map);
@@ -223,6 +322,10 @@ namespace TFYP.Controller.WindowsControllers
                 {
                     ExecuteFocusMove(new Vector2(speed, 0));
                 }
+                else if (key.Button == Keys.R && key.ButtonState == Utils.KeyState.Clicked)
+                {
+                    rotate = !rotate;
+                }
 
                 _gw_view.SetFocusCoord(_initCoord - _focusCoord);
             }
@@ -241,30 +344,34 @@ namespace TFYP.Controller.WindowsControllers
             if (arr[3]?.Type == EBuildable.Road)
                 dir |= 0b_0001;
 
-            //Debug.WriteLine($"X: {x}, Y: {y}");
             return _uiTextures.RoadTiles[dir];
         }
 
         private Buildable[] GetAdj(int x, int y)
         {
-            Buildable[] arr = new Buildable[4];
+            return _gameModel.GetAdj(y, x);
+        }
 
-            if (y % 2 == 1)
-            {
-                arr[0] = _gameModel.GetMapElementAt(x, y - 1);
-                arr[1] = _gameModel.GetMapElementAt(x + 1, y - 1);
-                arr[2] = _gameModel.GetMapElementAt(x + 1, y + 1);
-                arr[3] = _gameModel.GetMapElementAt(x, y + 1);
-            }
-            else
-            {
-                arr[0] = _gameModel.GetMapElementAt(x - 1, y - 1);
-                arr[1] = _gameModel.GetMapElementAt(x, y - 1);
-                arr[2] = _gameModel.GetMapElementAt(x, y + 1);
-                arr[3] = _gameModel.GetMapElementAt(x - 1, y + 1);
-            }
+        public Point GetCoordAt(byte direction, Point coord)
+        {
+            return GetCoordAt(direction, coord.X, coord.Y);
+        }
 
-            return arr;
+        public Point GetCoordAt(byte direction, int x, int y)
+        {
+            Point coord = _gameModel.GetCoordAt(direction, y, x);
+
+            return new Point(coord.Y, coord.X);
+        }
+
+        public int VerticalDistance(int i1, int j1, int i2, int j2)
+        {
+            return _gameModel.VerticalDistance(j1, i1, j2, i2);
+        }
+
+        public int HorizontalDistance(int i1, int j1, int i2, int j2)
+        {
+            return _gameModel.HorizontalDistance(j1, i1, j2, i2);
         }
 
         private void SendTileInfo()
@@ -275,23 +382,25 @@ namespace TFYP.Controller.WindowsControllers
             {
                 Zone zn = (Zone)z;
 
-                _gw_view.PrintInfo(Tuple.Create(z.Type.ToString(), EPrintInfo.Title),
-                                   Tuple.Create("Level: " + zn.Level.ToString(), EPrintInfo.Normal),
-                                   Tuple.Create("Number of citizens: " + zn.NCitizensInZone.ToString() + " / " + zn.Capacity.ToString(), EPrintInfo.Normal),
-                                   Tuple.Create("Satisfaction: " + zn.GetZoneSatisfaction(_gameModel), EPrintInfo.Normal)
+                _gw_view.PrintInfo(true,
+                    Tuple.Create(z.Type.ToString(), EPrintInfo.Title),
+                    Tuple.Create("Level: " + zn.Level.ToString(), EPrintInfo.Normal),
+                    Tuple.Create("Number of citizens: " + zn.NCitizensInZone.ToString() + " / " + zn.Capacity.ToString(), EPrintInfo.Normal),
+                    Tuple.Create("Satisfaction: " + zn.GetZoneSatisfaction(_gameModel), EPrintInfo.Normal)
                 );
             }
             else
             {
-                if (z.Type == EBuildable.Inaccessible || z.Type == EBuildable.Road)
+                if (z.Type == EBuildable.Inaccessible || z.Type == EBuildable.Road || z.Type == EBuildable.None)
                 {
                     _gw_view.DeleteInfo();
                     return;
                 }
 
-                _gw_view.PrintInfo(Tuple.Create(z.Type.ToString(), EPrintInfo.Title),
-                                   Tuple.Create("Cap", EPrintInfo.Normal),
-                                   Tuple.Create("Residents", EPrintInfo.Normal)
+                _gw_view.PrintInfo(false,
+                    Tuple.Create(z.Type.ToString(), EPrintInfo.Title),
+                    Tuple.Create("Cap", EPrintInfo.Normal),
+                    Tuple.Create("Residents", EPrintInfo.Normal)
                 );
             }
         }
@@ -333,7 +442,8 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.UIPoliceButtonPressed += () => { _activeZone = EBuildable.PoliceStation; Debug.WriteLine("Selected PoliceStation."); };
             _gw_view.UIStadiumButtonPressed += () => { _activeZone = EBuildable.Stadium; Debug.WriteLine("Selected Stadium."); };
             _gw_view.UISchoolButtonPressed += () => { _activeZone = EBuildable.School; Debug.WriteLine("Selected School."); };
-            _gw_view.UIBudgetButtonPressed += () => { Debug.WriteLine(_gameModel.Statistics.Budget.Balance); _gw_view.is_budget_active = true; };
+            _gw_view.UIBudgetButtonPressed += () => { _gw_view.is_budget_active = true; };
+            _gw_view.UIDisasterButtonPressed += () => { Debug.WriteLine("ActivateDisaster!"); };
 
             _gw_view.UIStopSpeedPressed += () => { stop = true; Debug.WriteLine("Speed stop."); };
             _gw_view.UISpeedX1Pressed += () => { speed = 1; stop = false; Debug.WriteLine("Speed X1."); };
@@ -346,6 +456,8 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.UIMenuLoadGameButtonPressed += ToLoadsWindow;
             _gw_view.UIMenuOpenSettingsButtonPressed += ToSettingsWindow;
             _gw_view.UIMenuExitButtonPressed += () => base.OnExitPressed();
+
+            _gw_view.UIUpgradeTileButtonPressed += () => { Debug.WriteLine($"Upgrade! X:{_selectedZone?.X}, Y:{_selectedZone?.Y}"); };
     }
 
         #endregion

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Diagnostics;
 using TFYP.Utils;
+using MonoGame.Extended.BitmapFonts;
 
 namespace TFYP.View.Renders
 {
@@ -32,7 +33,14 @@ namespace TFYP.View.Renders
                 if (element is ITextRenderable)
                 {
                     ITextRenderable text = (ITextRenderable)element;
-                    Globals.SpriteBatch.DrawString(text.Font, text.TextString, text.Position, text.Color);
+                    if (text.Font == null)
+                    {
+                        Globals.SpriteBatch.DrawString(text.BTFont, text.TextString, text.Position, text.Color);
+                    }
+                    else
+                    {
+                        Globals.SpriteBatch.DrawString(text.Font, text.TextString, text.Position, text.Color);
+                    }
                 }
             }
 
