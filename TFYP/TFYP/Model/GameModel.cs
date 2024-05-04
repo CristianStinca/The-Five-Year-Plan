@@ -386,6 +386,7 @@ namespace TFYP.Model
         /// <param name="_y">y coridnate of the removed tile</param>
         private void RemoveFromMap(int _x, int _y)
         {
+          
             var obj = map[_x, _y];
             if (obj.Type.Equals(EBuildable.Road))
             {
@@ -406,6 +407,13 @@ namespace TFYP.Model
         /// <param name="_x"></param>
         /// <param name="_y"></param>
         private void RemoveZone(int _x, int _y) {
+
+            foreach (var zone in this.CityRegistry.Zones)
+            {
+                var c = zone.Coor[0];
+                zone.Coor.Clear();
+                zone.Coor.Add(c);
+            }
             var obj = map[_x, _y];
             Zone z = (Zone)obj;
             this.CityRegistry.Zones.Remove(z);
