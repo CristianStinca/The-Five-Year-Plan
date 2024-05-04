@@ -13,6 +13,7 @@ using TFYP.View.UIElements.ClickableElements;
 using static TFYP.View.UIElements.ClickableElements.Button;
 using Microsoft.Xna.Framework.Input;
 using TFYP.Model;
+using MonoGame.Extended.BitmapFonts;
 
 namespace TFYP.View.Windows
 {
@@ -20,6 +21,9 @@ namespace TFYP.View.Windows
     {
         public delegate void TilePressedInWindowHandler(int i, int j, string btn);
         public event TilePressedInWindowHandler TileButtonPressedInWindow;
+        public delegate void TileHoverInWindowHandler(int i, int j);
+        public event TileHoverInWindowHandler TileButtonHoverInWindow;
+
 
         public static readonly int TILE_W = 30;
 
@@ -45,11 +49,10 @@ namespace TFYP.View.Windows
         List<IRenderable> screenWindow = new List<IRenderable>();
         List<IRenderable> statsWindow = new List<IRenderable>();
         List<IRenderable> menuWindow = new List<IRenderable>();
-        Button screenWindowBttn;
-        Button statsWindowBttn;
 
         bool is_menu_active = false;
         public bool is_tile_info_active = false;
+        public bool is_tile_info_bttn_active = false;
         public bool is_budget_active = false;
 
         private bool is2D = false;
@@ -66,6 +69,7 @@ namespace TFYP.View.Windows
         Button stadium;
         Button school;
         Button budget;
+        Button disaster;
 
         Button stopTime;
         Button timeX1;
@@ -80,6 +84,10 @@ namespace TFYP.View.Windows
         Button s_setting;
         Button s_exit;
 
+        Button screenWindowBttn;
+        Button statsWindowBttn;
+        Button upgradeBttn;
+
         public event UIButtonPressedHandler UIResidentialZoneButtonPressed;
         public event UIButtonPressedHandler UIIndustrialZoneButtonPressed;
         public event UIButtonPressedHandler UICommertialZoneButtonPressed;
@@ -91,6 +99,7 @@ namespace TFYP.View.Windows
         public event UIButtonPressedHandler UIStadiumButtonPressed;
         public event UIButtonPressedHandler UISchoolButtonPressed;
         public event UIButtonPressedHandler UIBudgetButtonPressed;
+        public event UIButtonPressedHandler UIDisasterButtonPressed;
 
         public event UIButtonPressedHandler UIStopSpeedPressed;
         public event UIButtonPressedHandler UISpeedX1Pressed;
@@ -104,6 +113,8 @@ namespace TFYP.View.Windows
         public event UIButtonPressedHandler UIMenuLoadGameButtonPressed;
         public event UIButtonPressedHandler UIMenuOpenSettingsButtonPressed;
         public event UIButtonPressedHandler UIMenuExitButtonPressed;
+
+        public event UIButtonPressedHandler UIUpgradeTileButtonPressed;
 
         #endregion
 
@@ -123,7 +134,39 @@ namespace TFYP.View.Windows
                 (int)Math.Round(((GameModel.MAP_H / 2) - 0.5f) * GameWindow.TILE_H * GameWindow.SCALE - Globals.Graphics.PreferredBackBufferHeight)
             );
 
+            InitialiseMap();
             InitialiseUi();
+        }
+
+        private void InitialiseMap()
+        {
+            if (map == null)
+            {
+                map = new TileButton[GameModel.MAP_H, GameModel.MAP_W];
+            }
+
+            for (int i = 0; i < GameModel.MAP_H; i++)
+            {
+                for (int j = 0; j < GameModel.MAP_W; j++)
+                {
+                    float deviation = (i % 2 == 1) ? (TILE_W * SCALE / 2f) : 0f;
+                    Sprite sprite = new Sprite(
+                        Globals.Content.Load<Texture2D>("Tiles/innac"),
+                        new Vector2(
+                            deviation + (j * TILE_W * SCALE),
+                            (i * TILE_H * SCALE / 2)
+                        ),
+                        SCALE
+                    );
+
+                    TileButton tile = new TileButton(sprite, _inputHandler, j, i);
+
+                    tile.TileButtonPressed += OnTilePressed;
+                    tile.TileButtonHover += OnTileHover;
+                    map[i, j] = tile;
+                }
+            }
+
         }
 
         /// <summary>
@@ -132,35 +175,36 @@ namespace TFYP.View.Windows
         /// <param name="_map">The IRenderable matrix.</param>
         public void SendGameMap(ISprite[,] _map)
         {
-            if (map == null)
-            {
-                map = new TileButton[_map.GetLength(0), _map.GetLength(1)];
-            }
-
             this.mapRend.Clear();
 
             for (int i = 0; i < _map.GetLength(0); i++)
             {
                 for (int j = 0; j < _map.GetLength(1); j++)
                 {
-                    ISprite _vo = _map[i, j];
-                    float deviation = (i % 2 == 1) ? (TILE_W * SCALE / 2f) : 0f;
+                    Sprite _vo = _map[i, j] as Sprite;
 
-                    Sprite sprite = new Sprite(
-                        _vo.Texture,
-                        new Vector2(
-                            (initPos.X * SCALE) + focusCoord.X + deviation + _vo.Position.X + ScreenLimit.X + (j * TILE_W * SCALE),
-                            (initPos.Y * SCALE) + focusCoord.Y + _vo.Position.Y + ScreenLimit.Y + (i * TILE_H * SCALE / 2) - ((_vo.Texture.Height - TILE_H) * (SCALE - 1))
-                        ),
-                        SCALE
+                    float deviation = (i % 2 == 1) ? (TILE_W * SCALE / 2f) : 0f;
+                    map[i, j].Position = new Vector2(
+                        (initPos.X * SCALE) + focusCoord.X + deviation + ScreenLimit.X + (j * TILE_W * SCALE),
+                        (initPos.Y * SCALE) + focusCoord.Y + ScreenLimit.Y + (i * TILE_H * SCALE / 2)
                     );
 
-                    TileButton tile = new TileButton(sprite, _inputHandler, j, i);
-                    tile.TileButtonPressed += OnTilePressed;
+                    if (_vo == null)
+                        continue;
 
-                    map[i, j] = tile;
+                    if (_vo.Texture.Name == _UIElements.EmptyTile.Texture.Name)
+                    {
+                        Sprite new_sprite = _UIElements.getGrass(i, j);
+                        _vo.Texture = new_sprite.Texture;
+                    }
 
-                    mapRend.Add(sprite);
+                    _vo.Position += new Vector2(
+                        (initPos.X * SCALE) + focusCoord.X + ScreenLimit.X,
+                        (initPos.Y * SCALE) + focusCoord.Y + ScreenLimit.Y
+                    );
+
+                    mapRend.Add(_vo);
+                    // TODO: change the TileButton to accept no sprite and generate it only once
                 }
             }
 
@@ -169,12 +213,22 @@ namespace TFYP.View.Windows
 
         public void OnTilePressed(int col, int row, int x, int y, string btn)
         {
-            if (!screenRect.Contains(x, y) || IsOnUIElement(x, y) || is_menu_active || tileInfoRect.Contains(x, y) || statsRect.Contains(x, y))
+            if (!screenRect.Contains(x, y) || IsOnUIElement(x, y) || is_menu_active || (tileInfoRect.Contains(x, y) && is_tile_info_active) || (statsRect.Contains(x, y) && is_budget_active))
             {
                 return;
             }
 
             TileButtonPressedInWindow.Invoke(col, row, btn); // TODO: Refactor the events so that the controller gets it more directly? (now we create an event for every tile and that's sad :( )
+        }
+
+        public void OnTileHover(int col, int row, int x, int y)
+        {
+            if (!screenRect.Contains(x, y) || IsOnUIElement(x, y) || is_menu_active || (tileInfoRect.Contains(x, y) && is_tile_info_active) || (statsRect.Contains(x, y) && is_budget_active))
+            {
+                return;
+            }
+
+            TileButtonHoverInWindow.Invoke(col, row);
         }
 
         private bool IsOnUIElement(int x, int y)
@@ -203,14 +257,15 @@ namespace TFYP.View.Windows
             gameScreenRect.X = BackgroundButtonTab.Texture.Width;
             gameScreenRect.Width -= BackgroundButtonTab.Texture.Width;
 
-            RenderableVerticalList buttonsBar = new (20, 20, 30);
+            RenderableVerticalList buttonsBar = new (18, 20, 30);
 
             delRoad = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Demolish_Road_Button")));
             delRoad.ButtonPressed += (string name) => NotifyEvent(UIDeleteButtonPressed);
             buttonsBar.AddElement(delRoad);
 
             RenderableVerticalList zonesList = new RenderableVerticalList(10, 20, 30);
-            zonesList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Zones", new Vector2(20, 30), Color.Black));
+            //zonesList.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/propaganda_22"), "Zones", new Vector2(20, 30), Color.Black));
+            zonesList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Menu/zones")));
 
             resZone = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Residential_Zone_Button")));
             resZone.ButtonPressed += (string name) => NotifyEvent(UIResidentialZoneButtonPressed);
@@ -228,7 +283,9 @@ namespace TFYP.View.Windows
             buttonsBar.AddElement(zonesList);
 
             RenderableVerticalList roadList = new RenderableVerticalList(10, 20, 30);
-            roadList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Roads", new Vector2(20, 30), Color.Black));
+            //roadList.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/propaganda_22"), "Roads", new Vector2(20, 30), Color.Black));
+            roadList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Menu/roads")));
+
             buildRoad = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Build_Road_Button")));
             buildRoad.ButtonPressed += (string name) => NotifyEvent(UIBuildRoadButtonPressed);
             roadList.AddElement(buildRoad);
@@ -236,7 +293,9 @@ namespace TFYP.View.Windows
             buttonsBar.AddElement(roadList);
 
             RenderableVerticalList specialsList = new RenderableVerticalList(10, 20, 30);
-            specialsList.AddElement(new Text(Globals.Content.Load<SpriteFont>("UIButtonsText"), "Specials", new Vector2(20, 30), Color.Black));
+            //specialsList.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/propaganda_22"), "Specials", new Vector2(20, 30), Color.Black));
+            specialsList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Menu/specials")));
+
             police = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Police_Button")));
             police.ButtonPressed += (string name) => NotifyEvent(UIPoliceButtonPressed);
             specialsList.AddElement(police);
@@ -246,11 +305,20 @@ namespace TFYP.View.Windows
             school = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/School_Button")));
             school.ButtonPressed += (string name) => NotifyEvent(UISchoolButtonPressed);
             specialsList.AddElement(school);
-            budget = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/budget_button")));
-            budget.ButtonPressed += (string name) => NotifyEvent(UIBudgetButtonPressed);
-            specialsList.AddElement(budget);
 
             buttonsBar.AddElement(specialsList);
+
+            RenderableVerticalList buttonsList = new RenderableVerticalList(10, 20, 30);
+
+            budget = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/budget_button")));
+            budget.ButtonPressed += (string name) => NotifyEvent(UIBudgetButtonPressed);
+            buttonsList.AddElement(budget);
+
+            disaster = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/disaster_Button")));
+            disaster.ButtonPressed += (string name) => NotifyEvent(UIDisasterButtonPressed);
+            buttonsList.AddElement(disaster);
+
+            buttonsBar.AddElement(buttonsList);
 
             ElementsInWindow.AddRange(buttonsBar.ToIRenderable());
 
@@ -281,7 +349,7 @@ namespace TFYP.View.Windows
             perspectiveButton.ButtonPressed += (string name) => { if (!is_menu_active) ChangePerspective(); };
             ElementsInWindow.Add(perspectiveButton.ToIRenderable());
             
-            RenderableContainer menuContainer = new(0, 0, ESize.AllScreen, new Color(Color.Gray, 0.1f));
+            RenderableContainer menuContainer = new(0, 0, ESize.AllScreen, Color.Black * 0.3f);
             Sprite menuBackground = new Sprite(Globals.Content.Load<Texture2D>("Menu/game_menu_back"));
             menuContainer.AddElement(EVPosition.Center, EHPosition.Center, menuBackground);
 
@@ -336,10 +404,37 @@ namespace TFYP.View.Windows
             Sublist
         }
 
-        public void PrintInfo(params Tuple<string, EPrintInfo>[] args)
+        public void PrintInfo(bool is_upgradeable, params Tuple<string, EPrintInfo>[] args)
         {
             screenWindow.Clear();
-            screenWindow.AddRange(CreateWindow(EVPosition.Bottom, EHPosition.Left, DeleteInfo, out tileInfoRect, out screenWindowBttn, args));
+
+            RenderableContainer screenCont = new(gameScreenRect.X, gameScreenRect.Y, gameScreenRect.Size.ToVector2());
+            screenCont.Margin = 20f;
+            RenderableContainer cont = new(0, 0, ESize.FitContent, Color.LightGray);
+            cont.Padding = 20f;
+            RenderableHorizontalList mainList = new(10, 0, 0);
+
+            RenderableVerticalList list = CreateList(args);
+
+            if (is_upgradeable)
+            {
+                is_tile_info_bttn_active = true;
+                upgradeBttn = new Button(new Sprite(Globals.Content.Load<Texture2D>("Buttons/upgrade_Button")), _inputHandler);
+                upgradeBttn.ButtonPressed += (string name) => { if (!is_menu_active && is_tile_info_bttn_active) UIUpgradeTileButtonPressed.Invoke(); };
+                list.AddElement(upgradeBttn);
+            }
+
+            mainList.AddElement(list);
+
+            screenWindowBttn = new Button(new Sprite(Globals.Content.Load<Texture2D>("Buttons/close_Button")), _inputHandler);
+            screenWindowBttn.ButtonPressed += (string name) => { if (!is_menu_active && is_tile_info_active) DeleteInfo(); };
+            mainList.AddElement(screenWindowBttn);
+
+            cont.AddElement(EVPosition.Top, EHPosition.Left, mainList);
+            screenCont.AddElement(EVPosition.Bottom, EHPosition.Left, cont);
+            tileInfoRect = new Rectangle(cont.CollisionRectangle.Location, cont.CollisionRectangle.Size);
+
+            screenWindow.AddRange(screenCont.ToIRenderable());
         }
 
         public void DeleteInfo()
@@ -347,12 +442,31 @@ namespace TFYP.View.Windows
             screenWindow.Clear();
             statsRect = new Rectangle();
             is_tile_info_active = false;
+            is_tile_info_bttn_active = false;
         }
 
         public void PrintStats(params Tuple<string, EPrintInfo>[] args)
         {
             statsWindow.Clear();
-            statsWindow.AddRange(CreateWindow(EVPosition.Top, EHPosition.Left, DeleteStats, out statsRect, out statsWindowBttn, args));
+
+            RenderableContainer screenCont = new(gameScreenRect.X, gameScreenRect.Y, gameScreenRect.Size.ToVector2());
+            screenCont.Margin = 20f;
+            RenderableContainer cont = new(0, 0, ESize.FitContent, Color.LightGray);
+            cont.Padding = 20f;
+            RenderableHorizontalList mainList = new(10, 0, 0);
+
+            RenderableVerticalList list = CreateList(args);
+
+            statsWindowBttn = new Button(new Sprite(Globals.Content.Load<Texture2D>("Buttons/close_Button")), _inputHandler);
+            statsWindowBttn.ButtonPressed += (string name) => { if (!is_menu_active) DeleteStats(); };
+
+            mainList.AddElement(list);
+            mainList.AddElement(statsWindowBttn);
+            cont.AddElement(EVPosition.Top, EHPosition.Left, mainList);
+            screenCont.AddElement(EVPosition.Top, EHPosition.Left, cont);
+            statsRect = new Rectangle(cont.CollisionRectangle.Location, cont.CollisionRectangle.Size);
+
+            statsWindow.AddRange(screenCont.ToIRenderable());
         }
 
         public void DeleteStats()
@@ -362,13 +476,8 @@ namespace TFYP.View.Windows
             is_budget_active = false;
         }
 
-        private List<IRenderable> CreateWindow(EVPosition v, EHPosition h, UIButtonPressedHandler f, out Rectangle rect, out Button bttn, params Tuple<string, EPrintInfo>[] args)
+        private RenderableVerticalList CreateList(params Tuple<string, EPrintInfo>[] args)
         {
-            RenderableContainer screenCont = new(gameScreenRect.X, gameScreenRect.Y, gameScreenRect.Size.ToVector2());
-            screenCont.Margin = 20f;
-            RenderableContainer cont = new(0, 0, ESize.FitContent, Color.LightGray);
-            cont.Padding = 20f;
-            RenderableHorizontalList mainList = new(10, 0, 0);
             RenderableVerticalList list = new(10, 0, 0);
 
             foreach (Tuple<string, EPrintInfo> item in args)
@@ -379,27 +488,18 @@ namespace TFYP.View.Windows
                 switch (info)
                 {
                     case EPrintInfo.Title:
-                        list.AddElement(new Text(Globals.Content.Load<SpriteFont>("UITitleText"), text, Vector2.Zero, Color.Black));
+                        list.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/m6x11_26"), text, Vector2.Zero, Color.Black));
                         break;
                     case EPrintInfo.Normal:
-                        list.AddElement(new Text(Globals.Content.Load<SpriteFont>("UISubtitleText"), text, Vector2.Zero, Color.Black));
+                        list.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/m6x11_18"), text, Vector2.Zero, Color.Black));
                         break;
                     case EPrintInfo.Sublist:
-                        list.AddElement(new Text(Globals.Content.Load<SpriteFont>("UINormalText"), text, Vector2.Zero, Color.Black));
+                        list.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/m6x11_22"), text, Vector2.Zero, Color.Black));
                         break;
                 }
             }
 
-            bttn = new Button(new Sprite(Globals.Content.Load<Texture2D>("Buttons/close_Button")), _inputHandler);
-            bttn.ButtonPressed += (string name) => { if (!is_menu_active) f.Invoke(); };
-            mainList.AddElement(list);
-            mainList.AddElement(bttn);
-            cont.AddElement(EVPosition.Top, EHPosition.Left, mainList);
-            //cont.AddElement(EVPosition.Top, EHPosition.Right, close_btn);
-            screenCont.AddElement(v, h, cont);
-            rect = new Rectangle(cont.CollisionRectangle.Location, cont.CollisionRectangle.Size);
-
-            return screenCont.ToIRenderable();
+            return list;
         }
 
         public void ChangePerspective()
@@ -435,6 +535,7 @@ namespace TFYP.View.Windows
 
             screenWindowBttn?.Update();
             statsWindowBttn?.Update();
+            upgradeBttn?.Update();
         }
 
         public override void Draw(IRenderer renderer)
@@ -447,10 +548,10 @@ namespace TFYP.View.Windows
             renderer.DrawState(screenWindow);
             renderer.DrawState(statsWindow);
 
+            base.Draw(renderer);
+
             if (is_menu_active)
                 renderer.DrawState(menuWindow);
-
-            base.Draw(renderer);
         }
     }
 }

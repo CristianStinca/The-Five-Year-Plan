@@ -14,7 +14,7 @@ namespace TFYP.View.UIElements
             set
             {
                 _position = value;
-                CollisionRectangle = new Rectangle(_position.ToPoint(), SourceRectangle.Size);
+                CollisionRectangle = new Rectangle(_position.ToPoint(), CollisionRectangle.Size);
             }
         }
 
@@ -46,7 +46,7 @@ namespace TFYP.View.UIElements
         {
         }
 
-        public Sprite(Texture2D texture, float scale) : this(texture, Vector2.Zero, 1f)
+        public Sprite(Texture2D texture, float scale) : this(texture, Vector2.Zero, scale)
         {
         }
 

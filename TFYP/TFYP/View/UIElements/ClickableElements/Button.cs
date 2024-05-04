@@ -20,9 +20,9 @@ namespace TFYP.View.UIElements.ClickableElements
         public Sprite Sprite { get; set; }
 
         protected InputHandler _inputHandler { get; }
-        public Vector2 Position { get => Sprite.Position; set => Sprite.Position = value; }
-        public Rectangle SourceRectangle { get => Sprite.SourceRectangle; set => Sprite.SourceRectangle = value; }
-        public Rectangle CollisionRectangle { get => Sprite.CollisionRectangle; set => Sprite.CollisionRectangle = value; }
+        public virtual Vector2 Position { get => Sprite.Position; set => Sprite.Position = value; }
+        public virtual Rectangle SourceRectangle { get => Sprite.SourceRectangle; set => Sprite.SourceRectangle = value; }
+        public virtual Rectangle CollisionRectangle { get => Sprite.CollisionRectangle; set => Sprite.CollisionRectangle = value; }
 
         public Button(Sprite sprite, InputHandler inputHandler)
         {

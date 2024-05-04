@@ -17,6 +17,363 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin ../Resources/Fonts/m6x11_18_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/m6x11_18_0.png;Fonts/m6x11_18_0.png
+
+#begin ../Resources/Fonts/m6x11_18_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/m6x11_18_0.png;Fonts/m6x11_18_0.png
+
+#begin ../Resources/Fonts/m6x11_18.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/m6x11_18.fnt;Fonts/m6x11_18.fnt
+
+#begin ../Resources/Fonts/m6x11_18.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/m6x11_18.fnt;Fonts/m6x11_18.fnt
+
+#begin ../Resources/Fonts/m6x11_20_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/m6x11_20_0.png;Fonts/m6x11_20_0.png
+
+#begin ../Resources/Fonts/m6x11_20_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/m6x11_20_0.png;Fonts/m6x11_20_0.png
+
+#begin ../Resources/Fonts/m6x11_20.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/m6x11_20.fnt;Fonts/m6x11_20.fnt
+
+#begin ../Resources/Fonts/m6x11_20.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/m6x11_20.fnt;Fonts/m6x11_20.fnt
+
+#begin ../Resources/Fonts/m6x11_22_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/m6x11_22_0.png;Fonts/m6x11_22_0.png
+
+#begin ../Resources/Fonts/m6x11_22_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/m6x11_22_0.png;Fonts/m6x11_22_0.png
+
+#begin ../Resources/Fonts/m6x11_22.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/m6x11_22.fnt;Fonts/m6x11_22.fnt
+
+#begin ../Resources/Fonts/m6x11_22.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/m6x11_22.fnt;Fonts/m6x11_22.fnt
+
+#begin ../Resources/Fonts/m6x11_26_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/m6x11_26_0.png;Fonts/m6x11_26_0.png
+
+#begin ../Resources/Fonts/m6x11_26.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/m6x11_26.fnt;Fonts/m6x11_26.fnt
+
+#begin ../Resources/Fonts/propaganda_19_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/propaganda_19_0.png;Fonts/propaganda_19_0.png
+
+#begin ../Resources/Fonts/propaganda_19_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/propaganda_19_0.png;Fonts/propaganda_19_0.png
+
+#begin ../Resources/Fonts/propaganda_19.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/propaganda_19.fnt;Fonts/propaganda_19.fnt
+
+#begin ../Resources/Fonts/propaganda_19.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/propaganda_19.fnt;Fonts/propaganda_19.fnt
+
+#begin ../Resources/Fonts/propaganda_22_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/propaganda_22_0.png;Fonts/propaganda_22_0.png
+
+#begin ../Resources/Fonts/propaganda_22_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/propaganda_22_0.png;Fonts/propaganda_22_0.png
+
+#begin ../Resources/Fonts/propaganda_22.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/propaganda_22.fnt;Fonts/propaganda_22.fnt
+
+#begin ../Resources/Fonts/propaganda_22.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/propaganda_22.fnt;Fonts/propaganda_22.fnt
+
+#begin ../Resources/Fonts/propaganda_60_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/propaganda_60_0.png;Fonts/propaganda_60_0.png
+
+#begin ../Resources/Fonts/propaganda_60_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/propaganda_60_0.png;Fonts/propaganda_60_0.png
+
+#begin ../Resources/Fonts/propaganda_60.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/propaganda_60.fnt;Fonts/propaganda_60.fnt
+
+#begin ../Resources/Fonts/propaganda_60.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/propaganda_60.fnt;Fonts/propaganda_60.fnt
+
+#begin ../Resources/Fonts/snowstorm_20_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/snowstorm_20_0.png;Fonts/snowstorm_20_0.png
+
+#begin ../Resources/Fonts/snowstorm_20_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/snowstorm_20_0.png;Fonts/snowstorm_20_0.png
+
+#begin ../Resources/Fonts/snowstorm_20.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/snowstorm_20.fnt;Fonts/snowstorm_20.fnt
+
+#begin ../Resources/Fonts/snowstorm_20.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/snowstorm_20.fnt;Fonts/snowstorm_20.fnt
+
+#begin ../Resources/Fonts/snowstorm_24_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/snowstorm_24_0.png;Fonts/snowstorm_24_0.png
+
+#begin ../Resources/Fonts/snowstorm_24_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/snowstorm_24_0.png;Fonts/snowstorm_24_0.png
+
+#begin ../Resources/Fonts/snowstorm_24.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/snowstorm_24.fnt;Fonts/snowstorm_24.fnt
+
+#begin ../Resources/Fonts/snowstorm_24.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/snowstorm_24.fnt;Fonts/snowstorm_24.fnt
+
+#begin ../Resources/Fonts/snowstorm_light_22_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/snowstorm_light_22_0.png;Fonts/snowstorm_light_22_0.png
+
+#begin ../Resources/Fonts/snowstorm_light_22_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/snowstorm_light_22_0.png;Fonts/snowstorm_light_22_0.png
+
+#begin ../Resources/Fonts/snowstorm_light_22.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/snowstorm_light_22.fnt;Fonts/snowstorm_light_22.fnt
+
+#begin ../Resources/Fonts/snowstorm_light_22.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/snowstorm_light_22.fnt;Fonts/snowstorm_light_22.fnt
+
+#begin ../Resources/Fonts/unitblock_24_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/unitblock_24_0.png;Fonts/unitblock_24_0.png
+
+#begin ../Resources/Fonts/unitblock_24_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Fonts/unitblock_24_0.png;Fonts/unitblock_24_0.png
+
+#begin ../Resources/Fonts/unitblock_24.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/unitblock_24.fnt;Fonts/unitblock_24.fnt
+
+#begin ../Resources/Fonts/unitblock_24.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:../Resources/Fonts/unitblock_24.fnt;Fonts/unitblock_24.fnt
+
 #begin ../Resources/Images/back2.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -101,6 +458,18 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Buttons/Demolish_Road_Button.png;Buttons/Demolish_Road_Button.png
 
+#begin ../Resources/Images/Buttons/disaster_Button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Buttons/disaster_Button.png;Buttons/disaster_Button.png
+
 #begin ../Resources/Images/Buttons/Erase_Zone_Button.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -149,6 +518,18 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Buttons/Residential_Zone_Button.png;Buttons/Residential_Zone_Button.png
 
+#begin ../Resources/Images/Buttons/roads.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Buttons/roads.png;Menu/roads.png
+
 #begin ../Resources/Images/Buttons/School_Button.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -160,6 +541,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Buttons/School_Button.png;Buttons/School_Button.png
+
+#begin ../Resources/Images/Buttons/specials.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Buttons/specials.png;Menu/specials.png
 
 #begin ../Resources/Images/Buttons/speed_1.png
 /importer:TextureImporter
@@ -244,6 +637,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Buttons/Switch_Perspective_Button.png;Buttons/Switch_Perspective_Button.png
+
+#begin ../Resources/Images/Buttons/upgrade_Button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Buttons/upgrade_Button.png;Buttons/upgrade_Button.png
+
+#begin ../Resources/Images/Buttons/zones.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Buttons/zones.png;Menu/zones.png
 
 #begin ../Resources/Images/Grasses/grass1.png
 /importer:TextureImporter
@@ -737,6 +1154,18 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/StadiumParts/stadium_bottom.png;StadiumParts/stadium_bottom.png
 
+#begin ../Resources/Images/StadiumParts/stadium_full.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/StadiumParts/stadium_full.png;StadiumParts/stadium_full.png
+
 #begin ../Resources/Images/StadiumParts/stadium_left.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -820,6 +1249,30 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Tiles/police_station.png;Tiles/police_station.png
+
+#begin ../Resources/Images/Tiles/school_double_rotated.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Tiles/school_double_rotated.png;Tiles/school_double_rotated.png
+
+#begin ../Resources/Images/Tiles/school_double.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Tiles/school_double.png;Tiles/school_double.png
 
 #begin ../Resources/Images/Tiles/school.png
 /importer:TextureImporter

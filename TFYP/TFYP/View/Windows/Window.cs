@@ -19,7 +19,7 @@ namespace TFYP.View.Windows
     {
         public delegate void UIButtonPressedHandler();
         protected List<IRenderable> ElementsInWindow { get; set; } // list of all the sprites that need to be rendered on the scnene
-        private IUIElements _UIElements;
+        protected UIObjects _UIElements;
         protected InputHandler _inputHandler;
         protected List<Button> _UpdateingUIElements;
 
@@ -27,7 +27,7 @@ namespace TFYP.View.Windows
         {
             this.ElementsInWindow = new();
             this._UpdateingUIElements = new();
-            this._UIElements = UIElements;
+            this._UIElements = (UIObjects)UIElements;
             this._inputHandler = inputHandler;
         }
 

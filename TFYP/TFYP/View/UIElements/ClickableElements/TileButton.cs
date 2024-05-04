@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended;
+using MonoGame.Extended.Sprites;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,26 +19,48 @@ namespace TFYP.View.UIElements.ClickableElements
     {
         public delegate void TileButtonPressedHandler(int col, int row, int x, int y, string btn);
         public event TileButtonPressedHandler TileButtonPressed;
+        public delegate void TileButtonHoverHandler(int col, int row, int x, int y);
+        public event TileButtonHoverHandler TileButtonHover;
 
         private Vector2[] _vertecies;
 
         private int _col;
         private int _row;
+        private int width;
+        private int height;
+
+        private bool activated = false;
+
+        public override Vector2 Position
+        {
+            get => base.Position;
+            set
+            {
+                base.Position = value;
+                _vertecies = new Vector2[]
+                {
+                    new ((width / 2) + Position.X, Position.Y),
+                    new ((width) + Position.X, (height / 2) + Position.Y),
+                    new ((width / 2) + Position.X, height + Position.Y),
+                    new (Position.X, (height / 2) + Position.Y)
+                };
+            }
+        }
 
         public TileButton(Sprite sprite, InputHandler inputHandler, int col, int row)
             : base(sprite, inputHandler)
         {
-            int width = Windows.GameWindow.TILE_W * Windows.GameWindow.SCALE;
-            int height = Windows.GameWindow.TILE_H * Windows.GameWindow.SCALE;
+            width = Windows.GameWindow.TILE_W * Windows.GameWindow.SCALE;
+            height = Windows.GameWindow.TILE_H * Windows.GameWindow.SCALE;
             this._col = col;
             this._row = row;
 
             _vertecies = new Vector2[]
             {
-                new ((width / 2) + sprite.Position.X, sprite.Position.Y),
-                new ((width) + sprite.Position.X, (height / 2) + sprite.Position.Y),
-                new ((width / 2) + sprite.Position.X, height + sprite.Position.Y),
-                new (sprite.Position.X, (height / 2) + sprite.Position.Y)
+                new ((width / 2) + Position.X, Position.Y),
+                new ((width) + Position.X, (height / 2) + Position.Y),
+                new ((width / 2) + Position.X, height + Position.Y),
+                new (Position.X, (height / 2) + Position.Y)
             };
         }
 
@@ -76,14 +100,28 @@ namespace TFYP.View.UIElements.ClickableElements
         {
             MouseState mouse_state = Mouse.GetState();
 
-            if (IsMouseOverButton(mouse_state) && (_inputHandler.LeftButton == Utils.KeyState.Clicked || _inputHandler.LeftButton == Utils.KeyState.Held))
+            if (IsMouseOverButton(mouse_state))
             {
-                TileButtonPressed.Invoke(this._col, this._row, mouse_state.Position.X, mouse_state.Position.Y, "L");
+                TileButtonHover.Invoke(this._col, this._row, mouse_state.Position.X, mouse_state.Position.Y);
+
+                if (_inputHandler.LeftButton == Utils.KeyState.Clicked || _inputHandler.LeftButton == Utils.KeyState.Held)
+                {
+                    if (!activated)
+                    {
+                        activated = true;
+                        TileButtonPressed.Invoke(this._col, this._row, mouse_state.Position.X, mouse_state.Position.Y, "L");
+                    }
+                }
+
+                if (_inputHandler.RightButton == Utils.KeyState.Clicked)
+                {
+                    TileButtonPressed.Invoke(this._col, this._row, mouse_state.Position.X, mouse_state.Position.Y, "R");
+                }
             }
 
-            if (IsMouseOverButton(mouse_state) && _inputHandler.RightButton == Utils.KeyState.Clicked)
+            if (_inputHandler.LeftButton == Utils.KeyState.Released)
             {
-                TileButtonPressed.Invoke(this._col, this._row, mouse_state.Position.X, mouse_state.Position.Y, "R");
+                activated = false;
             }
         }
     }

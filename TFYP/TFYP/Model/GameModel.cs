@@ -100,12 +100,12 @@ namespace TFYP.Model
             set { _mapW = value; }
         }
         
-        public void AddZone(int _x, int _y, EBuildable zone)
+        public void AddZone(int _x, int _y, EBuildable zone, bool rotate)
         {
             // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
             try
             {
-                AddToMap(_y, _x, zone);
+                AddToMap(_y, _x, zone, rotate);
 
                 foreach (Road tmp in Roads)
                 {
@@ -206,7 +206,7 @@ namespace TFYP.Model
             }
             
         }
-        private void AddToMap(int _x, int _y, EBuildable zone) {
+        private void AddToMap(int _x, int _y, EBuildable zone, bool rotate) {
 
             List<Vector2> t = new List<Vector2>();
             t.Add((new Vector2(_x, _y)));
@@ -214,48 +214,39 @@ namespace TFYP.Model
 
             switch (zone)
             {
-                
                 case EBuildable.Stadium:
                     CityRegistry.AddFacility(new Stadium(t, zone));
                     Statistics.Budget.UpdateBalance(-Constants.StadiumBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
                     Stadium stad;
-                    if (_x % 2 == 0)
+
+                    Point[] points = new Point[4];
+                    points[3] = new Point(_x, _y);
+                    points[2] = GetCoordAt(0b_0100, points[3]);
+                    points[1] = GetCoordAt(0b_1000, points[3]);
+                    points[0] = GetCoordAt(0b_0100, points[1]);
+
+                    if (!AreFree(points))
                     {
-                        if (!(map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None) && map[_x - 1, _y].Type.Equals(EBuildable.None) && map[_x, _y + 1].Type.Equals(EBuildable.None)))
-                        {
-                            throw new Exception("second tile was alradsy filled");
-                        }
-                        t.Add(new Vector2(_x + 1, _y));
-                        t.Add(new Vector2(_x - 1, _y));
-                        t.Add(new Vector2(_x, _y+1));
-                        stad = new Stadium(t, zone);
-                        map[_x, _y] = stad;
-                        map[_x + 1, _y] = stad;
-                        map[_x - 1, _y] = stad;
-                        map[_x, _y +1] = stad;
+                        throw new Exception("second tile was already filled!");
                     }
-                    else
-                    {
-                        if (!(map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None) && map[_x - 1, _y].Type.Equals(EBuildable.None) && map[_x, _y - 1].Type.Equals(EBuildable.None)))
-                        {
-                            throw new Exception("second tile was alradsy filled");
-                        }
-                        t.Add(new Vector2(_x + 1, _y));
-                        t.Add(new Vector2(_x - 1, _y));
-                        t.Add(new Vector2(_x, _y - 1));
-                        stad = new Stadium(t, zone);
-                        map[_x, _y] = stad;
-                        map[_x + 1, _y] = stad;
-                        map[_x - 1, _y] = stad;
-                        map[_x, _y - 1] = stad;
-                    }
+
+                    t.Add(points[0].ToVector2());
+                    t.Add(points[1].ToVector2());
+                    t.Add(points[2].ToVector2());
+
+                    stad = new Stadium(t, zone);
+                    map[points[0].X, points[0].Y] = stad;
+                    map[points[1].X, points[1].Y] = stad;
+                    map[points[2].X, points[2].Y] = stad;
+                    map[points[3].X, points[3].Y] = stad;
 
                     break;
 
                 case EBuildable.None:
                     this.RemoveFromMap(_x,_y);
                     break;
+
                 case EBuildable.PoliceStation:
                     if(!map[_x, _y].Type.Equals(EBuildable.None))
                     {
@@ -267,6 +258,7 @@ namespace TFYP.Model
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.PoliceStationMaintenanceFee);
                     map[_x, _y] = s;
                     break;
+
                 case EBuildable.Residential:
                     if (!map[_x, _y].Type.Equals(EBuildable.None))
                     {
@@ -278,6 +270,7 @@ namespace TFYP.Model
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
                     map[_x, _y] = z;
                     break;
+
                 case EBuildable.Service:
                     if (!map[_x, _y].Type.Equals(EBuildable.None))
                     {
@@ -289,6 +282,7 @@ namespace TFYP.Model
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
                     map[_x, _y] = z1;
                     break;
+
                 case EBuildable.Industrial:
                     if (!map[_x, _y].Type.Equals(EBuildable.None))
                     {
@@ -300,6 +294,7 @@ namespace TFYP.Model
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
                     map[_x, _y] = z2;
                     break;
+
                 case EBuildable.Road:
                     if (map[_x, _y].Type.Equals(EBuildable.None))
                     {
@@ -310,8 +305,8 @@ namespace TFYP.Model
                         Statistics.Budget.UpdateBalance(-Constants.RoadBuildCost, GameTime);
                         CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.RoadMaintenanceFee);
                     }
-                    
                     break;
+                    
                 case EBuildable.University:
                     if (!map[_x, _y].Type.Equals(EBuildable.None))
                     {
@@ -323,65 +318,30 @@ namespace TFYP.Model
                     Statistics.Budget.UpdateBalance(-Constants.UniversityBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
                     break;
+
                 case EBuildable.School:
                     CityRegistry.AddFacility(new School(t));
                     Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
-                    if(_x % 2 == 0)
-                    {
-                        if(map[_x - 1, _y - 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                        {
-                            t.Add(new Vector2(_x - 1, _y - 1));
-                            School tmp = new School(t);
-                            map[_x, _y] = tmp;
-                            map[_x - 1, _y - 1] = tmp;
-                            break;
-                        }
-                        else if(map[_x + 1, _y - 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                        {
-                            t.Add(new Vector2(_x + 1, _y - 1));
-                            School tmp = new School(t);
-                            map[_x, _y] = tmp;
-                            map[_x + 1, _y - 1] = tmp;
-                            break;
-                        }
-                    }
+
+                    points = new Point[2];
+                    points[1] = new Point(_x, _y);
+                    if (rotate)
+                        points[0] = GetCoordAt(0b_0100, points[1]);
                     else
+                        points[0] = GetCoordAt(0b_1000, points[1]);
+
+                    if (!AreFree(points))
                     {
-                        if (map[_x - 1, _y + 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                        {
-                            t.Add(new Vector2(_x - 1, _y + 1));
-                            School tmp = new School(t);
-                            map[_x, _y] = tmp;
-                            map[_x - 1, _y + 1] = tmp;
-                            break;
-                        }
-                        else if (map[_x + 1, _y + 1].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                        {
-                            t.Add(new Vector2(_x + 1, _y + 1));
-                            School tmp = new School(t);
-                            map[_x, _y] = tmp;
-                            map[_x + 1, _y + 1] = tmp;
-                            break;
-                        }
+                        throw new Exception("second tile was already filled!");
                     }
-                    if (map[_x - 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        t.Add(new Vector2(_x - 1, _y));
-                        School tmp = new School(t);
-                        map[_x, _y] = tmp;
-                        map[_x - 1, _y] = tmp;
-                        break;
-                    }
-                    else if (map[_x + 1, _y].Type.Equals(EBuildable.None) && map[_x, _y].Type.Equals(EBuildable.None))
-                    {
-                        t.Add(new Vector2(_x + 1, _y));
-                        School tmp = new School(t);
-                        map[_x, _y] = tmp;
-                        map[_x + 1, _y] = tmp;
-                        break;
-                    }
-                    throw new Exception("second tile was alradsy filled");
+
+                    t.Add(points[0].ToVector2());
+
+                    School tmp = new School(t);
+                    map[points[0].X, points[0].Y] = tmp;
+                    map[points[1].X, points[1].Y] = tmp;
+
                     break;
 
             }
@@ -635,6 +595,11 @@ namespace TFYP.Model
             }
         }
 
+        public Buildable GetMapElementAt(Point point)
+        {
+            return GetMapElementAt(point.X, point.Y);
+        }
+
         public void UpgradeZone(int x, int y)
         {
             double upgradeCost = 0;
@@ -806,22 +771,100 @@ namespace TFYP.Model
         {
             Buildable[] arr = new Buildable[4];
 
-            if (j % 2 == 1)
+            if (i % 2 == 1)
             {
-                arr[0] = map[i, j - 1];
-                arr[1] = map[i + 1, j - 1];
+                arr[0] = map[i - 1, j];
+                arr[1] = map[i - 1, j + 1];
                 arr[2] = map[i + 1, j + 1];
-                arr[3] = map[i, j + 1];
+                arr[3] = map[i + 1, j];
             }
             else
             {
                 arr[0] = map[i - 1, j - 1];
-                arr[1] = map[i, j - 1];
-                arr[2] = map[i, j + 1];
-                arr[3] = map[i - 1, j + 1];
+                arr[1] = map[i - 1, j];
+                arr[2] = map[i + 1, j];
+                arr[3] = map[i + 1, j - 1];
             }
 
             return arr;
+        }
+
+        public Point GetCoordAt(byte direction, Point coord)
+        {
+            return GetCoordAt(direction, coord.X, coord.Y);
+        }
+
+        public Point GetCoordAt(byte direction, int i, int j)
+        {
+            Point[] dir = new Point[4];
+            if (i % 2 == 1)
+            {
+                dir[0] = new Point (i - 1, j);
+                dir[1] = new Point (i - 1, j + 1);
+                dir[2] = new Point (i + 1, j + 1);
+                dir[3] = new Point (i + 1, j);
+            }
+            else
+            {
+                dir[0] = new Point (i - 1, j - 1);
+                dir[1] = new Point (i - 1, j);
+                dir[2] = new Point (i + 1, j);
+                dir[3] = new Point (i + 1, j - 1);
+            }
+
+            switch (direction)
+            {
+                case 0b_1000: return dir[0];
+                case 0b_0100: return dir[1];
+                case 0b_0010: return dir[2];
+                case 0b_0001: return dir[3];
+            }
+
+            throw new ArgumentOutOfRangeException();
+        }
+
+        public bool AreFree(params Point[] points)
+        {
+            //return points.All((point) => map[point.X, point.Y].Type == EBuildable.None);
+            foreach (Point point in points)
+            {
+                if (map[point.X, point.Y].Type != EBuildable.None)
+                {
+                    Debug.WriteLine($"P: {point}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public int VerticalDistance(Point p1, Point p2)
+        {
+            return VerticalDistance(p1.X, p1.Y, p2.X, p2.Y);
+        }
+
+        public int VerticalDistance(int i1, int j1, int i2, int j2)
+        {
+            return Math.Abs(i2 - i1) - 1;
+        }
+
+        public int HorizontalDistance(Point p1, Point p2)
+        {
+            return HorizontalDistance(p1.X, p1.Y, p2.X, p2.Y);
+        }
+
+        public int HorizontalDistance(int i1, int j1, int i2, int j2)
+        {
+            int val = j2 - j1;
+
+            if (val > 0)
+            {
+                return (val * 2) + (i2 % 2) - (i1 % 2) - 1;
+            }
+            else
+            {
+                return (-val * 2) - (i2 % 2) + (i1 % 2) - 1;
+            }
         }
     }
 }
