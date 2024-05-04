@@ -45,7 +45,7 @@ namespace TFYP.Model.Facilities
         }
         public bool isConnected(Buildable elem)
         { 
-            return this.connected.Contains(elem);
+            return this.connected.Exists(x => x.Coor.Contains(elem.Coor[0]));
         }
 
         public bool connection(Buildable dest) {

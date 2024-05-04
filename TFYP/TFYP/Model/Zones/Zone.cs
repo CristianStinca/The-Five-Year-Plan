@@ -61,6 +61,49 @@ namespace TFYP.Model.Zones
             IsBuilt = false;
             DayOfBuildStart = dayOfBuildStart;
         }
+        public void checkOutGoing() {
+            GameModel gm = GameModel.GetInstance();
+            outGoing.Clear();
+            ThisCheck(this.Coor);
+        }
+
+        private void ThisCheck(List<Vector2> CoorL) {
+            GameModel gm = GameModel.GetInstance();
+            for (int i = 0; i < CoorL.Count; i++)
+            {
+                if (gm.map[(int)CoorL[i].X + 1, (int)CoorL[i].Y].Type.Equals(EBuildable.Road))
+                {
+                    outGoing.Add((Road)gm.map[(int)CoorL[i].X + 1, (int)CoorL[i].Y]);
+                }
+                if (gm.map[(int)CoorL[i].X - 1, (int)CoorL[i].Y].Type.Equals(EBuildable.Road))
+                {
+                    outGoing.Add((Road)gm.map[(int)CoorL[i].X - 1, (int)CoorL[i].Y]);
+                }
+                if ((int)CoorL[i].X % 2 == 0)
+                {
+                    if (gm.map[(int)CoorL[i].X + 1, (int)CoorL[i].Y - 1].Type.Equals(EBuildable.Road))
+                    {
+                        outGoing.Add((Road)gm.map[(int)CoorL[i].X + 1, (int)CoorL[i].Y - 1]);
+                    }
+                    if (gm.map[(int)CoorL[i].X - 1, (int)CoorL[i].Y - 1].Type.Equals(EBuildable.Road))
+                    {
+                        outGoing.Add((Road)gm.map[(int)CoorL[i].X - 1, (int)CoorL[i].Y - 1]);
+                    }
+                }
+                else
+                {
+                    if (gm.map[(int)CoorL[i].X - 1, (int)CoorL[i].Y + 1].Type.Equals(EBuildable.Road))
+                    {
+                        outGoing.Add((Road)gm.map[(int)CoorL[i].X - 1, (int)CoorL[i].Y + 1]);
+                    }
+                    if (gm.map[(int)CoorL[i].X + 1, (int)CoorL[i].Y + 1].Type.Equals(EBuildable.Road))
+                    {
+                        outGoing.Add((Road)gm.map[(int)CoorL[i].X + 1, (int)CoorL[i].Y + 1]);
+                    }
+                }
+            }
+        }
+    
 
         public List<Road> GetOutgoing() {
             return this.outGoing;

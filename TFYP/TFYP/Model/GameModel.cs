@@ -200,6 +200,8 @@ namespace TFYP.Model
                         }
                     }
                 }
+
+                this.CityRegistry.Zones.ForEach(x => x.checkOutGoing());
             }
             catch (Exception ex) {
                 Debug.WriteLine(ex);    
@@ -431,6 +433,7 @@ namespace TFYP.Model
             var obj= map[_x, _y];
             map[_x, _y] = new Buildable(new List<Vector2> { new Vector2(_x, _y) }, EBuildable.None);
             this.Roads.ForEach(x => x.checkForZones());
+            this.CityRegistry.Zones.ForEach(x=>x.checkOutGoing());
             bool test = true;
             foreach (var tmp in CityRegistry.Zones)
             {
@@ -461,12 +464,14 @@ namespace TFYP.Model
             if (!test)
             {
                 map[_x, _y] = obj;
+                this.CityRegistry.Zones.ForEach(x => x.checkOutGoing());
             }
             else
             {
                 this.Roads.Remove((Road)obj);
                 this.Roads = this.Roads.Distinct().ToList();
                 this.Roads.ForEach(x => x.checkForZones());
+                this.CityRegistry.Zones.ForEach(x => x.checkOutGoing());
             }
         }
         private void RemoveFacility(int _x, int _y) {
