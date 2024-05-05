@@ -700,7 +700,7 @@ namespace TFYP.Model
             CitizenshipEducationUpdate();
             UpdateZoneBuildingStatus();
             UpdateCitySatisfaction();
-
+            GenerateDisaster();
             GameTime = GameTime.AddDays(1);
 
             UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR???? IDK
@@ -741,14 +741,23 @@ namespace TFYP.Model
                 }
             }
         }
-
+        /// <summary>
+        /// random disaster is generated at random location
+        /// if the zone is in the range, entire zone will get damage
+        /// disaster chance is 4% (1/25)
+        /// </summary>
         public void GenerateDisaster() {
             int _X, _Y;
             Random rnd = new Random();
-            _X=rnd.Next(20);
-            _Y = rnd.Next(20);
-            Disaster dis = new Disaster(5,new Vector2(_X, _Y));
-            dis.ApplyEffects(this);
+            int chance = rnd.Next(25);
+            // 4 % chance of dissaster every day
+            if(chance == 1)
+            {
+                _X = rnd.Next(20);
+                _Y = rnd.Next(20);
+                Disaster dis = new Disaster(5,new Vector2(_X, _Y));
+                dis.ApplyEffects(this);
+            }
         }
 
 

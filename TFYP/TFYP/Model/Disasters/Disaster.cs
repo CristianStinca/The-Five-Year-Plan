@@ -85,21 +85,22 @@ namespace TFYP.Model.Disasters
             return (DisasterType)selection;   
         }
 
-        private void DamageBuildings(Zone zone, float damagePercent)
+        private void DamageBuildings(Zone zone, float damage)
         {
-            //foreach (var building in zone.Buildings)
-            //{
-            //    building.Integrity -= building.Integrity * damagePercent;
-            //}
-            zone.SetHealth(zone.Health * (100 - damagePercent));
+            GameModel instance = GameModel.GetInstance();
+            Zone z = (Zone)instance.map[(int)zone.Coor[0].X, (int)zone.Coor[0].Y];
+            if (z.Health < damage)
+            {
+                z.SetHealth(0);
+            }
+            else
+            {
+                z.SetHealth(z.Health - damage);
+            }
         }
 
         private void DestroyBuildings(Zone zone)
         {
-            //foreach (var building in zone.Buildings)
-            //{
-            //    building.IsDestroyed = true;
-            //}
             zone.SetHealth(0); // HP is 0 so zone is destroyed
         }
 

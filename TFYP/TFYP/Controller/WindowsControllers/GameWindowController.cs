@@ -443,7 +443,7 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.UIStadiumButtonPressed += () => { _activeZone = EBuildable.Stadium; Debug.WriteLine("Selected Stadium."); };
             _gw_view.UISchoolButtonPressed += () => { _activeZone = EBuildable.School; Debug.WriteLine("Selected School."); };
             _gw_view.UIBudgetButtonPressed += () => { _gw_view.is_budget_active = true; };
-            _gw_view.UIDisasterButtonPressed += () => { Debug.WriteLine("ActivateDisaster!"); };
+            _gw_view.UIDisasterButtonPressed += () => { Debug.WriteLine("ActivateDisaster!"); _gameModel.GenerateDisaster(); };
 
             _gw_view.UIStopSpeedPressed += () => { stop = true; Debug.WriteLine("Speed stop."); };
             _gw_view.UISpeedX1Pressed += () => { speed = 1; stop = false; Debug.WriteLine("Speed X1."); };

@@ -49,7 +49,12 @@ namespace TFYP.Model.Zones
         {
             get { return citizens.Count(c => c.IsActive); } 
         }
-
+        //public void DeactivateCitizens()
+        //{
+        //    Random rnd = new Random();
+        //    int ind = rnd.Next(citizens.Count());
+        //    citizens.Remove(citizens[ind]);
+        //}
         public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost, DateTime dayOfBuildStart)
             : base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
         {
@@ -128,6 +133,7 @@ namespace TFYP.Model.Zones
         {
             // this will be called in disasters at first and will decrease the HP of the zone
             // then will be increased again to 100% after user repairs it, so RepairZone function is needed
+            if(health < 0) health = 0;
             Health = health;
         }
         public virtual List<Citizen> GetCitizens()
