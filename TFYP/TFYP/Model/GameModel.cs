@@ -233,9 +233,9 @@ namespace TFYP.Model
 
                     Point[] points = new Point[4];
                     points[3] = new Point(_x, _y);
-                    points[2] = GetCoordAt(0b_0100, points[3]);
-                    points[1] = GetCoordAt(0b_1000, points[3]);
-                    points[0] = GetCoordAt(0b_0100, points[1]);
+                    points[2] = GetCoordAt(0b_0100, _x, _y);
+                    points[1] = GetCoordAt(0b_1000, _x, _y);
+                    points[0] = GetCoordAt(0b_1100, _x, _y);
 
               
 
@@ -857,9 +857,13 @@ namespace TFYP.Model
                 case 0b_0100: return dir[1];
                 case 0b_0010: return dir[2];
                 case 0b_0001: return dir[3];
+                case 0b_1100: return GetCoordAt(0b_0100, dir[0]);
+                case 0b_0110: return GetCoordAt(0b_0010, dir[1]);
+                case 0b_0011: return GetCoordAt(0b_0001, dir[2]);
+                case 0b_1001: return GetCoordAt(0b_1000, dir[3]);
             }
 
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException("Invalid direction.");
         }
 
         public bool AreFree(params Point[] points)
@@ -877,6 +881,11 @@ namespace TFYP.Model
             return true;
         }
 
+        public int VerticalDistance(Vector2 p1, Vector2 p2)
+        {
+            return VerticalDistance(p1.ToPoint(), p2.ToPoint());
+        }
+
         public int VerticalDistance(Point p1, Point p2)
         {
             return VerticalDistance(p1.X, p1.Y, p2.X, p2.Y);
@@ -885,6 +894,11 @@ namespace TFYP.Model
         public int VerticalDistance(int i1, int j1, int i2, int j2)
         {
             return Math.Abs(i2 - i1) - 1;
+        }
+
+        public int HorizontalDistance(Vector2 p1, Vector2 p2)
+        {
+            return HorizontalDistance(p1.ToPoint(), p2.ToPoint());
         }
 
         public int HorizontalDistance(Point p1, Point p2)
@@ -904,6 +918,21 @@ namespace TFYP.Model
             {
                 return (-val * 2) - (i2 % 2) + (i1 % 2) - 1;
             }
+        }
+
+        public int Distance(Vector2 p1, Vector2 p2)
+        {
+            return Distance(p1.ToPoint(), p2.ToPoint());
+        }
+
+        public int Distance(Point p1, Point p2)
+        {
+            return Distance(p1.X, p1.Y, p2.X, p2.Y);
+        }
+
+        public int Distance(int i1, int j1, int i2, int j2)
+        {
+            return Math.Max(VerticalDistance(i1, j1, i2, j2), HorizontalDistance(i1, j1, i2, j2));
         }
     }
 }

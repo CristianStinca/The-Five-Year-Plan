@@ -103,6 +103,7 @@ namespace TFYP.Controller.WindowsControllers
                 case "R":
                     Debug.WriteLine($"X: {x}, Y: {y}");
                     //Debug.WriteLine($"i: {y}, j: {x}");
+                    Debug.WriteLine($"Dist: {Distance(5, 5, x, y)}");
 
                     _activeZone = null;
                     _gw_view.DeleteInfo();
@@ -372,6 +373,11 @@ namespace TFYP.Controller.WindowsControllers
         public int HorizontalDistance(int i1, int j1, int i2, int j2)
         {
             return _gameModel.HorizontalDistance(j1, i1, j2, i2);
+        }
+
+        public int Distance(int i1, int j1, int i2, int j2)
+        {
+            return _gameModel.Distance(j1, i1, j2, i2);
         }
 
         private void SendTileInfo()
