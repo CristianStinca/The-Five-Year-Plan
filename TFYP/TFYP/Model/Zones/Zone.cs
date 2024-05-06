@@ -108,6 +108,12 @@ namespace TFYP.Model.Zones
                 }
             }
         }
+
+
+        public void Heal() {
+            this.Health += 10;
+            Health= Health > 100 ? 100 : Health;
+        }
     
 
         public List<Road> GetOutgoing() {

@@ -99,7 +99,18 @@ namespace TFYP.Model
             get { return _mapW; }
             set { _mapW = value; }
         }
-        
+
+        public void HealZone(int _x, int _y) {
+            if (map[_x, _y].Type.Equals(EBuildable.Residential) || map[_x, _y].Type.Equals(EBuildable.Industrial) || map[_x, _y].Type.Equals(EBuildable.Service)) { 
+                    Zone z= (Zone)map[_x, _y];
+                if (CityRegistry.Statistics.Budget.Balance >= Constants.HealZone)
+                {
+                    CityRegistry.Statistics.Budget.UpdateBalance(-1*Constants.HealZone, this.GameTime);
+                    z.Heal();
+                }
+            }
+        }
+
         public void AddZone(int _x, int _y, EBuildable zone, bool rotate)
         {
             // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
@@ -217,10 +228,8 @@ namespace TFYP.Model
             switch (zone)
             {
                 case EBuildable.Stadium:
-                    CityRegistry.AddFacility(new Stadium(t, zone));
-                    Statistics.Budget.UpdateBalance(-Constants.StadiumBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
-                    Stadium stad;
+
+                   
 
                     Point[] points = new Point[4];
                     points[3] = new Point(_x, _y);
@@ -228,10 +237,17 @@ namespace TFYP.Model
                     points[1] = GetCoordAt(0b_1000, points[3]);
                     points[0] = GetCoordAt(0b_0100, points[1]);
 
+              
+
                     if (!AreFree(points))
                     {
                         throw new Exception("second tile was already filled!");
                     }
+
+                    CityRegistry.AddFacility(new Stadium(t, zone));
+                    Statistics.Budget.UpdateBalance(-Constants.StadiumBuildCost, GameTime);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
+                    Stadium stad;
 
                     t.Add(points[0].ToVector2());
                     t.Add(points[1].ToVector2());
@@ -322,9 +338,7 @@ namespace TFYP.Model
                     break;
 
                 case EBuildable.School:
-                    CityRegistry.AddFacility(new School(t));
-                    Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
+
 
                     points = new Point[2];
                     points[1] = new Point(_x, _y);
@@ -337,6 +351,9 @@ namespace TFYP.Model
                     {
                         throw new Exception("second tile was already filled!");
                     }
+                    CityRegistry.AddFacility(new School(t));
+                    Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost, GameTime);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
 
                     t.Add(points[0].ToVector2());
 

@@ -13,6 +13,8 @@ namespace TFYP.Model.Common
         public const int RoadBuildCost = 500;
         public const int SchoolBuildCost = 500;
         public const int UniversityBuildCost = 500;
+        // HEAL COST FOR 10%
+        public const int HealZone = 50;
 
         // CAPACITIES OF ZONES
         public const int ServiceZoneCapacity = 200;
