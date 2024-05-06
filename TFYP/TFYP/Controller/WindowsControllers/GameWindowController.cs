@@ -103,7 +103,6 @@ namespace TFYP.Controller.WindowsControllers
                 case "R":
                     Debug.WriteLine($"X: {x}, Y: {y}");
                     //Debug.WriteLine($"i: {y}, j: {x}");
-                    Debug.WriteLine($"Dist: {Distance(5, 5, x, y)}");
 
                     _activeZone = null;
                     _gw_view.DeleteInfo();
