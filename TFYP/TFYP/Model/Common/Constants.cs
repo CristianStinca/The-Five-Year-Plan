@@ -50,9 +50,11 @@ namespace TFYP.Model.Common
         // TIME in days
         public const int SchoolGraduationTime = 1100;
         public const int UniversityGraduationTime = 700;
+
         public const int ResidentialZoneBuildTime = 5;
         public const int ServiceZoneBuildTime = 5;
         public const int IndustrialBuildTime = 5;
+        
         public const int PoliceConstructionTime = 5;
         public const int SchoolConstructionTime = 5;
         public const int UniversityConstructionTime = 5;
@@ -60,11 +62,10 @@ namespace TFYP.Model.Common
 
 
         //SATTISFACTION WEIGHTS (for citizen)
-        public const float EducationWeight = 0.3f; // 30% of total satisfaction
-        public const float EmploymentWeight = 0.2f; // 20% of total satisfaction
-        public const float DistanceWeight = 0.2f; // 20% of total satisfaction
-        public const float TaxWeight = 0.1f; // 10% of total satisfaction
-        public const float ZoneSatisfactionWeight = 0.2f; // 20% of total satisfaction
+        public const float EducationWeight = 0.03f; // 13% of total satisfaction
+        public const float DistanceWeight = 0.05f; // 12% of total satisfaction
+        public const float TaxWeight = 0.08f; // 11% of total satisfaction
+        public const float ZoneSatisfactionWeight = 0.6f; // 12% of total satisfaction
 
         public const float baseZoneSatisfaction = 60.0f;
 

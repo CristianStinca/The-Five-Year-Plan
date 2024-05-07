@@ -32,12 +32,10 @@ namespace TFYP.Model.City
         {
             if (zone == null) throw new System.ArgumentNullException(nameof(zone));
             Zones.Add(zone);
-            Statistics.UpdateZoneCount(this);
         }
         public void RemoveZone(Zone zone)
         {
             bool removed = Zones.Remove(zone);
-            if (removed) Statistics.UpdateZoneCount(this);
         }
         public IEnumerable<Zone> GetAllZones()
         {
@@ -60,14 +58,14 @@ namespace TFYP.Model.City
         public List<Citizen> GetAllCitizens()
         {
             List<Citizen> allCitizens = new List<Citizen>();
-            foreach (var zone in Zones)
+            foreach (Citizen c in Citizens)
             {
-                if (zone is ResidentialZone residentialZone) // Checking if the zone is a ResidentialZone
+                if (c.IsActive)
                 {
-                    // Filter to include only active citizens
-                    allCitizens.AddRange(residentialZone.GetCitizens().Where(citizen => citizen.IsActive));
+                    allCitizens.Add(c);
                 }
             }
+
             return allCitizens;
         }
 
@@ -86,24 +84,20 @@ namespace TFYP.Model.City
 
         //These 2 methods are to check for conditions, if new citizens are eligible to move in city
 
-        public bool GetFreeWorkplacesNearResidentialZones()
+        public bool GetFreeWorkplacesNearResidentialZones(GameModel gm)
         {
-            int workplaceSearchRadius = 5;
+            int workplaceSearchRadius = (int)(gm.MaxDistance/2);
+
             foreach (var residentialZone in Zones.Where(z => z.Type == EBuildable.Residential))
             {
-                foreach (var residentialPos in residentialZone.Coor)
+                foreach (var workZone in residentialZone.conncetedZone.Where(z => z.Type == EBuildable.Industrial || z.Type == EBuildable.Service))
                 {
-                    foreach (var workZone in Zones.Where(z => z.Type == EBuildable.Industrial || z.Type == EBuildable.Service))
+
+                    if (gm.CalculateDistanceBetweenTwo(residentialZone, workZone) <= workplaceSearchRadius && workZone.HasFreeCapacity() && residentialZone.HasFreeCapacity())
                     {
-                        foreach (var workPos in workZone.Coor)
-                        {
-                            double distance = Vector2.Distance(residentialPos, workPos);
-                            if (distance <= workplaceSearchRadius && workZone.HasFreeCapacity())
-                            {
-                                return true;
-                            }
-                        }
+                        return true;
                     }
+
                 }
             }
             return false;
@@ -111,30 +105,25 @@ namespace TFYP.Model.City
 
 
         // Method to check the absence of industrial buildings near residential zones
-        public bool NoIndustriesNearResidentialZones()
+        public bool NoIndustriesNearResidentialZones(GameModel gm)
         {
-            int industryProximityRadius = 5;//ეს შეიძლება შესაცვლელი გახდეს
+            int industryProximityRadius = (int)(gm.MaxDistance / 5); 
+
+
             foreach (var residentialZone in Zones.Where(z => z.Type == EBuildable.Residential))
             {
-                foreach (var residentialPos in residentialZone.Coor)
+                foreach (var industrial in residentialZone.conncetedZone.Where(z => z.Type == EBuildable.Industrial))
                 {
-                    foreach (var industrialZone in Zones.Where(z => z.Type == EBuildable.Industrial))
+
+                    if (gm.CalculateDistanceBetweenTwo(residentialZone, industrial) <= industryProximityRadius)
                     {
-                        foreach (var industrialPos in industrialZone.Coor)
-                        {
-                            double distance = Vector2.Distance(residentialPos, industrialPos);
-                            if (distance <= industryProximityRadius)
-                            {
-                                return false;
-                            }
-                        }
+                        return false;
                     }
+
                 }
             }
             return true;
+            
         }
-
-
-
     }
 }

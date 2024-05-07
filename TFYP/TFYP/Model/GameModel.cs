@@ -20,7 +20,7 @@ namespace TFYP.Model
     /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
 
     [Serializable]
-    public class GameModel : ISteppable
+    public class GameModel 
     {       
         private static GameModel instance = null;
         private static int _mapH, _mapW;
@@ -33,8 +33,8 @@ namespace TFYP.Model
         public CityRegistry CityRegistry { get; private set; }
         public List<Road> Roads { get; private set; }
 
-        public double MaxDistance { get; private set; }
-        public float MaxTax { get; private set; }
+        public int MaxDistance { get; private set; }
+        public int MaxTax { get; private set; }
 
 
         private GameModel(int _mapH, int _mapW)
@@ -48,9 +48,9 @@ namespace TFYP.Model
             CreationDate = DateTime.Now; // Year, Month, Day - we will change date later
             Roads = new List<Road>();
 
-
+            MaxTax = 1000; // --> we will change in future
+            MaxDistance = 40;// --> debugged
             InitializeMap();
-            InitializeMaxValues();
         }
 
         private void InitializeMap()
@@ -71,12 +71,6 @@ namespace TFYP.Model
             }
         }
 
-        private void InitializeMaxValues()
-        {
-            // Assuming maximum distance is from one corner of the map to the opposite corner
-            MaxDistance = Math.Sqrt(Math.Pow(MAP_H - 1, 2) + Math.Pow(MAP_W - 1, 2));
-            MaxTax = 50; // --> we will change in future
-        }
 
         public static GameModel GetInstance()
         {
@@ -283,10 +277,12 @@ namespace TFYP.Model
                         break;
                     }
                     Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, DateTime.Now);
+                    z.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z);
                     Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
                     map[_x, _y] = z;
+                    
                     break;
 
                 case EBuildable.Service:
@@ -295,6 +291,7 @@ namespace TFYP.Model
                         break;
                     }
                     Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, DateTime.Now);
+                    z1.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z1);
                     Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
@@ -307,6 +304,7 @@ namespace TFYP.Model
                         break;
                     }
                     Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, DateTime.Now);
+                    z2.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z2);
                     Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
@@ -506,112 +504,30 @@ namespace TFYP.Model
         }
 
 
-        //These 3 helper functions to calculate zone sattisfaction!!
-
-
-        public float GetDistanceToNearestPoliceStation(Vector2 zoneCoordinate)
+        public int CalculateDistanceBetweenTwo(Buildable b1, Buildable b2)
         {
-            float minDistance = float.MaxValue;
-
-            // Iterate over every cell in your grid map
-            for (int i = 0; i < MAP_H; i++)
+            if (b1 == null || b2 == null)
             {
-                for (int j = 0; j < MAP_W; j++)
+                throw new ArgumentNullException("Both places must be non-null to calculate distance.");
+            }
+
+            int minDistance = int.MaxValue;
+
+            foreach (Vector2 coor1 in b1.Coor)
+            {
+                foreach (Vector2 coor2 in b2.Coor)
                 {
-                    // Check if the current cell contains a Police Station
-                    if (map[i, j].Type == EBuildable.PoliceStation)
+                    int distance = Distance(coor1, coor2);
+                    if (distance < minDistance)
                     {
-                        float distance = Math.Abs(zoneCoordinate.X - i) + Math.Abs(zoneCoordinate.Y - j); // Manhattan distance
-                        if (distance < minDistance)
-                        {
-                            minDistance = distance;
-                        }
+                        minDistance = distance;
                     }
                 }
             }
 
-            return minDistance;
+            return minDistance+1;
         }
 
-        public float GetDistanceToNearestStadium(Vector2 zoneCoordinate)
-        {
-            float minDistance = float.MaxValue;
-
-            // Iterate over every cell in your grid map
-            for (int i = 0; i < MAP_H; i++)
-            {
-                for (int j = 0; j < MAP_W; j++)
-                {
-                    // Check if the current cell contains a Stadium
-                    if (map[i, j].Type == EBuildable.Stadium)
-                    {
-                        float distance = Math.Abs(zoneCoordinate.X - i) + Math.Abs(zoneCoordinate.Y - j); // Manhattan distance
-                        if (distance < minDistance)
-                        {
-                            minDistance = distance;
-                        }
-                    }
-                }
-            }
-
-            return minDistance;
-        }
-
-        public float GetDistanceToNearestIndustrialArea(Vector2 zoneCoordinate)
-        {
-            float minDistance = float.MaxValue;
-
-            // Iterate over every cell in your grid map
-            for (int i = 0; i < MAP_H; i++)
-            {
-                for (int j = 0; j < MAP_W; j++)
-                {
-                    // Check if the current cell is an Industrial area
-                    if (map[i, j].Type == EBuildable.Industrial)
-                    {
-                        float distance = Math.Abs(zoneCoordinate.X - i) + Math.Abs(zoneCoordinate.Y - j); // Manhattan distance
-                        if (distance < minDistance)
-                        {
-                            minDistance = distance;
-                        }
-                    }
-                }
-            }
-
-            return minDistance;
-        }
-
-
-        //this is for citizen satisfaction, to measure the distance between his workplace and livingplace
-        //i think it is not necessary to calculate it using roads - მოკლედ ანუ იქნებ მაგ ორს შორის პირდაპირ მანძილს
-        //რომ ვპოულობ გზა არც გადის, მაგრამ მარტივად შეგვიძლია ასე გამოვთვალოთ ჩემი აზრით რადგან მაინც სეთისფექშენის
-        //დასათვლელად ვიყენებთ ამ პარამეტრს მხოლოდ - კრისთან გადაამოწმე
-        public int CalculateDistanceBetweenZones(Zone zone1, Zone zone2)
-        {
-            if (zone1 == null || zone2 == null)
-            {
-                throw new ArgumentNullException("Both zones must be non-null to calculate distance.");
-            }
-
-            List<Vector2> position1 = zone1.Coor;
-            List<Vector2> position2 = zone2.Coor;
-            int min = 1000000;
-
-            foreach (Vector2 pos1 in position1)
-            {
-                foreach (Vector2 pos2 in position2)
-                {
-                    int distance = (int)(Math.Abs(pos1.X - pos2.X) + Math.Abs(pos1.Y - pos2.Y));
-                    if (distance < min)
-                    {
-                        min = distance;
-                    }
-                }
-            }
-
-
-            return min;
-        }
 
         public Buildable GetMapElementAt(int x, int y)
         {
@@ -652,43 +568,93 @@ namespace TFYP.Model
             bool highSatisfaction = Statistics.Satisfaction >= Constants.SatisfactionUpperLimit;
 
             // Check for free workplaces near available residential zones
-            bool freeWorkplacesAvailable = CityRegistry.GetFreeWorkplacesNearResidentialZones();
+            bool freeWorkplacesAvailable = CityRegistry.GetFreeWorkplacesNearResidentialZones(this);
 
             // Check for absence of industrial buildings near these zones
-            bool noNearbyIndustries = CityRegistry.NoIndustriesNearResidentialZones();
+            bool noNearbyIndustries = CityRegistry.NoIndustriesNearResidentialZones(this);
 
             return highSatisfaction && freeWorkplacesAvailable && noNearbyIndustries;
         }
 
+        public List<Zone> getEveryIndustrial()
+        {
+            List<Zone> industrials = CityRegistry.Zones.Where(z => z.Type == EBuildable.Industrial).ToList();
+            return industrials;
+        }
 
+        public List<Facility> getEveryPolice()
+        {
+            List<Facility> polices = CityRegistry.Facilities.Where(f => f.Type == EBuildable.PoliceStation).ToList();
+            return polices;
+        }
+
+        public List<Facility> getEveryStadium()
+        {
+            List<Facility> stadiums = CityRegistry.Facilities.Where(f => f.Type == EBuildable.Stadium).ToList();
+            return stadiums;
+        }
+
+        private void initialPopulationOfZones()
+        {
+            List<Zone> allResidentialZones = new List<Zone>();
+            foreach (var residentialZone in this.CityRegistry.Zones.Where(z => z.Type == EBuildable.Residential))
+            {
+                if (!residentialZone.isInitiallyPopulated)
+                {
+                    for(int i = 0; i < CitizenLifecycle.StartingNrCitizens; i++)
+                    {
+                        CitizenLifecycle.populate(residentialZone, this);
+                    }
+                    foreach(Citizen c in residentialZone.citizens)
+                    {
+                        if(c.LivingPlace != null && c.WorkPlace != null)
+                        {
+                            Debug.WriteLine("distance between zones are :" + CalculateDistanceBetweenTwo(c.LivingPlace, c.WorkPlace));
+                        }
+
+                    }
+                }
+            }
+
+        }
 
         private void CitizenshipManipulation()
         {
+            
             if (AreNewCitizensEligible())
             {
-                for(int i = 0; i < CitizenLifecycle.StartingNrCitizens; i++)
+                for(int i = 0; i < CitizenLifecycle.ImmigrantsCount; i++)
                 {
                     CitizenLifecycle.CreateYoungCitizen(this);
                 }
             }
+            
             
             //ეს ლოგიკა როცა ახალი ხალხი მოდის რადგან მაღალია სეთისფექშენ, დასამატებელია ლოგიკა როცა
             //იმდენად დაბალია რომ
             //პირიქით, ხალხი ტოვებს ქალაქს!! აქვე დაამატე
         }
 
-
-
-
-
-        
-
         public void UpdateCitySatisfaction()
         {
+            
+            //update citizens sat
+            foreach (Citizen citizen in CityRegistry.GetAllCitizens())
+            {
+                citizen.CalculateSatisfaction(this, Statistics.Budget);
+                
+            }
+            //update zones sat
+            foreach (Zone zone in CityRegistry.Zones)
+            {
+                zone.GetZoneSatisfaction(this);
+
+            }
+            //update whole city sat
             Statistics.CalculateCitySatisfaction(this);
         }
 
-        private void CitizenshipEducationUpdate()
+        private void CitizenshipEducationUpdate()//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         {
             foreach (Citizen citizen in CityRegistry.GetAllCitizens())
             {
@@ -699,7 +665,7 @@ namespace TFYP.Model
             }
         }
 
-        private void UpdateCityBalance()
+        private void UpdateCityBalance()//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         {
             double revenue = Statistics.Budget.ComputeRevenue(this);
             double spend = Statistics.Budget.MaintenanceFeeForEverything;
@@ -712,30 +678,41 @@ namespace TFYP.Model
         /// </summary>
         public void UpdateCityState()
         {
-            // Placeholder for all update functions
-            CitizenshipManipulation();
-            CitizenshipEducationUpdate();
-            UpdateZoneBuildingStatus();
-            UpdateCitySatisfaction();
-            GenerateDisaster();
             GameTime = GameTime.AddDays(1);
+            initialPopulationOfZones();
+            UpdateCitySatisfaction();
+            CitizenshipManipulation();
 
-            UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR???? IDK
+            //GenerateDisaster();
+            //CitizenshipEducationUpdate();
+
+            //UpdateZoneBuildingStatus();
+
+            //UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR???? IDK
             // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
+
+            //just for debugging, will be deleted
+            foreach (Zone z1 in CityRegistry.Zones)
+            {
+                foreach (Citizen c in z1.GetCitizens())
+                {
+                    Debug.WriteLine("citizens satisfaction :" + c.Satisfaction);
+                }
+
+                foreach (Zone z2 in CityRegistry.Zones)
+                {
+                    Debug.WriteLine(CalculateDistanceBetweenTwo(z1, z2));
+                }
+            }
         }
 
-        public void Step()
-        {
-            // Advance game time by one day every step
-            //UpdateCityState();
-        }
 
         public List<Zone> GetZonesThatAreStillBuilding()
         {
             List<Zone> stillBuilding = new List<Zone>();
             foreach (Zone zone in GetAllZones())
             {
-                if (!zone.IsBuilt)
+                if (zone.Status == ZoneStatus.Building)
                 {
                     stillBuilding.Add(zone);
                 }
@@ -779,32 +756,8 @@ namespace TFYP.Model
 
 
 
-        public void PauseGame()
-        {
-            Timer.Instance.StopTimer();
-            // Additional logic to display pause menu - if we will need it
-        }
 
-        public void ResumeGame()
-        {
-            Timer.Instance.StartTimer();
-            // Additional logic to hide pause menu and return to the game 
-        }
-
-        //For persistence feature:
-        public void SaveGame()
-        {
-            Timer.Instance.StopTimer();
-            // Logic to serialize and save the game state
-            Timer.Instance.StartTimer(); // restart timer if we want the game to resume immediately after saving
-        }
-
-        public void LoadGame()
-        {
-            Timer.Instance.StopTimer();
-            // Logic to deserialize and load the game state
-            Timer.Instance.StartTimer(); // Restart timer after loading is complete
-        }
+        
 
         public Buildable[] GetAdj(int i, int j)
         {

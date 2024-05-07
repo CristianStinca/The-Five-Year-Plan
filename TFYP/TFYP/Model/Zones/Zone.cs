@@ -18,6 +18,13 @@ namespace TFYP.Model.Zones
         Three
     }
 
+    public enum ZoneStatus
+    {
+        Pending,
+        Building,
+        Done
+    }
+
 
     [Serializable]
     public class Zone : Buildable
@@ -29,20 +36,37 @@ namespace TFYP.Model.Zones
         private bool canStartBuilding;
         private List<Citizen> citizens = new List<Citizen>();
 
-        //public bool IsConnected { get; protected set; } // maybe we will need this after building roads
         public ZoneLevel Level { get; private set; }
-        public bool IsConnected { get; private set; }//ეს უნდა დაიმპლემენტდეს გზების ლოგიკის მერე!
-        private List<Zone> conncetedZone= new List<Zone>();
+        public bool IsConnected { get; private set; }
+        public List<Zone> conncetedZone= new List<Zone>();
         private List<Road> outGoing = new List<Road>();
 
         public DateTime DayOfBuildStart { get; private set; }
         public int TimeToBuild { get; set; }
-        public bool IsBuilt { get; set; }
+
+        public ZoneStatus Status { get; set; }
+
+        public bool isInitiallyPopulated { get; set; }
+        public int Satisfaction { get; private set; }
+
+        public int averageCitizensSatisfaction()
+        {
+            int totalCitizenSatisfaction = citizens.Sum(citizen => citizen.Satisfaction);
+            int citizenCount = citizens.Count;
+
+            if (citizenCount == 0)
+            {
+                return 0;  // Return 0 or some default value if there are no citizens
+            }
+
+            int averageCitizenSatisfaction = totalCitizenSatisfaction / citizenCount;
+            return averageCitizenSatisfaction;
+        }
 
         // when timer has gone through the days needed it will call this function to register that building is done
         public void finishBuilding()
         {
-            IsBuilt = true;
+            Status = ZoneStatus.Done;
         }
 
         public int NCitizensInZone
@@ -63,8 +87,9 @@ namespace TFYP.Model.Zones
             Level = ZoneLevel.One;
             IsConnected = false;
             TimeToBuild = timeToBuild;
-            IsBuilt = false;
             DayOfBuildStart = dayOfBuildStart;
+            Status = ZoneStatus.Pending;
+            Satisfaction = 50;   
         }
         public void checkOutGoing() {
             GameModel gm = GameModel.GetInstance();
@@ -167,34 +192,73 @@ namespace TFYP.Model.Zones
             // Effect diminishes as distance increases, decayRate controls how quickly the effect diminishes
             return Math.Max(0, maxEffect - (distance * decayRate));
         }
+        
 
-        public double GetZoneSatisfaction(GameModel gm)
+        public int GetZoneSatisfaction(GameModel gm)
         {
-            // Calculate effects based on the distance to the nearest police station, stadium, and industrial area
-            double mindistPolice=this.Coor.Min(s => gm.GetDistanceToNearestPoliceStation(s));
-            double policeEffect = CalculateDistanceEffect(100, mindistPolice, 0.5);
-            double mindistStad = this.Coor.Min(s => gm.GetDistanceToNearestStadium(s));
-            double stadiumEffect = CalculateDistanceEffect(80, mindistStad, 0.3);
-            var mindistInd = this.Coor.Min(s=>gm.GetDistanceToNearestIndustrialArea(s));
-            double industrialEffect = -CalculateDistanceEffect(50, mindistInd, 0.7);
+            int policeEffect = 0;
+            int stadiumEffect = 0;
+            int industrialEffect = 100;// Start with the highest satisfaction if no industrial zones are found
 
-            double freeWorkplaceEffect = (Capacity - NCitizensInZone) * 10; // more free capacity increases satisfaction
+            List<Facility> policeStations = gm.getEveryPolice();
+            if(policeStations.Any()) 
+            {
+                int minDistance = gm.MaxDistance;
+                foreach (Facility b in policeStations)
+                {
+                    int distance = gm.CalculateDistanceBetweenTwo(this, b);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                    }
+                }
+                policeEffect = 100 - (minDistance * 100 / gm.MaxDistance);
+            }
 
-            double citizenSatisfaction = citizens.Any(c => c.IsActive)
-                ? citizens.Where(c => c.IsActive).Average(c => c.Satisfaction)
-                : 0;
+            List<Facility> stadiums = gm.getEveryStadium();
+            if(stadiums.Any())
+            {
+                int minDistance = gm.MaxDistance;
+                foreach (Facility b in stadiums)
+                {
+                    int distance = gm.CalculateDistanceBetweenTwo(this, b);
+                    if (distance < minDistance)
+                    {
+                        minDistance = distance;
+                    }
 
-            double totalSatisfaction = Constants.baseZoneSatisfaction +
-                                       policeEffect +
-                                       stadiumEffect +
-                                       industrialEffect +
-                                       freeWorkplaceEffect +
-                                       citizenSatisfaction;
+                }
+                stadiumEffect = 100 - (minDistance * 100 / gm.MaxDistance);
+            }
 
-           
-            return Math.Clamp(totalSatisfaction, 0, 100);
+            if(this.Type != EBuildable.Industrial)
+            {
+                List<Zone> industrials = gm.getEveryIndustrial();
+                if (industrials.Any())
+                {
+                    int minDistance = gm.MaxDistance;
+                    foreach (Zone b in industrials)
+                    {
+                        int distance = gm.CalculateDistanceBetweenTwo(this, b);
+                        if (distance < minDistance)
+                        {
+                            minDistance = distance;
+                        }
+                    }
+                    industrialEffect = (minDistance * 100 / gm.MaxDistance); // Farther industrial zones reduce negative impact
+                }
+            }
+            
 
+
+            Satisfaction = (Satisfaction + policeEffect + stadiumEffect + industrialEffect) / 4;
+
+            return Satisfaction;
+
+            //return Math.Clamp(totalSatisfaction, 0, 100);
         }
+
+
 
 
         public void AddCitizen(Citizen citizen, GameModel _gameModel)
@@ -244,6 +308,7 @@ namespace TFYP.Model.Zones
         }
 
         public override void AddConnectedZone(Zone z) {
+            this.IsConnected = true;
             this.conncetedZone.Add(z);
             this.conncetedZone = this.conncetedZone.Distinct().ToList();
         }
@@ -270,9 +335,5 @@ namespace TFYP.Model.Zones
                    $"Active Citizens Details: [{string.Join(", ", citizensInfo)}]";
         }
 
-        /*
-         dictionary --> key is field, value is the actual value, 
-
-         */
     }
 }

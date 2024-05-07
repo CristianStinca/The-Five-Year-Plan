@@ -8,16 +8,16 @@ using TFYP.Model.City;
 using TFYP.Model.Zones;
 using TFYP.Utils;
 using System.Security.Policy;
+using System.Diagnostics;
+
 
 
 namespace TFYP.Model.Common
 {
     public class CitizenLifecycle
     {
-        
-        
         public static int StartingNrCitizens = 25;
-        
+        public static int ImmigrantsCount = 10;
 
         // Getting an available random Residential zone randomly
         public static Zone GetLivingPlace(GameModel gm)
@@ -38,13 +38,14 @@ namespace TFYP.Model.Common
         public static Zone GetClosestWorkingPlace(Zone livingPlace, GameModel gm)
         {
             Zone closestZone = null;
-            int closestDistance = 1000;//just starting with big integer
+            int closestDistance = gm.MaxDistance;
+            
             List<Zone> ConnectedZones = livingPlace.GetConnectedZones();
             foreach (var workZone in ConnectedZones)
             {
                 if(workZone.Type == EBuildable.Industrial || workZone.Type == EBuildable.Service)
                 {
-                    int distanceToWork = gm.CalculateDistanceBetweenZones(livingPlace, workZone);
+                    int distanceToWork = gm.CalculateDistanceBetweenTwo(livingPlace, workZone);
                     if (distanceToWork < closestDistance)
                     {
                         closestDistance = distanceToWork;
@@ -137,10 +138,45 @@ namespace TFYP.Model.Common
         public static void CreateYoungCitizen(GameModel gm)
         {
             Zone livingPlace = GetLivingPlace(gm);
-            Zone workPlace = GetClosestWorkingPlace(livingPlace, gm);
-            Citizen newCitizen = new Citizen(workPlace, livingPlace, GetEducationLevel(gm, livingPlace));
-            livingPlace.AddCitizen(newCitizen, gm);
-            workPlace?.AddCitizen(newCitizen, gm);
+            populate(livingPlace, gm);
+        }
+
+        // initial population
+        public static void populate(Zone livingPlace, GameModel gm)
+        {
+            Zone workPlace = null;
+
+            if (livingPlace != null && livingPlace.IsConnected && livingPlace.HasFreeCapacity())
+            {
+                List<Zone> potentialWorkingZones = livingPlace.conncetedZone.Where(z => z.Type == EBuildable.Service || z.Type == EBuildable.Industrial).ToList();
+
+                if (potentialWorkingZones.Any())
+                {
+
+                    int minDistance = gm.MaxDistance;
+                    foreach (Zone workZone in potentialWorkingZones)
+                    {
+                        int distance = gm.CalculateDistanceBetweenTwo(livingPlace, workZone);
+                        if (distance < minDistance)
+                        {
+                            minDistance = distance;
+                            workPlace = workZone;
+                        }
+                    }
+
+                }
+
+                if (workPlace != null && workPlace.HasFreeCapacity())
+                {
+                    Citizen newCitizen = new Citizen(workPlace, livingPlace, GetEducationLevel(gm, livingPlace));
+                    livingPlace.AddCitizen(newCitizen, gm);
+                    workPlace?.AddCitizen(newCitizen, gm);
+                    gm.CityRegistry.Citizens.Add(newCitizen);
+                    livingPlace.isInitiallyPopulated = true;
+                }
+            }
+
+
         }
 
     }

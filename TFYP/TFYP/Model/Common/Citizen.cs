@@ -7,6 +7,7 @@ using TFYP.Model.Facilities;
 using TFYP.Model.City;
 using TFYP.Model.Zones;
 using TFYP.Utils;
+using System.Diagnostics;
 
 namespace TFYP.Model.Common
 {
@@ -19,16 +20,16 @@ namespace TFYP.Model.Common
 
     public static class EducationExtensions
     {
-        public static float GetEducationValue(this EducationLevel level)
+        public static int GetEducationValue(this EducationLevel level)
         {
             switch (level)
             {
                 case EducationLevel.Primary:
-                    return 50.0f;
+                    return 50;
                 case EducationLevel.School:
-                    return 100.0f;
+                    return 75;
                 case EducationLevel.University:
-                    return 150.0f;
+                    return 100;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(level), level, null);
             }
@@ -47,7 +48,7 @@ namespace TFYP.Model.Common
         public bool IsWorking { get; private set; }
         public EducationLevel EducationLevel { get; set; }
         public float TaxPaidThisYear { get; private set; }
-        public float Satisfaction { get; private set; }
+        public int Satisfaction { get; private set; }
         public bool IsActive { get; private set; } = true;
 
         private static Random random = new Random();
@@ -61,12 +62,12 @@ namespace TFYP.Model.Common
             WorkPlace = workPlace;
             Age = random.Next(0, 101);
             IsWorking = WorkPlace != null;
-
             Sex sex = (random.Next(2) == 0) ? Sex.Male : Sex.Female; 
             string fullName = nameGenerator.Generate(sex);
             var names = fullName.Split(' ');
             FirstName = names[0];
-            LastName = names[^1]; 
+            LastName = names[^1];
+            Satisfaction = 50;
         }
 
 
@@ -90,53 +91,24 @@ namespace TFYP.Model.Common
 
         public void CalculateSatisfaction(GameModel gm, Budget budget)
         {
-            float educationSatisfaction = (float)(EducationExtensions.GetEducationValue(EducationLevel) / 150f);
-            float employmentSatisfaction = IsWorking ? 1f : 0f;
-            float distanceSatisfaction = 1f - (float)(GetDistanceLiveWork(gm, LivingPlace, WorkPlace) / gm.MaxDistance);
-            float taxSatisfaction = 1f - (float)(TaxAmount(budget) / gm.MaxTax);
+            int educationSatisfaction = EducationExtensions.GetEducationValue(EducationLevel);
+            
+            int livingPlaceSatisfaction = (int)LivingPlace.GetZoneSatisfaction(gm);
 
-            float industrialProximityEffect = CalculateIndustrialProximityEffect(LivingPlace, gm);
-            float cityFinancialHealthEffect = CalculateCityFinancialHealthEffect(budget);
+            int workPlaceSatisfaction = WorkPlace != null ? (int)WorkPlace.GetZoneSatisfaction(gm) : 0;
+            int distanceSatisfaction = WorkPlace != null ? 100 - ((GetDistanceLiveWork(gm, LivingPlace, WorkPlace) * 100) / gm.MaxDistance) : 100;
 
-            float livingPlaceSatisfaction = (float)LivingPlace.GetZoneSatisfaction(gm) - industrialProximityEffect;
-            float workPlaceSatisfaction = WorkPlace != null ? (float)WorkPlace.GetZoneSatisfaction(gm) : 1f;
+            Satisfaction = (educationSatisfaction + livingPlaceSatisfaction + workPlaceSatisfaction + distanceSatisfaction) / 4;
 
-            // Calculate overall satisfaction
-            Satisfaction = (educationSatisfaction * Constants.EducationWeight) +
-                           (employmentSatisfaction * Constants.EmploymentWeight) +
-                           (distanceSatisfaction * Constants.DistanceWeight) +
-                           (taxSatisfaction * Constants.TaxWeight) +
-                           ((livingPlaceSatisfaction + workPlaceSatisfaction) / 2 * Constants.ZoneSatisfactionWeight) +
-                           cityFinancialHealthEffect;
-
-
-            Satisfaction = Math.Clamp(Satisfaction * 100, 0f, 100f);
-
-        }
-
-        private float CalculateIndustrialProximityEffect(Zone livingPlace, GameModel gm)
-        {
-            if (livingPlace.Coor.Count > 0) 
-            {
-                double distanceToNearestIndustrial = gm.GetDistanceToNearestIndustrialArea(livingPlace.Coor[0]);
-                return (float)(-0.5f * (1f - (distanceToNearestIndustrial / gm.MaxDistance)));
-            }
-            return 0; // if no coordinates are available
+            // Ensure satisfaction is within 0-100 range
+            //Satisfaction = Math.Clamp(Satisfaction, 0, 100);
         }
 
 
 
-        private float CalculateCityFinancialHealthEffect(Budget budget)
-        {
-            if (budget.Balance < 0)
-            {
-                // More negative impact as the loan size increases and the duration of the negative budget extends
-                int yearsNegative = budget.YearsOfBeingInLoan(DateTime.Now);
-                return (float)(-0.1 * yearsNegative * (budget.Balance / 10000));
-            }
-            return 0;
-        }
+        
 
+        
 
 
 
@@ -155,7 +127,7 @@ namespace TFYP.Model.Common
 
         public static int GetDistanceLiveWork(GameModel gm, Zone livingPlace, Zone workplace)
         {
-            return gm.CalculateDistanceBetweenZones(livingPlace, workplace);
+            return gm.CalculateDistanceBetweenTwo(livingPlace, workplace);
         }
 
 

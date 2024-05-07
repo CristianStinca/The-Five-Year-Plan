@@ -12,35 +12,40 @@ namespace TFYP.Model.City
 {
     public class Statistics
     {
-        public double Satisfaction { get; private set; }
+        public int Satisfaction { get; private set; }
         public Budget Budget { get; private set; }
-        public int IndustrialZoneCount { get; private set; }
-        public int ServiceZoneCount { get; private set; }
-        public double BudgetEffect { get; }
-        public double TaxEffect { get => 1 / (Budget.CurrentTax > 0 ? Budget.CurrentTax : 1); }
 
         public Statistics(Budget budget)
         {
-            IndustrialZoneCount = 0;
-            ServiceZoneCount = 0;
             Budget = budget;
         }
 
-        public void UpdateZoneCount(CityRegistry cityRegistry)
-        {
-            ServiceZoneCount = cityRegistry.Zones.OfType<IndustrialZone>().Count();
-            IndustrialZoneCount = cityRegistry.Zones.OfType<ServiceZone>().Count();
-        }
 
         public void CalculateCitySatisfaction(GameModel gm)
         {
-            double totalSatisfactionInZone = gm.CityRegistry.Zones.Sum(zone => zone.GetZoneSatisfaction(gm));
+
+            // Calculate average zone satisfaction
+            int totalSatisfactionInZone = gm.CityRegistry.Zones.Sum(zone => zone.GetZoneSatisfaction(gm));
             int zoneCount = gm.CityRegistry.Zones.Count;
-            double averageZoneSatisfaction = zoneCount > 0 ? totalSatisfactionInZone / zoneCount : 100; // Default to 100 if no zones
+            int averageZoneSatisfaction = zoneCount > 0 ? totalSatisfactionInZone / zoneCount : 100;
+
+            // Calculate average citizen satisfaction
+            int totalCitizenSatisfaction = gm.CityRegistry.GetAllCitizens().Sum(citizen => citizen.Satisfaction);
+            int citizenCount = gm.CityRegistry.GetAllCitizens().Count;
+            int averageCitizenSatisfaction = citizenCount > 0 ? totalCitizenSatisfaction / citizenCount : 100;
+
+            int financialHealthEffect = 100;
+            int yearsInLoan = Budget.YearsOfBeingInLoan(gm.GameTime);
+            if (yearsInLoan > 0)
+            {
+                // Decrease satisfaction based on the number of years in loan
+                financialHealthEffect -= yearsInLoan * 10; // Subtract 10 points per year in loan
+            }
 
 
-            double citySatisfaction = (averageZoneSatisfaction + TaxEffect + BudgetEffect + GetZoneBalance ()) / 4;
-            Satisfaction = Math.Clamp(citySatisfaction, 0.0, 100.0);
+            Satisfaction = (averageZoneSatisfaction + averageCitizenSatisfaction + financialHealthEffect) / 3;
+
+            //Satisfaction = Math.Clamp(citySatisfaction, 0, 100);
         }
 
         public int GetPopulationCount(CityRegistry cityRegistry)
@@ -48,15 +53,6 @@ namespace TFYP.Model.City
             return cityRegistry.GetAllCitizens().Count();
         }
 
-        
-        /*
-         For: Citizens should undertake work in the industrial and service zones in equal proportion
-        */
-        private double GetZoneBalance()
-        {
-            int diff = Math.Abs(IndustrialZoneCount - ServiceZoneCount);
-            return 1.0 / (diff == 0 ? 1.0 : diff);
-        }
 
 
         public int CitizensWithSecondaryEducation(CityRegistry cityRegistry)

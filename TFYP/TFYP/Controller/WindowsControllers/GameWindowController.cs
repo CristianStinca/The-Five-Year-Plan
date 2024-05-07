@@ -364,15 +364,7 @@ namespace TFYP.Controller.WindowsControllers
             return new Point(coord.Y, coord.X);
         }
 
-        public int VerticalDistance(int i1, int j1, int i2, int j2)
-        {
-            return _gameModel.VerticalDistance(j1, i1, j2, i2);
-        }
-
-        public int HorizontalDistance(int i1, int j1, int i2, int j2)
-        {
-            return _gameModel.HorizontalDistance(j1, i1, j2, i2);
-        }
+        //********************************** SATISFACTION PRINTING ********************************************
 
         public int Distance(int i1, int j1, int i2, int j2)
         {
@@ -391,7 +383,8 @@ namespace TFYP.Controller.WindowsControllers
                     Tuple.Create(z.Type.ToString(), EPrintInfo.Title),
                     Tuple.Create("Level: " + zn.Level.ToString(), EPrintInfo.Normal),
                     Tuple.Create("Number of citizens: " + zn.NCitizensInZone.ToString() + " / " + zn.Capacity.ToString(), EPrintInfo.Normal),
-                    Tuple.Create("Satisfaction: " + zn.GetZoneSatisfaction(_gameModel), EPrintInfo.Normal)
+                    Tuple.Create("Zone satisfaction: " + zn.GetZoneSatisfaction(_gameModel), EPrintInfo.Normal),
+                    Tuple.Create("Average citizens' satisfaction: " + zn.averageCitizensSatisfaction(), EPrintInfo.Normal)
                 );
             }
             else
@@ -410,9 +403,14 @@ namespace TFYP.Controller.WindowsControllers
             }
         }
 
+        //********************************** CITY INF(budget, total satisfaction....) ************************************
+
         private void SendBudgetInfo()
         {
-            _gw_view.PrintStats(Tuple.Create("City budget: " + _gameModel.Statistics.Budget.Balance, EPrintInfo.Title));
+            _gw_view.PrintStats(
+                Tuple.Create("City budget: " + _gameModel.Statistics.Budget.Balance, EPrintInfo.Title),
+                Tuple.Create("City satisfaction: " + _gameModel.Statistics.Satisfaction, EPrintInfo.Title)
+                );
         }
 
         /// <summary>
