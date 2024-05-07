@@ -71,11 +71,11 @@ namespace TFYP.Model.Common
         }
 
 
-        public void SetWorking(GameModel gm, Zone workPlace)
+        public void SetWorking(Zone workPlace)
         {
             WorkPlace = workPlace;
             IsWorking = true;
-            workPlace.AddCitizen(this, gm);
+            workPlace.AddCitizen(this);
         }
 
         public void IncAge()
@@ -83,9 +83,19 @@ namespace TFYP.Model.Common
             Age++;
         }
 
-        public void LeaveCity()//სად გამოვიყენებთ?
+        public void LeaveCity()
         {
             IsActive = false;
+
+            if (LivingPlace != null)
+            {
+                LivingPlace.RemoveCitizen(this);
+            }
+            if (WorkPlace != null)
+            {
+                WorkPlace.RemoveCitizen(this);
+            }
+
         }
 
 
@@ -105,19 +115,12 @@ namespace TFYP.Model.Common
         }
 
 
-
-        
-
-        
-
-
-
         // Method to calculate how much tax should a citizen pay tax based on current factors
         public float TaxAmount(Budget budget)
         {
-            // Calculating tax based on some constant base tax, the current tax rate, and an additional value based on education
+            // Calculating tax based on current tax rate, and an additional value based on education
 
-            float tax = (float)(Constants.CityBaseTax * budget.CurrentTax + EducationLevel.GetEducationValue());
+            float tax = (float)((budget.CurrentTax * budget.CurrentTaxRate) + (budget.CurrentTaxRate+1)*EducationLevel.GetEducationValue());
             TaxPaidThisYear = tax; // Assuming tax is paid annually
             return tax;
 

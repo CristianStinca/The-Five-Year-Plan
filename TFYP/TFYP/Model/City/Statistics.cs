@@ -21,7 +21,7 @@ namespace TFYP.Model.City
         }
 
 
-        public void CalculateCitySatisfaction(GameModel gm)
+        public int CalculateCitySatisfaction(GameModel gm, int NrCitizensLeft)
         {
 
             // Calculate average zone satisfaction
@@ -39,12 +39,13 @@ namespace TFYP.Model.City
             if (yearsInLoan > 0)
             {
                 // Decrease satisfaction based on the number of years in loan
-                financialHealthEffect -= yearsInLoan * 10; // Subtract 10 points per year in loan
+                financialHealthEffect -= yearsInLoan * 5; // Subtract 5 points per year in loan
             }
 
+            
+            Satisfaction = (averageZoneSatisfaction + averageCitizenSatisfaction + financialHealthEffect) / 3 - NrCitizensLeft;
 
-            Satisfaction = (averageZoneSatisfaction + averageCitizenSatisfaction + financialHealthEffect) / 3;
-
+            return Satisfaction;
             //Satisfaction = Math.Clamp(citySatisfaction, 0, 100);
         }
 

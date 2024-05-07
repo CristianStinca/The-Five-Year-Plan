@@ -16,14 +16,12 @@ namespace TFYP.Model.City
         
         public Statistics Statistics { get; private set; }
         public List<Zone> Zones { get; private set; }
-        public List<Citizen> Citizens { get; private set; }
         public List<Facility> Facilities { get; private set; }
         
         public CityRegistry(Statistics statistics)
         {
             Statistics = statistics;
             Zones = new List<Zone>();
-            Citizens = new List<Citizen>();
             Facilities = new List<Facility>();
         }
 
@@ -53,22 +51,27 @@ namespace TFYP.Model.City
             Facilities.Remove(facility);
         }
 
-
+        
         // citizens
         public List<Citizen> GetAllCitizens()
         {
             List<Citizen> allCitizens = new List<Citizen>();
-            foreach (Citizen c in Citizens)
+            
+
+            foreach (var residentialZone in Zones.Where(z => z.Type == EBuildable.Residential))
             {
-                if (c.IsActive)
+                foreach (Citizen c in residentialZone.citizens)
                 {
-                    allCitizens.Add(c);
+                    if (c.IsActive)
+                    {
+                        allCitizens.Add(c);
+                    }
                 }
             }
 
             return allCitizens;
         }
-
+        
 
         // budget
         public void SetBalance(double amount, DateTime time) // adds value (if negative, subtracts) from the balance
@@ -76,10 +79,6 @@ namespace TFYP.Model.City
             Statistics.Budget.UpdateBalance(amount, time);
         }
 
-        public void ChangeTax(double newRate)
-        {
-            Statistics.Budget.UpdateTax(newRate);
-        }
 
 
         //These 2 methods are to check for conditions, if new citizens are eligible to move in city

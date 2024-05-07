@@ -28,7 +28,7 @@ namespace TFYP.Model
 
         public DateTime GameTime { get; private set; }
 
-        public DateTime CreationDate; // DateTime built-in in c#
+        public DateTime CreationDate { get; private set; } // DateTime built-in in c#
         public Statistics Statistics { get; private set; }
         public CityRegistry CityRegistry { get; private set; }
         public List<Road> Roads { get; private set; }
@@ -45,7 +45,8 @@ namespace TFYP.Model
             Budget budget = new Budget();
             Statistics = new Statistics(budget);
             CityRegistry = new CityRegistry(Statistics);
-            CreationDate = DateTime.Now; // Year, Month, Day - we will change date later
+            CreationDate = new DateTime(1923, 1, 1);
+            GameTime = new DateTime(1923, 1, 1);
             Roads = new List<Road>();
 
             MaxTax = 1000; // --> we will change in future
@@ -276,7 +277,7 @@ namespace TFYP.Model
                     {
                         break;
                     }
-                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, DateTime.Now);
+                    Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, GameTime);
                     z.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z);
                     Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost, GameTime);
@@ -290,7 +291,7 @@ namespace TFYP.Model
                     {
                         break;
                     }
-                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, DateTime.Now);
+                    Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, GameTime);
                     z1.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z1);
                     Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost, GameTime);
@@ -303,7 +304,7 @@ namespace TFYP.Model
                     {
                         break;
                     }
-                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, DateTime.Now);
+                    Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, GameTime);
                     z2.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z2);
                     Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost, GameTime);
@@ -406,13 +407,19 @@ namespace TFYP.Model
             if (obj.Type.Equals(EBuildable.Road))
             {
                 this.RemoveRoad(_x, _y);
+                //CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.RoadMaintenanceCost);
+                //Statistics.Budget.UpdateBalance(Constants.RoadReimbursement, GameTime);
             }
             else if (obj.GetType().Equals(typeof(Zone)))
             {
                 RemoveZone(_x, _y);
+                //CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.ZoneMaintenanceCost);
+                //Statistics.Budget.UpdateBalance(Constants.ZoneReimbursement, GameTime);
             }
             else {
                 RemoveFacility(_x, _y);
+                //CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.FacilityMaintenanceCost);
+                //Statistics.Budget.UpdateBalance(Constants.FacilityReimbursement, GameTime);
             }
         }
 
@@ -565,7 +572,7 @@ namespace TFYP.Model
         public bool AreNewCitizensEligible()
         {
             // Check general satisfaction level
-            bool highSatisfaction = Statistics.Satisfaction >= Constants.SatisfactionUpperLimit;
+            bool highSatisfaction = Statistics.Satisfaction >= Constants.NewCitizenComingSatisfaction;
 
             // Check for free workplaces near available residential zones
             bool freeWorkplacesAvailable = CityRegistry.GetFreeWorkplacesNearResidentialZones(this);
@@ -605,56 +612,61 @@ namespace TFYP.Model
                     {
                         CitizenLifecycle.populate(residentialZone, this);
                     }
-                    foreach(Citizen c in residentialZone.citizens)
-                    {
-                        if(c.LivingPlace != null && c.WorkPlace != null)
-                        {
-                            Debug.WriteLine("distance between zones are :" + CalculateDistanceBetweenTwo(c.LivingPlace, c.WorkPlace));
-                        }
-
-                    }
                 }
             }
 
         }
 
-        private void CitizenshipManipulation()
+        private int CitizenshipManipulation()
         {
-            
+            int citizensArrivedOnThisDay = 0;
+
             if (AreNewCitizensEligible())
             {
                 for(int i = 0; i < CitizenLifecycle.ImmigrantsCount; i++)
                 {
                     CitizenLifecycle.CreateYoungCitizen(this);
+                    citizensArrivedOnThisDay += 1;
                 }
             }
+            return citizensArrivedOnThisDay;
             
-            
-            //ეს ლოგიკა როცა ახალი ხალხი მოდის რადგან მაღალია სეთისფექშენ, დასამატებელია ლოგიკა როცა
-            //იმდენად დაბალია რომ
-            //პირიქით, ხალხი ტოვებს ქალაქს!! აქვე დაამატე
         }
 
-        public void UpdateCitySatisfaction()
+        public int UpdateCitySatisfaction()
         {
+            int citizensLeftOnThisDay = 0;
             
-            //update citizens sat
+            //update citizens satisfaction and they might leave city if it's too low
             foreach (Citizen citizen in CityRegistry.GetAllCitizens())
             {
                 citizen.CalculateSatisfaction(this, Statistics.Budget);
-                
+                if(citizen.Satisfaction < Constants.CitizenLeavingSatisfaction)
+                {
+                    citizen.LeaveCity();
+                    citizensLeftOnThisDay += 1;
+                }
             }
+
             //update zones sat
             foreach (Zone zone in CityRegistry.Zones)
             {
                 zone.GetZoneSatisfaction(this);
 
             }
+
             //update whole city sat
-            Statistics.CalculateCitySatisfaction(this);
+            int citySat = Statistics.CalculateCitySatisfaction(this, citizensLeftOnThisDay);
+            if(citySat < Constants.GameOverSatisfaction)
+            {
+                //Game is over if city satisfaction became critically low
+                //GameOver();
+            }
+
+            return citizensLeftOnThisDay;
         }
 
-        private void CitizenshipEducationUpdate()//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        private void CitizenshipEducationUpdate()
         {
             foreach (Citizen citizen in CityRegistry.GetAllCitizens())
             {
@@ -665,12 +677,13 @@ namespace TFYP.Model
             }
         }
 
-        private void UpdateCityBalance()//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        private void UpdateCityBalance()
         {
             double revenue = Statistics.Budget.ComputeRevenue(this);
             double spend = Statistics.Budget.MaintenanceFeeForEverything;
-            Statistics.Budget.Balance += revenue;
-            Statistics.Budget.Balance -= spend;
+            Statistics.Budget.UpdateBalance(revenue, GameTime);
+            Statistics.Budget.UpdateBalance(-spend, GameTime);
+            
         }
 
         /// <summary>
@@ -680,18 +693,28 @@ namespace TFYP.Model
         {
             GameTime = GameTime.AddDays(1);
             initialPopulationOfZones();
-            UpdateCitySatisfaction();
-            CitizenshipManipulation();
+            int NrCitizensLeft = UpdateCitySatisfaction();
+            int NrCitizensArrived = CitizenshipManipulation();
+            CitizenshipEducationUpdate();
+            // Check if it's the first day of the year to update city balance -->
+            // collect taxes from citizens and pay maintainance fees once a year
+            if (GameTime.Day == 1 && GameTime.Month == 1)
+            {
+                UpdateCityBalance();
+            }
+            UpdateZoneBuildingStatus();
+
 
             //GenerateDisaster();
-            //CitizenshipEducationUpdate();
 
-            //UpdateZoneBuildingStatus();
-
-            //UpdateCityBalance(); // --> PROBABLY THIS SHOULD BE RUN IN ONCE A YEAR???? IDK
-            // სხვა აფდეითები და თამაშის წაგების ლოგიკა აქ დაემატება!
 
             //just for debugging, will be deleted
+            Debug.WriteLine(Statistics.Budget.YearsOfBeingInLoan(GameTime));
+
+            Debug.WriteLine(NrCitizensLeft + " citizens left the city");
+
+            Debug.WriteLine(NrCitizensArrived + " new citizens arrived");
+
             foreach (Zone z1 in CityRegistry.Zones)
             {
                 foreach (Citizen c in z1.GetCitizens())
@@ -722,13 +745,10 @@ namespace TFYP.Model
 
         private void UpdateZoneBuildingStatus()
         {
-            DateTime gameCurrentTime = GameModel.GetInstance().GameTime;
-
             foreach (Zone zone in GetZonesThatAreStillBuilding())
             {
-                TimeSpan dateDifference = gameCurrentTime - zone.DayOfBuildStart;
+                TimeSpan dateDifference = GameTime - zone.DayOfBuildStart;
                 int daysDifference = dateDifference.Days;
-
                 if (daysDifference >= zone.TimeToBuild)
                 {
                     zone.finishBuilding();
@@ -753,11 +773,6 @@ namespace TFYP.Model
                 dis.ApplyEffects(this);
             }
         }
-
-
-
-
-        
 
         public Buildable[] GetAdj(int i, int j)
         {

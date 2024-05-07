@@ -169,9 +169,8 @@ namespace TFYP.Model.Common
                 if (workPlace != null && workPlace.HasFreeCapacity())
                 {
                     Citizen newCitizen = new Citizen(workPlace, livingPlace, GetEducationLevel(gm, livingPlace));
-                    livingPlace.AddCitizen(newCitizen, gm);
-                    workPlace?.AddCitizen(newCitizen, gm);
-                    gm.CityRegistry.Citizens.Add(newCitizen);
+                    livingPlace.AddCitizen(newCitizen);
+                    workPlace?.AddCitizen(newCitizen);
                     livingPlace.isInitiallyPopulated = true;
                 }
             }

@@ -382,9 +382,11 @@ namespace TFYP.Controller.WindowsControllers
                 _gw_view.PrintInfo(true,
                     Tuple.Create(z.Type.ToString(), EPrintInfo.Title),
                     Tuple.Create("Level: " + zn.Level.ToString(), EPrintInfo.Normal),
+                    Tuple.Create("Status: " + zn.Status.ToString(), EPrintInfo.Normal),
                     Tuple.Create("Number of citizens: " + zn.NCitizensInZone.ToString() + " / " + zn.Capacity.ToString(), EPrintInfo.Normal),
                     Tuple.Create("Zone satisfaction: " + zn.GetZoneSatisfaction(_gameModel), EPrintInfo.Normal),
                     Tuple.Create("Average citizens' satisfaction: " + zn.averageCitizensSatisfaction(), EPrintInfo.Normal)
+                    
                 );
             }
             else

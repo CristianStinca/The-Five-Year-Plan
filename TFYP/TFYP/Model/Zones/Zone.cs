@@ -34,7 +34,7 @@ namespace TFYP.Model.Zones
         // health will help us to calculate the cost of the damage which will be OneTimeCost * (Health/100)
         // Tracking the citizens within the zone
         private bool canStartBuilding;
-        private List<Citizen> citizens = new List<Citizen>();
+        public List<Citizen> citizens = new List<Citizen>();
 
         public ZoneLevel Level { get; private set; }
         public bool IsConnected { get; private set; }
@@ -48,6 +48,9 @@ namespace TFYP.Model.Zones
 
         public bool isInitiallyPopulated { get; set; }
         public int Satisfaction { get; private set; }
+
+
+        
 
         public int averageCitizensSatisfaction()
         {
@@ -196,6 +199,8 @@ namespace TFYP.Model.Zones
 
         public int GetZoneSatisfaction(GameModel gm)
         {
+            double dampingFactor = 0.5;
+
             int policeEffect = 0;
             int stadiumEffect = 0;
             int industrialEffect = 100;// Start with the highest satisfaction if no industrial zones are found
@@ -212,7 +217,7 @@ namespace TFYP.Model.Zones
                         minDistance = distance;
                     }
                 }
-                policeEffect = 100 - (minDistance * 100 / gm.MaxDistance);
+                policeEffect = (int)(100 - (minDistance * 100.0 / gm.MaxDistance) * dampingFactor);
             }
 
             List<Facility> stadiums = gm.getEveryStadium();
@@ -228,7 +233,7 @@ namespace TFYP.Model.Zones
                     }
 
                 }
-                stadiumEffect = 100 - (minDistance * 100 / gm.MaxDistance);
+                stadiumEffect = (int)(100 - (minDistance * 100.0 / gm.MaxDistance) * dampingFactor);
             }
 
             if(this.Type != EBuildable.Industrial)
@@ -245,7 +250,7 @@ namespace TFYP.Model.Zones
                             minDistance = distance;
                         }
                     }
-                    industrialEffect = (minDistance * 100 / gm.MaxDistance); // Farther industrial zones reduce negative impact
+                    industrialEffect = (int)((minDistance * 100.0 / gm.MaxDistance) * dampingFactor); // Farther industrial zones reduce negative impact
                 }
             }
             
@@ -261,9 +266,13 @@ namespace TFYP.Model.Zones
 
 
 
-        public void AddCitizen(Citizen citizen, GameModel _gameModel)
+        public void AddCitizen(Citizen citizen)
         {
             citizens.Add(citizen);
+        }
+        public void RemoveCitizen(Citizen citizen)
+        {
+            citizens.Remove(citizen);
         }
 
         public double UpgradeZone()

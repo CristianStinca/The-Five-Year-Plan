@@ -2,34 +2,64 @@ using System.Threading;
 
 namespace TFYP.Model.Common
 {
-    public static class Constants // Leaving constants for now, can be changed later
+    public static class Constants 
     {
         // BUILD COSTS
-        public const int ServiceZoneBuildCost = 500;
-        public const int ResidentialZoneBuildCost = 500;
-        public const int IndustrialZoneBuildCost = 500;
-        public const int StadiumBuildCost = 500;
-        public const int PoliceStationBuildCost = 500;
+        public const int ServiceZoneBuildCost = 1000;
+        public const int ResidentialZoneBuildCost = 1000;
+        public const int IndustrialZoneBuildCost = 1000;
+        public const int StadiumBuildCost = 1500;
+        public const int PoliceStationBuildCost = 1000;
         public const int RoadBuildCost = 500;
-        public const int SchoolBuildCost = 500;
-        public const int UniversityBuildCost = 500;
+        public const int SchoolBuildCost = 2000;
+        public const int UniversityBuildCost = 3000;
         // HEAL COST FOR 10%
         public const int HealZone = 50;
 
         // CAPACITIES OF ZONES
-        public const int ServiceZoneCapacity = 200;
-        public const int ResidentialZoneCapacity = 200;
-        public const int IndustrialZoneCapacity = 200;
+        public const int ServiceZoneCapacity = 25;
+        public const int ResidentialZoneCapacity = 50;
+        public const int IndustrialZoneCapacity = 25;
 
         // MAINTENANCE FEES
-        public const int ServiceZoneMaintenanceCost = 500;
-        public const int ResidentialZoneMaintenanceCost = 500;
-        public const int IndustrialZoneMaintenanceCost = 500;
-        public const int StadiumMaintenanceFee = 100;
-        public const int PoliceStationMaintenanceFee = 100;
-        public const int RoadMaintenanceFee = 100;
-        public const int SchoolMaintenanceFee = 100;
-        public const int UniversityMaintenanceFee = 100;
+        public const int ServiceZoneMaintenanceCost = 1000;
+        public const int ResidentialZoneMaintenanceCost = 1000;
+        public const int IndustrialZoneMaintenanceCost = 1000;
+        public const int StadiumMaintenanceFee = 2000;
+        public const int PoliceStationMaintenanceFee = 2000;
+        public const int RoadMaintenanceFee = 500;
+        public const int SchoolMaintenanceFee = 2500;
+        public const int UniversityMaintenanceFee = 3000;
+
+        //FOR REMOVING
+        public const int ZoneReimbursement = 500;
+        public const int FacilityReimbursement = 750;
+        public const int RoadReimbursement = 250;
+        public const int ZoneMaintenanceCost = 1000;
+        public const int FacilityMaintenanceCost = 1250;
+        public const int RoadMaintenanceCost = 500;
+        
+
+        //TO DO - Should be added constants for Disaster
+
+
+        // GENERAL CONSTANTS
+        public const int CityBaseTax = 100;
+        public const float CityBaseTaxRate = 0.4f;
+        public const int InitialBalance = 1000000;
+
+
+        // TIME in days
+        public const int SchoolGraduationTime = 1460;//4 years
+        public const int UniversityGraduationTime = 1095;//3 years
+
+        public const int ResidentialZoneBuildTime = 10;
+        public const int ServiceZoneBuildTime = 10;
+        public const int IndustrialBuildTime = 10;
+        
+        public const int CitizenLeavingSatisfaction = 10;
+        public const int NewCitizenComingSatisfaction = 85;
+        public const int GameOverSatisfaction = 5;
 
         // LOCATION EFFECT
         public const int IndustrialEffectRadius = 10;
@@ -37,43 +67,6 @@ namespace TFYP.Model.Common
         public const int ResidentialEffectRadius = 0;
         public const int StadiumEffectRadius = 10;
         public const int PoliceStationEffectRadius = 10;
-
-
-        //TO DO - Should be added constants for Disaster
-
-
-        // GENERAL CONSTANTS
-        public const int CityBaseTax = 750;
-        public const int InitialBalance = 1000000;
-
-
-        // TIME in days
-        public const int SchoolGraduationTime = 1100;
-        public const int UniversityGraduationTime = 700;
-
-        public const int ResidentialZoneBuildTime = 5;
-        public const int ServiceZoneBuildTime = 5;
-        public const int IndustrialBuildTime = 5;
-        
-        public const int PoliceConstructionTime = 5;
-        public const int SchoolConstructionTime = 5;
-        public const int UniversityConstructionTime = 5;
-        public const int StadiumConstructionTime = 5;
-
-
-        //SATTISFACTION WEIGHTS (for citizen)
-        public const float EducationWeight = 0.03f; // 13% of total satisfaction
-        public const float DistanceWeight = 0.05f; // 12% of total satisfaction
-        public const float TaxWeight = 0.08f; // 11% of total satisfaction
-        public const float ZoneSatisfactionWeight = 0.6f; // 12% of total satisfaction
-
-        public const float baseZoneSatisfaction = 60.0f;
-
-
-        public const int SatisfactionLowerLimit = 25;
-        public const int SatisfactionUpperLimit = 75;
-
-
 
     }
 }

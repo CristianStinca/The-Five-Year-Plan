@@ -13,21 +13,20 @@ namespace TFYP.Model.Common
     {
 
         public double Balance { get; set; }
-        public double CurrentTax { get; private set; }
-        public double MaintenanceFeeForEverything { get; private set; }
-        public DateTime DateOfStartingLoan { get; private set; }
+        public int CurrentTax { get; set; }
+        public float CurrentTaxRate { get; set; }
+        public double MaintenanceFeeForEverything { get; set; }
+        public DateTime DateOfStartingLoan { get; set; }
 
         public Budget()
         {
             Balance = Constants.InitialBalance;
             CurrentTax = Constants.CityBaseTax;
+            CurrentTaxRate = Constants.CityBaseTaxRate;
             MaintenanceFeeForEverything = 0;
+            DateOfStartingLoan = DateTime.MinValue;
         }
 
-        public void UpdateTax(double tax)
-        {
-            CurrentTax = tax;
-        }
 
         public void UpdateBalance(double amount, DateTime gameTime)
         {
@@ -40,7 +39,7 @@ namespace TFYP.Model.Common
 
         public int YearsOfBeingInLoan(DateTime gameTime)
         {
-            if (gameTime > DateOfStartingLoan)
+            if(DateOfStartingLoan != DateTime.MinValue && gameTime > DateOfStartingLoan)
             {
                 return gameTime.Year - DateOfStartingLoan.Year - (gameTime.DayOfYear < DateOfStartingLoan.DayOfYear ? 1 : 0);
             }
@@ -60,7 +59,14 @@ namespace TFYP.Model.Common
         public double ComputeRevenue(GameModel gm)
         {
             // Sum the TaxAmount for only active citizens
-            return gm.CityRegistry.Citizens.Where(citizen => citizen.IsActive).Sum(citizen => citizen.TaxAmount(this));
+            double revenue = 0;
+
+            foreach (var residentialZone in gm.CityRegistry.Zones.Where(z => z.Type == EBuildable.Residential))
+            {
+                revenue += residentialZone.citizens.Where(citizen => citizen.IsActive).Sum(citizen => citizen.TaxAmount(this));
+            }
+            return revenue;
+        
         }
 
 
