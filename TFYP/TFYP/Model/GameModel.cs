@@ -416,6 +416,12 @@ namespace TFYP.Model
                 //CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.ZoneMaintenanceCost);
                 //Statistics.Budget.UpdateBalance(Constants.ZoneReimbursement, GameTime);
             }
+            else if (!(obj.Type.Equals(EBuildable.None)))
+            {
+                RemoveFacility(_x, _y);
+                CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.FacilityMaintenanceCost);
+                Statistics.Budget.UpdateBalance(Constants.FacilityReimbursement, GameTime);
+            }
             else {
                 RemoveFacility(_x, _y);
                 //CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.FacilityMaintenanceCost);
@@ -449,6 +455,9 @@ namespace TFYP.Model
             foreach (var i in CityRegistry.Zones) {
                 i.ClearConnectedZone();
             }
+            // Adjusting balance after removing zone
+            CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.ZoneMaintenanceCost);
+            Statistics.Budget.UpdateBalance(Constants.ZoneReimbursement, GameTime);
 
         }
 
@@ -502,6 +511,9 @@ namespace TFYP.Model
                 this.Roads = this.Roads.Distinct().ToList();
                 this.Roads.ForEach(x => x.checkForZones());
                 this.CityRegistry.Zones.ForEach(x => x.checkOutGoing());
+                // Adjusting balance after removing road
+                CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.RoadMaintenanceCost);
+                Statistics.Budget.UpdateBalance(Constants.RoadReimbursement, GameTime);
             }
         }
         private void RemoveFacility(int _x, int _y) {
@@ -773,7 +785,15 @@ namespace TFYP.Model
                 dis.ApplyEffects(this);
             }
         }
-
+        public void GenerateDisasterByButton()
+        {
+            int _X, _Y;
+            Random rnd = new Random();
+            _X = rnd.Next(20);
+            _Y = rnd.Next(20);
+            Disaster dis = new Disaster(5, new Vector2(_X, _Y));
+            dis.ApplyEffects(this);
+        }
         public Buildable[] GetAdj(int i, int j)
         {
             Buildable[] arr = new Buildable[4];
