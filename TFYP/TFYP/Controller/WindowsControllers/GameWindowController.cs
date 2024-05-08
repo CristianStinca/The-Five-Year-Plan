@@ -75,6 +75,8 @@ namespace TFYP.Controller.WindowsControllers
             _focusCoord = new Vector2(_screenLimits.X + _gw_view.ScreenLimit.Width / 2, _screenLimits.Y + _gw_view.ScreenLimit.Height / 2);
             _initCoord = new Vector2(_screenLimits.X, _screenLimits.Y);
             _gw_view.SetFocusCoord(_initCoord - _focusCoord);
+
+            _gameModel.GameOver += GameEndHandler();
         }
 
         /// <summary>
@@ -117,6 +119,12 @@ namespace TFYP.Controller.WindowsControllers
         {
             HoveredTiles.Clear();
             HoveredTiles.Add(new Point(x, y));
+        }
+
+        public void GameEndHandler()
+        {
+            stop = true;
+            _gw_view.GameOver();
         }
 
         public override void Update(GameTime gameTime)
@@ -419,41 +427,50 @@ namespace TFYP.Controller.WindowsControllers
 
             int speed = 20;
 
-            // reading the keys
-            foreach (KeyboardButtonState key in _inputHandler.ActiveKeys) 
+            if (!_gw_view.is_game_over)
             {
-                if (key.Button == Keys.Escape && key.ButtonState == Utils.KeyState.Clicked)
+                // reading the keys
+                foreach (KeyboardButtonState key in _inputHandler.ActiveKeys) 
                 {
-                    //OnExitPressed();
-                    if (_menu_is_active)
-                        _gw_view.CleanMenu();
-                    else
-                        _gw_view.DrawMenu();
+                    if (key.Button == Keys.Escape && key.ButtonState == Utils.KeyState.Clicked)
+                    {
+                        //OnExitPressed();
+                        if (_menu_is_active)
+                            _gw_view.CleanMenu();
+                        else
+                        {
+                            _gw_view.DrawMenu();
+                            stop = true;
+                        }
 
-                    _menu_is_active = !_menu_is_active;
-                }
-                else if (key.Button == Keys.Up && key.ButtonState == Utils.KeyState.Held)
-                {
-                    ExecuteFocusMove(new Vector2(0, -speed));
-                }
-                else if (key.Button == Keys.Down && key.ButtonState == Utils.KeyState.Held)
-                {
-                    ExecuteFocusMove(new Vector2(0, speed));
-                }
-                else if (key.Button == Keys.Left && key.ButtonState == Utils.KeyState.Held)
-                {
-                    ExecuteFocusMove(new Vector2(-speed, 0));
-                }
-                else if (key.Button == Keys.Right && key.ButtonState == Utils.KeyState.Held)
-                {
-                    ExecuteFocusMove(new Vector2(speed, 0));
-                }
-                else if (key.Button == Keys.R && key.ButtonState == Utils.KeyState.Clicked)
-                {
-                    rotate = !rotate;
-                }
+                        _menu_is_active = !_menu_is_active;
+                    }
+                    else if (!_gw_view.is_menu_active)
+                    {
+                        if (key.Button == Keys.Up && key.ButtonState == Utils.KeyState.Held)
+                        {
+                            ExecuteFocusMove(new Vector2(0, -speed));
+                        }
+                        else if (key.Button == Keys.Down && key.ButtonState == Utils.KeyState.Held)
+                        {
+                            ExecuteFocusMove(new Vector2(0, speed));
+                        }
+                        else if (key.Button == Keys.Left && key.ButtonState == Utils.KeyState.Held)
+                        {
+                            ExecuteFocusMove(new Vector2(-speed, 0));
+                        }
+                        else if (key.Button == Keys.Right && key.ButtonState == Utils.KeyState.Held)
+                        {
+                            ExecuteFocusMove(new Vector2(speed, 0));
+                        }
+                        else if (key.Button == Keys.R && key.ButtonState == Utils.KeyState.Clicked)
+                        {
+                            rotate = !rotate;
+                        }
 
-                _gw_view.SetFocusCoord(_initCoord - _focusCoord);
+                        _gw_view.SetFocusCoord(_initCoord - _focusCoord);
+                    }
+                }
             }
         }
 
