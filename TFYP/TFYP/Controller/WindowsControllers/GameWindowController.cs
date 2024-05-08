@@ -77,6 +77,7 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.SetFocusCoord(_initCoord - _focusCoord);
 
             _gameModel.GameOver += GameEndHandler;
+            //GameEndHandler(null, null);
         }
 
         /// <summary>

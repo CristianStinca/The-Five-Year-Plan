@@ -404,25 +404,30 @@ namespace TFYP.View.Windows
             menuWindow.AddRange(menuContainer.ToIRenderable());
 
             RenderableContainer gameEndContainer = new(0, 0, ESize.AllScreen, Color.Black * 0.3f);
-            Sprite gameEndBackground = new Sprite(Globals.Content.Load<Texture2D>("Menu/game_menu_back"));
+            Sprite gameEndBackground = new Sprite(Globals.Content.Load<Texture2D>("Menu/game_end_back"));
             gameEndContainer.AddElement(EVPosition.Center, EHPosition.Center, gameEndBackground);
 
-            RenderableVerticalList gameEndList = new(5, 0, 0);
+            RenderableVerticalList gameEndList1 = new(5, 0, 0);
+            RenderableVerticalList gameEndList2 = new(20, 0, 0);
+            Sprite gameEndSprite = new Sprite(Globals.Content.Load<Texture2D>("Menu/game_end"));
+            gameEndList2.AddElement(gameEndSprite);
             ge_newgame = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Small_NewGame_Button")));
-            gameEndList.AddElement(ge_newgame);
+            gameEndList1.AddElement(ge_newgame);
             ge_newgame.ButtonPressed += (string name) => NotifyEndGameEvent(UIMenuNewGameButtonPressed);
             ge_load = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Small_Load_Button")));
-            gameEndList.AddElement(ge_load);
+            gameEndList1.AddElement(ge_load);
             ge_load.ButtonPressed += (string name) => NotifyEndGameEvent(UIMenuLoadGameButtonPressed);
 
-            gameEndContainer.AddElement(EVPosition.Center, EHPosition.Center, gameEndList);
+            gameEndList2.AddElement(gameEndList1);
+
+            gameEndContainer.AddElement(EVPosition.Center, EHPosition.Center, gameEndList2);
 
             gameOverWindow.AddRange(gameEndContainer.ToIRenderable());
         }
 
         private void NotifyEvent(UIButtonPressedHandler eve)
         {
-            if (!is_menu_active || !is_game_over)
+            if (!is_menu_active && !is_game_over)
                 eve.Invoke();
         }
 
