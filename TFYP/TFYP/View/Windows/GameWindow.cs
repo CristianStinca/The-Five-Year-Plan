@@ -52,8 +52,10 @@ namespace TFYP.View.Windows
         List<IRenderable> screenWindow = new List<IRenderable>();
         List<IRenderable> statsWindow = new List<IRenderable>();
         List<IRenderable> menuWindow = new List<IRenderable>();
+        List<IRenderable> gameOverWindow = new List<IRenderable>();
 
-        bool is_menu_active = false;
+        public bool is_menu_active = false;
+        public bool is_game_over = false;
         public bool is_tile_info_active = false;
         public bool is_tile_info_bttn_active = false;
         public bool is_budget_active = false;
@@ -88,6 +90,9 @@ namespace TFYP.View.Windows
         Button s_load;
         Button s_setting;
         Button s_exit;
+
+        Button ge_newgame;
+        Button ge_load;
 
         Button screenWindowBttn;
         Button statsWindowBttn;
@@ -234,7 +239,7 @@ namespace TFYP.View.Windows
 
         public void OnTilePressed(int col, int row, int x, int y, string btn)
         {
-            if (!screenRect.Contains(x, y) || IsOnUIElement(x, y) || is_menu_active || (tileInfoRect.Contains(x, y) && is_tile_info_active) || (statsRect.Contains(x, y) && is_budget_active))
+            if (!screenRect.Contains(x, y) || IsOnUIElement(x, y) || is_menu_active || is_game_over || (tileInfoRect.Contains(x, y) && is_tile_info_active) || (statsRect.Contains(x, y) && is_budget_active))
             {
                 return;
             }
@@ -244,7 +249,7 @@ namespace TFYP.View.Windows
 
         public void OnTileHover(int col, int row, int x, int y)
         {
-            if (!screenRect.Contains(x, y) || IsOnUIElement(x, y) || is_menu_active || (tileInfoRect.Contains(x, y) && is_tile_info_active) || (statsRect.Contains(x, y) && is_budget_active))
+            if (!screenRect.Contains(x, y) || IsOnUIElement(x, y) || is_menu_active || is_game_over || (tileInfoRect.Contains(x, y) && is_tile_info_active) || (statsRect.Contains(x, y) && is_budget_active))
             {
                 return;
             }
@@ -370,7 +375,7 @@ namespace TFYP.View.Windows
             Texture2D perspectiveButtonTexture = Globals.Content.Load<Texture2D>("Buttons/Switch_Perspective_Button");
             perspectiveButton = AddButton(new Sprite(perspectiveButtonTexture, new Vector2(Globals.Graphics.PreferredBackBufferWidth - perspectiveButtonTexture.Width - 20, Globals.Graphics.PreferredBackBufferHeight - perspectiveButtonTexture.Height - 30)));
             _UIElementsContainers.Add(perspectiveButton.CollisionRectangle);
-            perspectiveButton.ButtonPressed += (string name) => { if (!is_menu_active) ChangePerspective(); };
+            perspectiveButton.ButtonPressed += (string name) => { if (!is_menu_active || !is_game_over) ChangePerspective(); };
             ElementsInWindow.Add(perspectiveButton.ToIRenderable());
             
             RenderableContainer menuContainer = new(0, 0, ESize.AllScreen, Color.Black * 0.3f);
@@ -397,17 +402,39 @@ namespace TFYP.View.Windows
             menuContainer.AddElement(EVPosition.Center, EHPosition.Center, menuList);
 
             menuWindow.AddRange(menuContainer.ToIRenderable());
+
+            RenderableContainer gameEndContainer = new(0, 0, ESize.AllScreen, Color.Black * 0.3f);
+            Sprite gameEndBackground = new Sprite(Globals.Content.Load<Texture2D>("Menu/game_menu_back"));
+            gameEndContainer.AddElement(EVPosition.Center, EHPosition.Center, gameEndBackground);
+
+            RenderableVerticalList gameEndList = new(5, 0, 0);
+            ge_newgame = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Small_NewGame_Button")));
+            gameEndList.AddElement(ge_newgame);
+            ge_newgame.ButtonPressed += (string name) => NotifyEndGameEvent(UIMenuNewGameButtonPressed);
+            ge_load = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Small_Load_Button")));
+            gameEndList.AddElement(ge_load);
+            ge_load.ButtonPressed += (string name) => NotifyEndGameEvent(UIMenuLoadGameButtonPressed);
+
+            gameEndContainer.AddElement(EVPosition.Center, EHPosition.Center, gameEndList);
+
+            gameOverWindow.AddRange(gameEndContainer.ToIRenderable());
         }
 
         private void NotifyEvent(UIButtonPressedHandler eve)
         {
-            if (!is_menu_active)
+            if (!is_menu_active || !is_game_over)
                 eve.Invoke();
         }
 
         private void NotifyMenuEvent(UIButtonPressedHandler eve)
         {
-            if (is_menu_active)
+            if (is_menu_active || !is_game_over)
+                eve.Invoke();
+        }
+
+        private void NotifyEndGameEvent(UIButtonPressedHandler eve)
+        {
+            if (is_game_over)
                 eve.Invoke();
         }
 
@@ -444,14 +471,14 @@ namespace TFYP.View.Windows
             {
                 is_tile_info_bttn_active = true;
                 upgradeBttn = new Button(new Sprite(Globals.Content.Load<Texture2D>("Buttons/upgrade_Button")), _inputHandler);
-                upgradeBttn.ButtonPressed += (string name) => { if (!is_menu_active && is_tile_info_bttn_active) UIUpgradeTileButtonPressed.Invoke(); };
+                upgradeBttn.ButtonPressed += (string name) => { if ((!is_menu_active || !is_game_over) && is_tile_info_bttn_active) UIUpgradeTileButtonPressed.Invoke(); };
                 list.AddElement(upgradeBttn);
             }
 
             mainList.AddElement(list);
 
             screenWindowBttn = new Button(new Sprite(Globals.Content.Load<Texture2D>("Buttons/close_Button")), _inputHandler);
-            screenWindowBttn.ButtonPressed += (string name) => { if (!is_menu_active && is_tile_info_active) DeleteInfo(); };
+            screenWindowBttn.ButtonPressed += (string name) => { if ((!is_menu_active || !is_game_over) && is_tile_info_active) DeleteInfo(); };
             mainList.AddElement(screenWindowBttn);
 
             cont.AddElement(EVPosition.Top, EHPosition.Left, mainList);
@@ -482,7 +509,7 @@ namespace TFYP.View.Windows
             RenderableVerticalList list = CreateList(args);
 
             statsWindowBttn = new Button(new Sprite(Globals.Content.Load<Texture2D>("Buttons/close_Button")), _inputHandler);
-            statsWindowBttn.ButtonPressed += (string name) => { if (!is_menu_active) DeleteStats(); };
+            statsWindowBttn.ButtonPressed += (string name) => { if (!is_menu_active || !is_game_over) DeleteStats(); };
 
             mainList.AddElement(list);
             mainList.AddElement(statsWindowBttn);
@@ -542,6 +569,11 @@ namespace TFYP.View.Windows
             is2D = !is2D;
         }
 
+        public void GameOver()
+        {
+            is_game_over = true;
+        }
+
         public override void Update()
         {
             base.Update();
@@ -577,6 +609,9 @@ namespace TFYP.View.Windows
 
             if (is_menu_active)
                 renderer.DrawState(menuWindow);
+
+            if (is_game_over)
+                renderer.DrawState(gameOverWindow);
         }
     }
 }
