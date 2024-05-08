@@ -721,7 +721,7 @@ namespace TFYP.Model
 
 
             //just for debugging, will be deleted
-            Debug.WriteLine(Statistics.Budget.YearsOfBeingInLoan(GameTime));
+            //Debug.WriteLine(Statistics.Budget.YearsOfBeingInLoan(GameTime));
 
             Debug.WriteLine(NrCitizensLeft + " citizens left the city");
 
@@ -734,10 +734,10 @@ namespace TFYP.Model
                     Debug.WriteLine("citizens satisfaction :" + c.Satisfaction);
                 }
 
-                foreach (Zone z2 in CityRegistry.Zones)
-                {
-                    Debug.WriteLine(CalculateDistanceBetweenTwo(z1, z2));
-                }
+                //foreach (Zone z2 in CityRegistry.Zones)
+                //{
+                //    //Debug.WriteLine(CalculateDistanceBetweenTwo(z1, z2));
+                //}
             }
         }
 
@@ -776,6 +776,7 @@ namespace TFYP.Model
             int _X, _Y;
             Random rnd = new Random();
             int chance = rnd.Next(25);
+
             // 4 % chance of dissaster every day
             if(chance == 1)
             {

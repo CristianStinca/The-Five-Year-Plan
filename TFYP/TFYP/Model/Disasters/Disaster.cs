@@ -10,6 +10,7 @@ using TFYP.Model.City;
 using TFYP.Model.Zones;
 using System.Security.Policy;
 using Microsoft.Xna.Framework;
+using System.Diagnostics;
 
 namespace TFYP.Model.Disasters 
 {
@@ -19,6 +20,9 @@ namespace TFYP.Model.Disasters
         public float EffectRadius { get; private set; }
         public Vector2 Location { get; set; }
         public DisasterType Type { get; set; }
+        private List<Zone> affectedZones = new List<Zone>();
+        private DateTime effectAppliedTime;
+        private bool timerActive = false;
 
         public Disaster( float effectRadius, Vector2 location)
         {
@@ -27,13 +31,14 @@ namespace TFYP.Model.Disasters
             Location = location;
         }
 
-        public void ApplyEffects(GameModel gameModel)
+        public async void ApplyEffects(GameModel gameModel)
         {
             foreach(var zone in gameModel.CityRegistry.Zones)
             {
                 // Check if the zone is within the effect radius of the disaster
                 if (IsWithinEffectRadius(zone))
                 {
+                    affectedZones.Add(zone);
                     switch (Type)
                     {
                         case DisasterType.Fire:
@@ -54,7 +59,14 @@ namespace TFYP.Model.Disasters
                             break;
                     }
                 }
+                
+                
+
+                
             }
+            await Task.Delay(5000);  // Wait for 10 seconds
+            affectedZones.Clear();  // Clear the list after 10 seconds
+
             //foreach (var citizen in gameModel.Citizens)
             //{
             //    if (IsWithinDisasterRadius(citizen.Location))
@@ -87,6 +99,7 @@ namespace TFYP.Model.Disasters
 
         private void DamageBuildings(Zone zone, float damage)
         {
+
             GameModel instance = GameModel.GetInstance();
             Zone z = (Zone)instance.map[(int)zone.Coor[0].X, (int)zone.Coor[0].Y];
             if (z.Health < damage)
