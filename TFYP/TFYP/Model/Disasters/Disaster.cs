@@ -37,7 +37,7 @@ namespace TFYP.Model.Disasters
             foreach(var zone in gameModel.CityRegistry.Zones)
             {
                 // Check if the zone is within the effect radius of the disaster
-                if (IsWithinEffectRadius(zone))
+                if (IsWithinEffectRadius(zone, gameModel))
                 {
                     affectedZones.Add(zone);
                     switch (Type)
@@ -80,10 +80,10 @@ namespace TFYP.Model.Disasters
             //gameModel.Budget.AdjustForDisaster(recoveryCosts, lostIncome);
         }
 
-        private bool IsWithinEffectRadius(Zone zone)
+        private bool IsWithinEffectRadius(Zone zone, GameModel gameModel)
         {
             foreach (var i in zone.Coor) {
-                float distance = Vector2.Distance(this.Location, i);
+                float distance = gameModel.Distance(this.Location, i); //Vector2.Distance(this.Location, i);
                 if (distance <= this.EffectRadius)
                 {
                     return true;

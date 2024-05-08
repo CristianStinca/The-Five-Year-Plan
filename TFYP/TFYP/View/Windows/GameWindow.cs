@@ -14,6 +14,7 @@ using static TFYP.View.UIElements.ClickableElements.Button;
 using Microsoft.Xna.Framework.Input;
 using TFYP.Model;
 using MonoGame.Extended.BitmapFonts;
+using TFYP.Model.Disasters;
 
 namespace TFYP.View.Windows
 {
@@ -33,6 +34,8 @@ namespace TFYP.View.Windows
 
         private TileButton[,] map;
         private bool mapIsInit;
+
+        private List<IRenderable> disasters = new();
 
         private Vector2 focusCoord;
         private Vector2 initPos;
@@ -68,6 +71,8 @@ namespace TFYP.View.Windows
         Button police;
         Button stadium;
         Button school;
+        Button university;
+
         Button budget;
         Button disaster;
 
@@ -98,6 +103,8 @@ namespace TFYP.View.Windows
         public event UIButtonPressedHandler UIPoliceButtonPressed;
         public event UIButtonPressedHandler UIStadiumButtonPressed;
         public event UIButtonPressedHandler UISchoolButtonPressed;
+        public event UIButtonPressedHandler UIUniverisyButtonPressed;
+
         public event UIButtonPressedHandler UIBudgetButtonPressed;
         public event UIButtonPressedHandler UIDisasterButtonPressed;
 
@@ -211,6 +218,20 @@ namespace TFYP.View.Windows
             this.mapIsInit = true;
         }
 
+        public void SendDisasters(params Sprite[] disasters)
+        {
+            this.disasters.Clear();
+            foreach (Sprite spr in disasters)
+            {
+                spr.Position += new Vector2(
+                    (initPos.X * SCALE) + focusCoord.X + ScreenLimit.X,
+                    (initPos.Y * SCALE) + focusCoord.Y + ScreenLimit.Y
+                );
+
+                this.disasters.Add(spr);
+            }
+        }
+
         public void OnTilePressed(int col, int row, int x, int y, string btn)
         {
             if (!screenRect.Contains(x, y) || IsOnUIElement(x, y) || is_menu_active || (tileInfoRect.Contains(x, y) && is_tile_info_active) || (statsRect.Contains(x, y) && is_budget_active))
@@ -257,13 +278,13 @@ namespace TFYP.View.Windows
             gameScreenRect.X = BackgroundButtonTab.Texture.Width;
             gameScreenRect.Width -= BackgroundButtonTab.Texture.Width;
 
-            RenderableVerticalList buttonsBar = new (18, 20, 30);
+            RenderableVerticalList buttonsBar = new (15, 20, 30);
 
             delRoad = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Demolish_Road_Button")));
             delRoad.ButtonPressed += (string name) => NotifyEvent(UIDeleteButtonPressed);
             buttonsBar.AddElement(delRoad);
 
-            RenderableVerticalList zonesList = new RenderableVerticalList(10, 20, 30);
+            RenderableVerticalList zonesList = new RenderableVerticalList(5, 20, 30);
             //zonesList.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/propaganda_22"), "Zones", new Vector2(20, 30), Color.Black));
             zonesList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Menu/zones")));
 
@@ -282,7 +303,7 @@ namespace TFYP.View.Windows
 
             buttonsBar.AddElement(zonesList);
 
-            RenderableVerticalList roadList = new RenderableVerticalList(10, 20, 30);
+            RenderableVerticalList roadList = new RenderableVerticalList(5, 20, 30);
             //roadList.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/propaganda_22"), "Roads", new Vector2(20, 30), Color.Black));
             roadList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Menu/roads")));
 
@@ -292,7 +313,7 @@ namespace TFYP.View.Windows
 
             buttonsBar.AddElement(roadList);
 
-            RenderableVerticalList specialsList = new RenderableVerticalList(10, 20, 30);
+            RenderableVerticalList specialsList = new RenderableVerticalList(5, 20, 30);
             //specialsList.AddElement(new BitmapText(Globals.Content.Load<BitmapFont>("Fonts/propaganda_22"), "Specials", new Vector2(20, 30), Color.Black));
             specialsList.AddElement(new Sprite(Globals.Content.Load<Texture2D>("Menu/specials")));
 
@@ -305,10 +326,13 @@ namespace TFYP.View.Windows
             school = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/School_Button")));
             school.ButtonPressed += (string name) => NotifyEvent(UISchoolButtonPressed);
             specialsList.AddElement(school);
+            university = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/Uni_Button")));
+            university.ButtonPressed += (string name) => NotifyEvent(UIUniverisyButtonPressed);
+            specialsList.AddElement(university);
 
             buttonsBar.AddElement(specialsList);
 
-            RenderableVerticalList buttonsList = new RenderableVerticalList(10, 20, 30);
+            RenderableVerticalList buttonsList = new RenderableVerticalList(5, 20, 30);
 
             budget = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Buttons/budget_button")));
             budget.ButtonPressed += (string name) => NotifyEvent(UIBudgetButtonPressed);
@@ -353,7 +377,7 @@ namespace TFYP.View.Windows
             Sprite menuBackground = new Sprite(Globals.Content.Load<Texture2D>("Menu/game_menu_back"));
             menuContainer.AddElement(EVPosition.Center, EHPosition.Center, menuBackground);
 
-            RenderableVerticalList menuList = new(10, 0, 0);
+            RenderableVerticalList menuList = new(5, 0, 0);
             s_newgame = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Small_NewGame_Button")));
             menuList.AddElement(s_newgame);
             s_newgame.ButtonPressed += (string name) => NotifyMenuEvent(UIMenuNewGameButtonPressed);
@@ -543,6 +567,7 @@ namespace TFYP.View.Windows
             if (mapIsInit)
             {
                 renderer.DrawState(this.mapRend);
+                renderer.DrawState(this.disasters);
             }
 
             renderer.DrawState(screenWindow);
