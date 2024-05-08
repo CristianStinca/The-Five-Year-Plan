@@ -71,7 +71,7 @@ namespace TFYP.View.UIElements
             StadiumTile = CreateSprite("StadiumParts/stadium_full");
             SchoolTile = CreateSprite("Tiles/school_double");
             SchoolTile_r = CreateSprite("Tiles/school_double_rotated");
-            UniTile = CreateSprite("Tiles/university");
+            UniTile = CreateSprite("Tiles/university_quadruple");
             PoliceTile = CreateSprite("Tiles/police_station");
             ResidentialTile = CreateSprite("Zones/residential_empty");
             ResidentialTile11 = CreateSprite("Zones/residential11");

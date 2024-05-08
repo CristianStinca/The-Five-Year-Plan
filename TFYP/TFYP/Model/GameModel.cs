@@ -333,15 +333,36 @@ namespace TFYP.Model
                     break;
                     
                 case EBuildable.University:
-                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+
+                    Point[] pts = new Point[4];
+                    pts[3] = new Point(_x, _y);
+                    pts[2] = GetCoordAt(0b_0100, _x, _y);
+                    pts[1] = GetCoordAt(0b_1000, _x, _y);
+                    pts[0] = GetCoordAt(0b_1100, _x, _y);
+
+
+
+                    if (!AreFree(pts))
                     {
-                        break;
+                        throw new Exception("second tile was already filled!");
                     }
-                    University u = new University(t);
-                    CityRegistry.AddFacility(u);
-                    map[_x, _y] = u;
+
+                    CityRegistry.AddFacility(new University(t));
+
                     Statistics.Budget.UpdateBalance(-Constants.UniversityBuildCost, GameTime);
-                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
+                    CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.UniversityMaintenanceFee);
+                    University uni;
+
+                    t.Add(pts[0].ToVector2());
+                    t.Add(pts[1].ToVector2());
+                    t.Add(pts[2].ToVector2());
+
+                    uni = new University(t);
+                    map[pts[0].X, pts[0].Y] = uni;
+                    map[pts[1].X, pts[1].Y] = uni;
+                    map[pts[2].X, pts[2].Y] = uni;
+                    map[pts[3].X, pts[3].Y] = uni;
+                    
                     break;
 
                 case EBuildable.School:

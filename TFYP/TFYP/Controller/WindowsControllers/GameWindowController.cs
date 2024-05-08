@@ -179,6 +179,12 @@ namespace TFYP.Controller.WindowsControllers
                             HoveredTiles.Add(GetCoordAt(0b_1000, hovered));
                         break;
 
+                    case EBuildable.University:
+                        HoveredTiles.Add(GetCoordAt(0b_1000, hovered));
+                        HoveredTiles.Add(GetCoordAt(0b_0100, hovered));
+                        HoveredTiles.Add(GetCoordAt(0b_1100, hovered));
+                        break;
+
                     case EBuildable.None:
                         hover_tint = Color.Pink; break;
                 }
@@ -616,7 +622,12 @@ namespace TFYP.Controller.WindowsControllers
                     return;
 
                 Zone z = _gameModel.GetMapElementAt((Point)_selectedZone) as Zone;
-                z.UpgradeZone();
+                
+                try
+                {
+                    z.UpgradeZone();
+                }
+                catch (Exception ex) { }
 
                 Debug.WriteLine($"Upgrade! X:{_selectedZone?.X}, Y:{_selectedZone?.Y}");
             };
