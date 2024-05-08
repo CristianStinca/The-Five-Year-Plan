@@ -35,7 +35,7 @@ namespace TFYP.Model
 
         public int MaxDistance { get; private set; }
         public int MaxTax { get; private set; }
-
+        public Disaster latestDisaster { get; private set; }
 
         private GameModel(int _mapH, int _mapW)
         {
@@ -784,6 +784,7 @@ namespace TFYP.Model
                 _Y = rnd.Next(20);
                 Disaster dis = new Disaster(5,new Vector2(_X, _Y));
                 dis.ApplyEffects(this);
+                latestDisaster = dis;
             }
         }
         public void GenerateDisasterByButton()
@@ -794,6 +795,7 @@ namespace TFYP.Model
             _Y = rnd.Next(20);
             Disaster dis = new Disaster(5, new Vector2(_X, _Y));
             dis.ApplyEffects(this);
+            latestDisaster = dis;
         }
         public Buildable[] GetAdj(int i, int j)
         {
