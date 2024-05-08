@@ -780,8 +780,8 @@ namespace TFYP.Model
             // 4 % chance of dissaster every day
             if(chance == 1)
             {
-                _X = rnd.Next(20);
-                _Y = rnd.Next(20);
+                _X = rnd.Next(2, MAP_H - 2);
+                _Y = rnd.Next(1, MAP_W - 1);
                 Disaster dis = new Disaster(5,new Vector2(_X, _Y));
                 dis.ApplyEffects(this);
                 latestDisaster = dis;
@@ -792,8 +792,8 @@ namespace TFYP.Model
         {
             int _X, _Y;
             Random rnd = new Random();
-            _X = rnd.Next(20);
-            _Y = rnd.Next(20);
+            _X = rnd.Next(2, MAP_H - 2);
+            _Y = rnd.Next(1, MAP_W - 1);
             Disaster dis = new Disaster(5, new Vector2(_X, _Y));
             dis.ApplyEffects(this);
             latestDisaster = dis;

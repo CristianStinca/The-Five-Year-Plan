@@ -20,6 +20,8 @@ using TFYP.View.Windows;
 using static TFYP.View.Windows.GameWindow;
 using static TFYP.View.Windows.Window;
 using MonoGame.Extended.Timers;
+using TFYP.Model.Disasters;
+using MonoGame.Extended.Content;
 
 namespace TFYP.Controller.WindowsControllers
 {
@@ -149,8 +151,6 @@ namespace TFYP.Controller.WindowsControllers
 
             // TODO: add an event/obs collection to model to avoid re-drawing of the matrix
 
-            // trnsform the array of Buildable from the model to array of ViewObject for View
-
             hover_tint = Color.LightGray;
             if (HoveredTiles.Count > 0)
             {
@@ -160,7 +160,7 @@ namespace TFYP.Controller.WindowsControllers
                     case EBuildable.Stadium:
                         HoveredTiles.Add(GetCoordAt(0b_1000, hovered));
                         HoveredTiles.Add(GetCoordAt(0b_0100, hovered));
-                        HoveredTiles.Add(GetCoordAt(0b_0100, GetCoordAt(0b_1000, hovered)));
+                        HoveredTiles.Add(GetCoordAt(0b_1100, hovered));
                         break;
 
                     case EBuildable.School:
@@ -229,20 +229,87 @@ namespace TFYP.Controller.WindowsControllers
                                 sprite = _uiTextures.SchoolTile_r;
                             break;
 
+                        case EBuildable.University:
+                            sprite = _uiTextures.UniTile;
+                            break;
+
                         case EBuildable.PoliceStation:
                             sprite = _uiTextures.PoliceTile;
                             break;
 
                         case EBuildable.Residential:
-                            sprite = _uiTextures.ResidentialTile;
+                            Zone z = (tile as Zone);
+                            if (z.Status == ZoneStatus.Pending)
+                                sprite = _uiTextures.ResidentialTile;
+                            else if (z.Status == ZoneStatus.Building)
+                                sprite = _uiTextures.ResidentialTile_b;
+                            else
+                            {
+                                if (z.Level == ZoneLevel.One)
+                                {
+                                    float perc = (z.NCitizensInZone * 100) / z.Capacity;
+                                    if (perc < 33)
+                                        sprite = _uiTextures.ResidentialTile11;
+                                    else if (perc < 66)
+                                        sprite = _uiTextures.ResidentialTile12;
+                                    else
+                                        sprite = _uiTextures.ResidentialTile13;
+                                }
+                                else if (z.Level == ZoneLevel.Two)
+                                    sprite = _uiTextures.ResidentialTile2;
+                                else if (z.Level == ZoneLevel.Three)
+                                    sprite = _uiTextures.ResidentialTile3;
+                            }
                             break;
 
                         case EBuildable.Industrial:
-                            sprite = _uiTextures.IndustrialTile;
+                            z = (tile as Zone);
+                            if (z.Status == ZoneStatus.Pending)
+                                sprite = _uiTextures.IndustrialTile;
+                            else if (z.Status == ZoneStatus.Building)
+                                sprite = _uiTextures.IndustrialTile_b;
+                            else
+                            {
+                                if (z.Level == ZoneLevel.One)
+                                {
+                                    float perc = (z.NCitizensInZone * 100) / z.Capacity;
+                                    if (perc < 33)
+                                        sprite = _uiTextures.IndustrialTile11;
+                                    else if (perc < 66)
+                                        sprite = _uiTextures.IndustrialTile12;
+                                    else
+                                        sprite = _uiTextures.IndustrialTile13;
+                                }
+                                else if (z.Level == ZoneLevel.Two)
+                                    sprite = _uiTextures.IndustrialTile2;
+                                else if (z.Level == ZoneLevel.Three)
+                                    sprite = _uiTextures.IndustrialTile3;
+                            }
                             break;
 
                         case EBuildable.Service:
-                            sprite = _uiTextures.ServiceTile;
+                            z = (tile as Zone);
+                            if (z.Status == ZoneStatus.Pending)
+                                sprite = _uiTextures.ServiceTile;
+                            else if (z.Status == ZoneStatus.Building)
+                                sprite = _uiTextures.ServiceTile_b;
+                            else
+                            {
+                                if (z.Level == ZoneLevel.One)
+                                {
+                                    float perc = (z.NCitizensInZone * 100) / z.Capacity;
+                                    if (perc < 33)
+                                        sprite = _uiTextures.ServiceTile11;
+                                    else if (perc < 66)
+                                        sprite = _uiTextures.ServiceTile12;
+                                    else
+                                        sprite = _uiTextures.ServiceTile13;
+                                }
+                                else if (z.Level == ZoneLevel.Two)
+                                    sprite = _uiTextures.ServiceTile2;
+                                else if (z.Level == ZoneLevel.Three)
+                                    sprite = _uiTextures.ServiceTile3;
+                            }
                             break;
 
                         case EBuildable.Road:
@@ -285,6 +352,65 @@ namespace TFYP.Controller.WindowsControllers
                     out_map[i, j] = out_sprite;
                 }
             }
+
+            List<Sprite> disasters = new List<Sprite>();
+            foreach (Disaster disaster in _gameModel.currentDisasters)
+            {
+                float deviation = (disaster.Location.X % 2 == 1) ? (TILE_W * SCALE / 2f) : 0f;
+                Texture2D texture;
+                switch (disaster.Type)
+                {
+                    case DisasterType.GodzillaAttack:
+                        texture = Globals.Content.Load<Texture2D>("Disaster/godzila_with_fire");
+                        disasters.Add(new Sprite(
+                            texture,
+                            new Vector2(
+                                deviation + (disaster.Location.Y * TILE_W * SCALE),
+                                (disaster.Location.X * TILE_H * SCALE / 2) - ((texture.Height - TILE_H) * SCALE)
+                            ),
+                            SCALE
+                        ));
+                        break;
+
+                    case DisasterType.Fire:
+                        texture = Globals.Content.Load<Texture2D>("Disaster/fire");
+                        disasters.Add(new Sprite(
+                            texture,
+                            new Vector2(
+                                deviation + (disaster.Location.Y * TILE_W * SCALE),
+                                (disaster.Location.X * TILE_H * SCALE / 2) - ((texture.Height - TILE_H) * SCALE)
+                            ),
+                            SCALE
+                        ));
+                        break;
+
+                    case DisasterType.Flood:
+                        texture = Globals.Content.Load<Texture2D>("Disaster/flood");
+                        disasters.Add(new Sprite(
+                            texture,
+                            new Vector2(
+                                deviation + (disaster.Location.Y * TILE_W * SCALE),
+                                (disaster.Location.X * TILE_H * SCALE / 2) - ((texture.Height - TILE_H) * SCALE)
+                            ),
+                            SCALE
+                        ));
+                        break;
+
+                    case DisasterType.Earthquake:
+                        texture = Globals.Content.Load<Texture2D>("Disaster/earthquake");
+                        disasters.Add(new Sprite(
+                            texture,
+                            new Vector2(
+                                deviation + (disaster.Location.Y * TILE_W * SCALE),
+                                (disaster.Location.X * TILE_H * SCALE / 2) - ((texture.Height - TILE_H) * SCALE)
+                            ),
+                            SCALE
+                        ));
+                        break;
+                }
+            }
+
+            _gw_view.SendDisasters(disasters.ToArray());
 
             HoveredTiles.Clear();
 
@@ -447,6 +573,7 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.UIPoliceButtonPressed += () => { _activeZone = EBuildable.PoliceStation; Debug.WriteLine("Selected PoliceStation."); };
             _gw_view.UIStadiumButtonPressed += () => { _activeZone = EBuildable.Stadium; Debug.WriteLine("Selected Stadium."); };
             _gw_view.UISchoolButtonPressed += () => { _activeZone = EBuildable.School; Debug.WriteLine("Selected School."); };
+            _gw_view.UIUniverisyButtonPressed += () => { _activeZone = EBuildable.University; Debug.WriteLine("Selected University."); };
             _gw_view.UIBudgetButtonPressed += () => { _gw_view.is_budget_active = true; };
             _gw_view.UIDisasterButtonPressed += () => { Debug.WriteLine("ActivateDisaster!"); _gameModel.GenerateDisasterByButton(); };
 
@@ -462,7 +589,18 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.UIMenuOpenSettingsButtonPressed += ToSettingsWindow;
             _gw_view.UIMenuExitButtonPressed += () => base.OnExitPressed();
 
-            _gw_view.UIUpgradeTileButtonPressed += () => { Debug.WriteLine($"Upgrade! X:{_selectedZone?.X}, Y:{_selectedZone?.Y}"); };
+            _gw_view.UIUpgradeTileButtonPressed += () => {
+                if (_selectedZone == null)
+                    return;
+
+                if (_gameModel.GetMapElementAt((Point)_selectedZone) is not Zone)
+                    return;
+
+                Zone z = _gameModel.GetMapElementAt((Point)_selectedZone) as Zone;
+                z.UpgradeZone();
+
+                Debug.WriteLine($"Upgrade! X:{_selectedZone?.X}, Y:{_selectedZone?.Y}");
+            };
     }
 
         #endregion

@@ -29,39 +29,10 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Fonts/m6x11_18_0.png;Fonts/m6x11_18_0.png
 
-#begin ../Resources/Fonts/m6x11_18_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Fonts/m6x11_18_0.png;Fonts/m6x11_18_0.png
-
 #begin ../Resources/Fonts/m6x11_18.fnt
 /importer:BitmapFontImporter
 /processor:BitmapFontProcessor
 /build:../Resources/Fonts/m6x11_18.fnt;Fonts/m6x11_18.fnt
-
-#begin ../Resources/Fonts/m6x11_18.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:../Resources/Fonts/m6x11_18.fnt;Fonts/m6x11_18.fnt
-
-#begin ../Resources/Fonts/m6x11_20_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Fonts/m6x11_20_0.png;Fonts/m6x11_20_0.png
 
 #begin ../Resources/Fonts/m6x11_20_0.png
 /importer:TextureImporter
@@ -80,11 +51,6 @@
 /processor:BitmapFontProcessor
 /build:../Resources/Fonts/m6x11_20.fnt;Fonts/m6x11_20.fnt
 
-#begin ../Resources/Fonts/m6x11_20.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:../Resources/Fonts/m6x11_20.fnt;Fonts/m6x11_20.fnt
-
 #begin ../Resources/Fonts/m6x11_22_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -96,23 +62,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Fonts/m6x11_22_0.png;Fonts/m6x11_22_0.png
-
-#begin ../Resources/Fonts/m6x11_22_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Fonts/m6x11_22_0.png;Fonts/m6x11_22_0.png
-
-#begin ../Resources/Fonts/m6x11_22.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:../Resources/Fonts/m6x11_22.fnt;Fonts/m6x11_22.fnt
 
 #begin ../Resources/Fonts/m6x11_22.fnt
 /importer:BitmapFontImporter
@@ -148,39 +97,10 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Fonts/propaganda_19_0.png;Fonts/propaganda_19_0.png
 
-#begin ../Resources/Fonts/propaganda_19_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Fonts/propaganda_19_0.png;Fonts/propaganda_19_0.png
-
 #begin ../Resources/Fonts/propaganda_19.fnt
 /importer:BitmapFontImporter
 /processor:BitmapFontProcessor
 /build:../Resources/Fonts/propaganda_19.fnt;Fonts/propaganda_19.fnt
-
-#begin ../Resources/Fonts/propaganda_19.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:../Resources/Fonts/propaganda_19.fnt;Fonts/propaganda_19.fnt
-
-#begin ../Resources/Fonts/propaganda_22_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Fonts/propaganda_22_0.png;Fonts/propaganda_22_0.png
 
 #begin ../Resources/Fonts/propaganda_22_0.png
 /importer:TextureImporter
@@ -199,11 +119,6 @@
 /processor:BitmapFontProcessor
 /build:../Resources/Fonts/propaganda_22.fnt;Fonts/propaganda_22.fnt
 
-#begin ../Resources/Fonts/propaganda_22.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:../Resources/Fonts/propaganda_22.fnt;Fonts/propaganda_22.fnt
-
 #begin ../Resources/Fonts/propaganda_60_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -215,23 +130,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Fonts/propaganda_60_0.png;Fonts/propaganda_60_0.png
-
-#begin ../Resources/Fonts/propaganda_60_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Fonts/propaganda_60_0.png;Fonts/propaganda_60_0.png
-
-#begin ../Resources/Fonts/propaganda_60.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:../Resources/Fonts/propaganda_60.fnt;Fonts/propaganda_60.fnt
 
 #begin ../Resources/Fonts/propaganda_60.fnt
 /importer:BitmapFontImporter
@@ -250,39 +148,10 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Fonts/snowstorm_20_0.png;Fonts/snowstorm_20_0.png
 
-#begin ../Resources/Fonts/snowstorm_20_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Fonts/snowstorm_20_0.png;Fonts/snowstorm_20_0.png
-
 #begin ../Resources/Fonts/snowstorm_20.fnt
 /importer:BitmapFontImporter
 /processor:BitmapFontProcessor
 /build:../Resources/Fonts/snowstorm_20.fnt;Fonts/snowstorm_20.fnt
-
-#begin ../Resources/Fonts/snowstorm_20.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:../Resources/Fonts/snowstorm_20.fnt;Fonts/snowstorm_20.fnt
-
-#begin ../Resources/Fonts/snowstorm_24_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Fonts/snowstorm_24_0.png;Fonts/snowstorm_24_0.png
 
 #begin ../Resources/Fonts/snowstorm_24_0.png
 /importer:TextureImporter
@@ -301,23 +170,6 @@
 /processor:BitmapFontProcessor
 /build:../Resources/Fonts/snowstorm_24.fnt;Fonts/snowstorm_24.fnt
 
-#begin ../Resources/Fonts/snowstorm_24.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:../Resources/Fonts/snowstorm_24.fnt;Fonts/snowstorm_24.fnt
-
-#begin ../Resources/Fonts/snowstorm_light_22_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Fonts/snowstorm_light_22_0.png;Fonts/snowstorm_light_22_0.png
-
 #begin ../Resources/Fonts/snowstorm_light_22_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -335,11 +187,6 @@
 /processor:BitmapFontProcessor
 /build:../Resources/Fonts/snowstorm_light_22.fnt;Fonts/snowstorm_light_22.fnt
 
-#begin ../Resources/Fonts/snowstorm_light_22.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:../Resources/Fonts/snowstorm_light_22.fnt;Fonts/snowstorm_light_22.fnt
-
 #begin ../Resources/Fonts/unitblock_24_0.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -351,23 +198,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Fonts/unitblock_24_0.png;Fonts/unitblock_24_0.png
-
-#begin ../Resources/Fonts/unitblock_24_0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Fonts/unitblock_24_0.png;Fonts/unitblock_24_0.png
-
-#begin ../Resources/Fonts/unitblock_24.fnt
-/importer:BitmapFontImporter
-/processor:BitmapFontProcessor
-/build:../Resources/Fonts/unitblock_24.fnt;Fonts/unitblock_24.fnt
 
 #begin ../Resources/Fonts/unitblock_24.fnt
 /importer:BitmapFontImporter
@@ -638,6 +468,18 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Buttons/Switch_Perspective_Button.png;Buttons/Switch_Perspective_Button.png
 
+#begin ../Resources/Images/Buttons/Uni_Button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Buttons/Uni_Button.png;Buttons/Uni_Button.png
+
 #begin ../Resources/Images/Buttons/upgrade_Button.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -661,6 +503,66 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Buttons/zones.png;Menu/zones.png
+
+#begin ../Resources/Images/Disaster/earthquake.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Disaster/earthquake.png;Disaster/earthquake.png
+
+#begin ../Resources/Images/Disaster/fire.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Disaster/fire.png;Disaster/fire.png
+
+#begin ../Resources/Images/Disaster/flood.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Disaster/flood.png;Disaster/flood.png
+
+#begin ../Resources/Images/Disaster/godzila_with_fire.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Disaster/godzila_with_fire.png;Disaster/godzila_with_fire.png
+
+#begin ../Resources/Images/Disaster/godzila.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Disaster/godzila.png;Disaster/godzila.png
 
 #begin ../Resources/Images/Grasses/grass1.png
 /importer:TextureImporter
@@ -1250,6 +1152,18 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Tiles/police_station.png;Tiles/police_station.png
 
+#begin ../Resources/Images/Tiles/road1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Tiles/road1.png;Tiles/road1.png
+
 #begin ../Resources/Images/Tiles/school_double_rotated.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1286,6 +1200,18 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Tiles/school.png;Tiles/school.png
 
+#begin ../Resources/Images/Tiles/school2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Tiles/school2.png;Tiles/school2.png
+
 #begin ../Resources/Images/Tiles/stadium_tile.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1297,6 +1223,66 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Tiles/stadium_tile.png;Tiles/stadium_tile.png
+
+#begin ../Resources/Images/Tiles/stadium_tile1.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Tiles/stadium_tile1.png;Tiles/stadium_tile1.png
+
+#begin ../Resources/Images/Tiles/university.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Tiles/university.png;Tiles/university.png
+
+#begin ../Resources/Images/Zones/industrial_building.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/industrial_building.png;Tiles/industrial_building.png
+
+#begin ../Resources/Images/Zones/industrial_building.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/industrial_building.png;Zones/industrial_building.png
+
+#begin ../Resources/Images/Zones/industrial_empty.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/industrial_empty.png;Tiles/industrial_empty.png
 
 #begin ../Resources/Images/Zones/industrial_empty.png
 /importer:TextureImporter
@@ -1320,7 +1306,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/industrial11.png;Tiles/industrial11.png
+
+#begin ../Resources/Images/Zones/industrial11.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
 /build:../Resources/Images/Zones/industrial11.png;Zones/industrial11.png
+
+#begin ../Resources/Images/Zones/industrial12.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/industrial12.png;Tiles/industrial12.png
 
 #begin ../Resources/Images/Zones/industrial12.png
 /importer:TextureImporter
@@ -1344,7 +1354,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/industrial13.png;Tiles/industrial13.png
+
+#begin ../Resources/Images/Zones/industrial13.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
 /build:../Resources/Images/Zones/industrial13.png;Zones/industrial13.png
+
+#begin ../Resources/Images/Zones/industrial2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/industrial2.png;Tiles/industrial2.png
 
 #begin ../Resources/Images/Zones/industrial2.png
 /importer:TextureImporter
@@ -1368,7 +1402,55 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/industrial3.png;Tiles/industrial3.png
+
+#begin ../Resources/Images/Zones/industrial3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
 /build:../Resources/Images/Zones/industrial3.png;Zones/industrial3.png
+
+#begin ../Resources/Images/Zones/residential_building.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/residential_building.png;Tiles/residential_building.png
+
+#begin ../Resources/Images/Zones/residential_building.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/residential_building.png;Zones/residential_building.png
+
+#begin ../Resources/Images/Zones/residential_empty.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/residential_empty.png;Tiles/residential_empty.png
 
 #begin ../Resources/Images/Zones/residential_empty.png
 /importer:TextureImporter
@@ -1392,7 +1474,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/residential11.png;Tiles/residential11.png
+
+#begin ../Resources/Images/Zones/residential11.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
 /build:../Resources/Images/Zones/residential11.png;Zones/residential11.png
+
+#begin ../Resources/Images/Zones/residential12.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/residential12.png;Tiles/residential12.png
 
 #begin ../Resources/Images/Zones/residential12.png
 /importer:TextureImporter
@@ -1416,7 +1522,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/residential13.png;Tiles/residential13.png
+
+#begin ../Resources/Images/Zones/residential13.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
 /build:../Resources/Images/Zones/residential13.png;Zones/residential13.png
+
+#begin ../Resources/Images/Zones/residential2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/residential2.png;Tiles/residential2.png
 
 #begin ../Resources/Images/Zones/residential2.png
 /importer:TextureImporter
@@ -1440,7 +1570,55 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/residential3.png;Tiles/residential3.png
+
+#begin ../Resources/Images/Zones/residential3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
 /build:../Resources/Images/Zones/residential3.png;Zones/residential3.png
+
+#begin ../Resources/Images/Zones/service_building.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/service_building.png;Tiles/service_building.png
+
+#begin ../Resources/Images/Zones/service_building.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/service_building.png;Zones/service_building.png
+
+#begin ../Resources/Images/Zones/service_empty.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/service_empty.png;Tiles/service_empty.png
 
 #begin ../Resources/Images/Zones/service_empty.png
 /importer:TextureImporter
@@ -1464,7 +1642,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/service11.png;Tiles/service11.png
+
+#begin ../Resources/Images/Zones/service11.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
 /build:../Resources/Images/Zones/service11.png;Zones/service11.png
+
+#begin ../Resources/Images/Zones/service12.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/service12.png;Tiles/service12.png
 
 #begin ../Resources/Images/Zones/service12.png
 /importer:TextureImporter
@@ -1488,7 +1690,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/service13.png;Tiles/service13.png
+
+#begin ../Resources/Images/Zones/service13.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
 /build:../Resources/Images/Zones/service13.png;Zones/service13.png
+
+#begin ../Resources/Images/Zones/service2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/service2.png;Tiles/service2.png
 
 #begin ../Resources/Images/Zones/service2.png
 /importer:TextureImporter
@@ -1512,67 +1738,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/service3.png;Tiles/service3.png
+
+#begin ../Resources/Images/Zones/service3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
 /build:../Resources/Images/Zones/service3.png;Zones/service3.png
-
-#begin ../Resources/Images/Disaster/earthquake.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Disaster/earthquake.png;Disaster/earthquake.png
-
-#begin ../Resources/Images/Disaster/flood.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Disaster/flood.png;Disaster/flood.png
-
-#begin ../Resources/Images/Disaster/fire.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Disaster/fire.png;Disaster/fire.png
-
-#begin ../Resources/Images/Disaster/godzila_with_fire.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Disaster/godzila_with_fire.png;Disaster/godzila_with_fire.png
-
-#begin ../Resources/Images/Disaster/godzila.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:../Resources/Images/Disaster/godzila.png;Disaster/godzila.png
 
 #begin ../Resources/JSON/names.json
 /importer:JsonContentImporter
