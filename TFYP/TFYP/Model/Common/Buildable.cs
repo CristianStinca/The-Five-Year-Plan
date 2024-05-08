@@ -38,7 +38,7 @@ namespace TFYP.Model.Common
 
         }
 
-        public virtual void startBuilding() { }
+        public virtual void startBuilding(DateTime buildingStartDate) { }
 
         public virtual void stopBuilding() { }
 

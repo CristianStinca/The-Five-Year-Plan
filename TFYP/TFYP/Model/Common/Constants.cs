@@ -46,7 +46,7 @@ namespace TFYP.Model.Common
         // GENERAL CONSTANTS
         public const int CityBaseTax = 100;
         public const float CityBaseTaxRate = 0.4f;
-        public const int InitialBalance = 1000000;
+        public const int InitialBalance = 10000;
 
 
         // TIME in days
@@ -59,7 +59,7 @@ namespace TFYP.Model.Common
         
         public const int CitizenLeavingSatisfaction = 10;
         public const int NewCitizenComingSatisfaction = 85;
-        public const int GameOverSatisfaction = 5;
+        public const int GameOverSatisfaction = 30;
 
         // LOCATION EFFECT
         public const int IndustrialEffectRadius = 10;

@@ -555,7 +555,8 @@ namespace TFYP.Controller.WindowsControllers
         {
             _gw_view.PrintStats(
                 Tuple.Create("City budget: " + _gameModel.Statistics.Budget.Balance, EPrintInfo.Title),
-                Tuple.Create("City satisfaction: " + _gameModel.Statistics.Satisfaction, EPrintInfo.Title)
+                Tuple.Create("City satisfaction: " + _gameModel.Statistics.Satisfaction, EPrintInfo.Title),
+                Tuple.Create("Date: " + _gameModel.GameTime, EPrintInfo.Title)
                 );
         }
 

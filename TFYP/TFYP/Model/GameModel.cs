@@ -286,7 +286,7 @@ namespace TFYP.Model
                         break;
                     }
                     Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, GameTime);
-                    z.Status = ZoneStatus.Building;
+                    //z.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z);
                     Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
@@ -300,7 +300,7 @@ namespace TFYP.Model
                         break;
                     }
                     Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, GameTime);
-                    z1.Status = ZoneStatus.Building;
+                    //z1.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z1);
                     Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
@@ -313,7 +313,7 @@ namespace TFYP.Model
                         break;
                     }
                     Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, GameTime);
-                    z2.Status = ZoneStatus.Building;
+                    //z2.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z2);
                     Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
@@ -626,9 +626,10 @@ namespace TFYP.Model
             List<Zone> allResidentialZones = new List<Zone>();
             foreach (var residentialZone in this.CityRegistry.Zones.Where(z => z.Type == EBuildable.Residential))
             {
-                if (!residentialZone.isInitiallyPopulated)
+                if (!residentialZone.isInitiallyPopulated && residentialZone.IsConnected)
                 {
-                    for(int i = 0; i < CitizenLifecycle.StartingNrCitizens; i++)
+                    residentialZone.startBuilding(this.GameTime);
+                    for (int i = 0; i < CitizenLifecycle.StartingNrCitizens; i++)
                     {
                         CitizenLifecycle.populate(residentialZone, this);
                     }
@@ -636,6 +637,8 @@ namespace TFYP.Model
             }
 
         }
+
+
 
         private int CitizenshipManipulation()
         {
@@ -724,7 +727,7 @@ namespace TFYP.Model
                 UpdateCityBalance();
             }
             UpdateZoneBuildingStatus();
-
+            ConvertUnusedZonesToGeneral();
 
             //GenerateDisaster();
 
@@ -740,7 +743,7 @@ namespace TFYP.Model
             {
                 foreach (Citizen c in z1.GetCitizens())
                 {
-                    Debug.WriteLine("citizens satisfaction :" + c.Satisfaction);
+                    //Debug.WriteLine("citizens satisfaction :" + c.Satisfaction);
                 }
 
                 //foreach (Zone z2 in CityRegistry.Zones)
@@ -756,6 +759,14 @@ namespace TFYP.Model
             List<Zone> stillBuilding = new List<Zone>();
             foreach (Zone zone in GetAllZones())
             {
+                if(zone.Type == EBuildable.Service || zone.Type == EBuildable.Industrial)
+                {
+                    if (zone.IsConnected && zone.Status == ZoneStatus.Pending)
+                    {
+                        zone.startBuilding(this.GameTime);
+                    }
+                }
+
                 if (zone.Status == ZoneStatus.Building)
                 {
                     stillBuilding.Add(zone);
@@ -776,6 +787,35 @@ namespace TFYP.Model
                 }
             }
         }
+
+        //zones that haven't been used will be converted to general
+        private void ConvertUnusedZonesToGeneral()
+        {
+            List<Zone> deactivatableZones = new List<Zone>();
+            foreach (var zone in CityRegistry.Zones)
+            {
+                deactivatableZones.Add(zone);
+            }
+            foreach (var zone in deactivatableZones)
+            {
+                Zone currZone = (Zone)zone;
+                TimeSpan timeDifference = GameTime - currZone.DayOfCreation;
+                bool isOneYearPassed = Math.Abs(timeDifference.Days) == 365 || Math.Abs(timeDifference.Days) == 366;
+
+
+                //bool isOneYearPassed = Math.Abs(timeDifference.Days) == 100;
+
+
+                if (currZone.Status == ZoneStatus.Pending && isOneYearPassed)
+                {
+                    RemoveZone((int)currZone.Coor[0].X, (int)currZone.Coor[0].Y);
+                }
+
+            }
+            deactivatableZones.Clear();
+        }
+
+
         /// <summary>
         /// random disaster is generated at random location
         /// if the zone is in the range, entire zone will get damage

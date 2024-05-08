@@ -41,6 +41,9 @@ namespace TFYP.Model.Zones
         public List<Zone> conncetedZone= new List<Zone>();
         private List<Road> outGoing = new List<Road>();
 
+
+        public DateTime DayOfCreation { get; set; }
+
         public DateTime DayOfBuildStart { get; private set; }
         public int TimeToBuild { get; set; }
 
@@ -82,7 +85,7 @@ namespace TFYP.Model.Zones
         //    int ind = rnd.Next(citizens.Count());
         //    citizens.Remove(citizens[ind]);
         //}
-        public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost, DateTime dayOfBuildStart)
+        public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost, DateTime dayOfCreation)
             : base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
         {
             Health = 100;
@@ -90,10 +93,12 @@ namespace TFYP.Model.Zones
             Level = ZoneLevel.One;
             IsConnected = false;
             TimeToBuild = timeToBuild;
-            DayOfBuildStart = dayOfBuildStart;
             Status = ZoneStatus.Pending;
-            Satisfaction = 50;   
+            Satisfaction = 50;
+            DayOfCreation = dayOfCreation;
         }
+
+
         public void checkOutGoing() {
             GameModel gm = GameModel.GetInstance();
             outGoing.Clear();
@@ -175,8 +180,10 @@ namespace TFYP.Model.Zones
             return citizens;
         }
 
-        public override void startBuilding() {
+        public override void startBuilding(DateTime buildingStartDate) {
             this.canStartBuilding = true;
+            Status = ZoneStatus.Building;
+            DayOfBuildStart = buildingStartDate;
         }
 
         public override bool checkToBuild()

@@ -12,8 +12,8 @@ namespace TFYP.Model.Zones
 {
     public class ServiceZone : Zone 
     {
-        public ServiceZone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost, DateTime dayOfBuildStart)
-        : base(type, coor, influenceRadius, timeToBuild, capacity, maintenanceCost, buildCost, dayOfBuildStart)
+        public ServiceZone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost, DateTime dayOfCreation)
+        : base(type, coor, influenceRadius, timeToBuild, capacity, maintenanceCost, buildCost, dayOfCreation)
         {
         
         }
