@@ -20,7 +20,7 @@ namespace TFYP.Model.Disasters
         public float EffectRadius { get; private set; }
         public Vector2 Location { get; set; }
         public DisasterType Type { get; set; }
-        private List<Zone> affectedZones = new List<Zone>();
+        public List<Zone> affectedZones = new List<Zone>();
         private DateTime effectAppliedTime;
         private bool timerActive = false;
 
