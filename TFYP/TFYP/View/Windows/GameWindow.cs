@@ -428,7 +428,7 @@ namespace TFYP.View.Windows
 
         private void NotifyMenuEvent(UIButtonPressedHandler eve)
         {
-            if (is_menu_active || !is_game_over)
+            if (is_menu_active)
                 eve.Invoke();
         }
 

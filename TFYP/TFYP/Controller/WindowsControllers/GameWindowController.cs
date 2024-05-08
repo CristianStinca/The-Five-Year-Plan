@@ -76,7 +76,7 @@ namespace TFYP.Controller.WindowsControllers
             _initCoord = new Vector2(_screenLimits.X, _screenLimits.Y);
             _gw_view.SetFocusCoord(_initCoord - _focusCoord);
 
-            _gameModel.GameOver += GameEndHandler();
+            _gameModel.GameOver += GameEndHandler;
         }
 
         /// <summary>
@@ -121,7 +121,7 @@ namespace TFYP.Controller.WindowsControllers
             HoveredTiles.Add(new Point(x, y));
         }
 
-        public void GameEndHandler()
+        public void GameEndHandler(object sender, EventArgs e)
         {
             stop = true;
             _gw_view.GameOver();
