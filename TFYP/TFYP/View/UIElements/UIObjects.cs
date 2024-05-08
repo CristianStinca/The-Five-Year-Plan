@@ -157,7 +157,7 @@ namespace TFYP.View.UIElements
         /// <returns>The Sprite object.</returns>
         private static Sprite CreateSprite(string fileName)
         {
-            var texture = Globals.Content.Load<Texture2D>(fileName);
+          var texture = Globals.Content.Load<Texture2D>(fileName);
             Sprite sprite = new Sprite(texture);
             return sprite;
         }

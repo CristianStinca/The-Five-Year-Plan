@@ -37,6 +37,14 @@ namespace TFYP.Model
         public int MaxTax { get; private set; }
         public Disaster latestDisaster { get; private set; }
         public List<Disaster> currentDisasters = new List<Disaster>();
+
+        public event EventHandler GameOver;
+
+        protected virtual void OnGameOver()
+        {
+            GameOver?.Invoke(this, EventArgs.Empty);
+        }
+
         private GameModel(int _mapH, int _mapW)
         {
             MAP_H = _mapH;
@@ -672,7 +680,7 @@ namespace TFYP.Model
             if(citySat < Constants.GameOverSatisfaction)
             {
                 //Game is over if city satisfaction became critically low
-                //GameOver();
+                OnGameOver();
             }
 
             return citizensLeftOnThisDay;
