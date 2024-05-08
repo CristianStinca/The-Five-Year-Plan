@@ -94,9 +94,9 @@ namespace TFYP.View.UIElements
             DoneResidentialTile = CreateSprite("Tiles/police_station");
             //Inaccessible = CreateSprite("Tiles/innac");
             Inaccessible = CreateSprite("Grasses/grass4");
-            IndustrialTile_b = CreateSprite("Tiles/industrial_building");
-            ResidentialTile_b = CreateSprite("Tiles/residential_building");
-            ServiceTile_b = CreateSprite("Tiles/service_building");
+            IndustrialTile_b = CreateSprite("Zones/industrial_building");
+            ResidentialTile_b = CreateSprite("Zones/residential_building");
+            ServiceTile_b = CreateSprite("Zones/service_building");
 
             RoadTiles[0b_0000] = CreateSprite("Roads/eroad");
             RoadTiles[0b_0001] = CreateSprite("Roads/deadend4");
