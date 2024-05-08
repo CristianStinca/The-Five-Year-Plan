@@ -36,7 +36,7 @@ namespace TFYP.Model
         public int MaxDistance { get; private set; }
         public int MaxTax { get; private set; }
         public Disaster latestDisaster { get; private set; }
-
+        public List<Disaster> currentDisasters = new List<Disaster>();
         private GameModel(int _mapH, int _mapW)
         {
             MAP_H = _mapH;
@@ -708,6 +708,7 @@ namespace TFYP.Model
             int NrCitizensLeft = UpdateCitySatisfaction();
             int NrCitizensArrived = CitizenshipManipulation();
             CitizenshipEducationUpdate();
+            CheckForDisasters();
             // Check if it's the first day of the year to update city balance -->
             // collect taxes from citizens and pay maintainance fees once a year
             if (GameTime.Day == 1 && GameTime.Month == 1)
@@ -776,7 +777,6 @@ namespace TFYP.Model
             int _X, _Y;
             Random rnd = new Random();
             int chance = rnd.Next(25);
-
             // 4 % chance of dissaster every day
             if(chance == 1)
             {
@@ -785,6 +785,7 @@ namespace TFYP.Model
                 Disaster dis = new Disaster(5,new Vector2(_X, _Y));
                 dis.ApplyEffects(this);
                 latestDisaster = dis;
+                currentDisasters.Add(dis);
             }
         }
         public void GenerateDisasterByButton()
@@ -796,7 +797,30 @@ namespace TFYP.Model
             Disaster dis = new Disaster(5, new Vector2(_X, _Y));
             dis.ApplyEffects(this);
             latestDisaster = dis;
+            currentDisasters.Add(dis);
         }
+
+        public List<Disaster> GetCurrentDisasters()
+        {
+            return currentDisasters;
+        }
+
+        public void CheckForDisasters()
+        {
+            List<Disaster> removableDisasters = new List<Disaster>();
+            foreach(Disaster disaster in currentDisasters)
+            {
+                if (disaster.isActive)
+                {
+                    removableDisasters.Add(disaster);
+                }
+            }
+            foreach(Disaster disaster in removableDisasters)
+            {
+                currentDisasters.Remove(disaster);
+            }
+        }
+
         public Buildable[] GetAdj(int i, int j)
         {
             Buildable[] arr = new Buildable[4];

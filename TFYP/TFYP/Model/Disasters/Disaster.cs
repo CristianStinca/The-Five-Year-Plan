@@ -22,13 +22,14 @@ namespace TFYP.Model.Disasters
         public DisasterType Type { get; set; }
         public List<Zone> affectedZones = new List<Zone>();
         private DateTime effectAppliedTime;
-        private bool timerActive = false;
+        public bool isActive { get; private set; }
 
         public Disaster( float effectRadius, Vector2 location)
         {
             EffectRadius = effectRadius;
             Type = this.SelectType();
             Location = location;
+            isActive = true;
         }
 
         public async void ApplyEffects(GameModel gameModel)
@@ -64,9 +65,9 @@ namespace TFYP.Model.Disasters
 
                 
             }
-            await Task.Delay(5000);  // Wait for 10 seconds
-            affectedZones.Clear();  // Clear the list after 10 seconds
-
+            await Task.Delay(11000);  // Wait for 11 seconds
+            //affectedZones.Clear();  // Clear the list after 10 seconds
+            isActive = false;
             //foreach (var citizen in gameModel.Citizens)
             //{
             //    if (IsWithinDisasterRadius(citizen.Location))
