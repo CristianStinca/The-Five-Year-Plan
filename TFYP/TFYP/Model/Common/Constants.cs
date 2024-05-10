@@ -68,5 +68,17 @@ namespace TFYP.Model.Common
         public const int StadiumEffectRadius = 10;
         public const int PoliceStationEffectRadius = 10;
 
+        // MAXIMUM NUMBER OF BUILDABLES
+        public const int MaxUniversityCount = 3;
+        public const int MaxSchoolCount = 3;
+        public const int MaxPoliceCount = 6;
+        public const int MaxStadiumCount = 4;
+
+        public const int MaxResidentialCount = 30;
+        public const int MaxIndustrialCount = 15;
+        public const int MaxServiceCount = 15;
+
+        public const int MaxRoadCount = 50;
+
     }
 }

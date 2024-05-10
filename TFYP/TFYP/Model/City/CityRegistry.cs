@@ -17,14 +17,65 @@ namespace TFYP.Model.City
         public Statistics Statistics { get; private set; }
         public List<Zone> Zones { get; private set; }
         public List<Facility> Facilities { get; private set; }
-        
+        public int SchoolCount { get; private set; }
+        public int UniversityCount { get; private set; }
+        public int PoliceCount { get; private set; }
+        public int StadiumCount { get; private set; }
+        public int RoadCount { get; private set; }
         public CityRegistry(Statistics statistics)
         {
             Statistics = statistics;
             Zones = new List<Zone>();
             Facilities = new List<Facility>();
+            SchoolCount = 0;
+            UniversityCount = 0;
+            PoliceCount = 0;
+            StadiumCount = 0;
+            RoadCount = 0;
+        }
+        public void IncPoliceCount()
+        {
+            PoliceCount += 1;
+        }
+        public void DecPoliceCount()
+        {
+            PoliceCount -= 1;
         }
 
+        public void IncStadiumCount()
+        {
+            StadiumCount += 1;
+        }
+        public void DecStadiumCount()
+        {
+            StadiumCount -= 1;
+        }
+
+        public void IncSchoolCount()
+        {
+            SchoolCount += 1;
+        }
+        public void DecSchoolCount()
+        {
+            SchoolCount -= 1;
+        }
+
+        public void IncUniversityCount()
+        {
+            UniversityCount += 1;
+        }
+        public void DecUniversityCount()
+        {
+            UniversityCount -= 1;
+        }
+        public void IncRoadCount()
+        {
+            RoadCount += 1;
+        }
+        public void DecRoadCount()
+        {
+            RoadCount -= 1;
+        }
         // zones
         public void AddZone(Zone zone)
         {

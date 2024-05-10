@@ -113,109 +113,147 @@ namespace TFYP.Model
                 }
             }
         }
-
+        public int CheckResidentialCount()
+        {
+            int count = 0;
+            foreach(var z in CityRegistry.Zones)
+            {
+                if (z.Type.Equals(EBuildable.Residential))
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+        public int CheckIndustrialCount()
+        {
+            int count = 0;
+            foreach (var z in CityRegistry.Zones)
+            {
+                if (z.Type.Equals(EBuildable.Industrial))
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
+        public int CheckServiceCount()
+        {
+            int count = 0;
+            foreach (var z in CityRegistry.Zones)
+            {
+                if (z.Type.Equals(EBuildable.Service))
+                {
+                    count++;
+                }
+            }
+            return count;
+        }
         public void AddZone(int _x, int _y, EBuildable zone, bool rotate)
         {
             // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
             try
             {
                 AddToMap(_y, _x, zone, rotate);
-
+                
                 foreach (Road tmp in Roads)
-                {
-                    tmp.checkForZones();
-                    foreach (var b in tmp.connected)
                     {
-                        if (b.Type.Equals(EBuildable.Residential) || b.Type.Equals(EBuildable.Industrial) || b.Type.Equals(EBuildable.Service))
+                        tmp.checkForZones();
+                        foreach (var b in tmp.connected)
                         {
-                            b.AddOutgoingRoad(tmp);
+                            if (b.Type.Equals(EBuildable.Residential) || b.Type.Equals(EBuildable.Industrial) || b.Type.Equals(EBuildable.Service))
+                            {
+                                b.AddOutgoingRoad(tmp);
+                            }
                         }
                     }
-                }
 
                 foreach (var z in CityRegistry.Zones)
-                {
-                    for(int i=0; i<z.Coor.Count; i++)
                     {
-                        var tmp= z.Coor[i];
-                        if (!z.Coor.Contains(new Vector2((tmp.X+1), tmp.Y)))
+                        for(int i=0; i<z.Coor.Count; i++)
                         {
-                            if (this.map[(int)tmp.X+1, (int)tmp.Y].Type.Equals(z.Type)) {
-                                z.Coor.Add(new Vector2((tmp.X + 1),tmp.Y));
-                            }
-                        }
-                        if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y)))
-                        {
-                            if (this.map[(int)tmp.X - 1, (int)tmp.Y].Type.Equals(z.Type))
+                            var tmp= z.Coor[i];
+                            if (!z.Coor.Contains(new Vector2((tmp.X+1), tmp.Y)))
                             {
-                                z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y));
-                            }
-                        }
-                        if (tmp.X % 2 == 0)
-                        {
-                            if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y - 1)))
-                            {
-                                if (this.map[(int)tmp.X - 1, (int)tmp.Y-1].Type.Equals(z.Type))
-                                {
-                                    z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y-1));
+                                if (this.map[(int)tmp.X+1, (int)tmp.Y].Type.Equals(z.Type)) {
+                                    z.Coor.Add(new Vector2((tmp.X + 1),tmp.Y));
                                 }
                             }
-                            if (!z.Coor.Contains(new Vector2((tmp.X + 1), tmp.Y - 1)))
+                            if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y)))
                             {
-                                if (this.map[(int)tmp.X + 1, (int)tmp.Y - 1].Type.Equals(z.Type))
+                                if (this.map[(int)tmp.X - 1, (int)tmp.Y].Type.Equals(z.Type))
                                 {
-                                    z.Coor.Add(new Vector2((tmp.X + 1), tmp.Y - 1));
+                                    z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y));
                                 }
                             }
-                        }
-                        else {
-                            if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y + 1)))
+                            if (tmp.X % 2 == 0)
                             {
-                                if (this.map[(int)tmp.X - 1, (int)tmp.Y+1].Type.Equals(z.Type))
+                                if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y - 1)))
                                 {
-                                    z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y+1));
+                                    if (this.map[(int)tmp.X - 1, (int)tmp.Y-1].Type.Equals(z.Type))
+                                    {
+                                        z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y-1));
+                                    }
+                                }
+                                if (!z.Coor.Contains(new Vector2((tmp.X + 1), tmp.Y - 1)))
+                                {
+                                    if (this.map[(int)tmp.X + 1, (int)tmp.Y - 1].Type.Equals(z.Type))
+                                    {
+                                        z.Coor.Add(new Vector2((tmp.X + 1), tmp.Y - 1));
+                                    }
                                 }
                             }
-                            if (!z.Coor.Contains(new Vector2((tmp.X + 1), tmp.Y + 1)))
-                            {
-                                if (this.map[(int)tmp.X + 1, (int)tmp.Y + 1].Type.Equals(z.Type))
+                            else {
+                                if (!z.Coor.Contains(new Vector2((tmp.X - 1), tmp.Y + 1)))
                                 {
-                                    z.Coor.Add(new Vector2((tmp.X + 1), tmp.Y + 1));
+                                    if (this.map[(int)tmp.X - 1, (int)tmp.Y+1].Type.Equals(z.Type))
+                                    {
+                                        z.Coor.Add(new Vector2((tmp.X - 1), tmp.Y+1));
+                                    }
                                 }
-                            }
+                                if (!z.Coor.Contains(new Vector2((tmp.X + 1), tmp.Y + 1)))
+                                {
+                                    if (this.map[(int)tmp.X + 1, (int)tmp.Y + 1].Type.Equals(z.Type))
+                                    {
+                                        z.Coor.Add(new Vector2((tmp.X + 1), tmp.Y + 1));
+                                    }
+                                }
 
+                            }
                         }
                     }
-                }
 
                 foreach (var i in CityRegistry.Zones) {
-                    foreach (var tmp in CityRegistry.Zones) {
-                        if (!tmp.Equals(i)) {
-                            foreach (var r in i.GetOutgoing()) 
-                            {
-                                if (r.connection(tmp)) {
-                                    i.AddConnectedZone(tmp);
-                                    tmp.AddConnectedZone(i);
-                                    break;
+                        foreach (var tmp in CityRegistry.Zones) {
+                            if (!tmp.Equals(i)) {
+                                foreach (var r in i.GetOutgoing()) 
+                                {
+                                    if (r.connection(tmp)) {
+                                        i.AddConnectedZone(tmp);
+                                        tmp.AddConnectedZone(i);
+                                        break;
+                                    }
                                 }
                             }
                         }
                     }
-                }
+
                 foreach (var i in CityRegistry.Zones) {
-                    var Connection = i.GetConnectedZones();
-                    foreach (var tmp in i.Coor) {
-                        if (!i.Equals(map[(int)tmp.X, (int)tmp.Y]))
-                        {
-                            foreach (var z in Connection)
+                        var Connection = i.GetConnectedZones();
+                        foreach (var tmp in i.Coor) {
+                            if (!i.Equals(map[(int)tmp.X, (int)tmp.Y]))
                             {
-                                map[(int)tmp.X, (int)tmp.Y].AddConnectedZone(z);
+                                foreach (var z in Connection)
+                                {
+                                    map[(int)tmp.X, (int)tmp.Y].AddConnectedZone(z);
+                                }
                             }
                         }
                     }
-                }
 
                 this.CityRegistry.Zones.ForEach(x => x.checkOutGoing());
+                
+                
             }
             catch (Exception ex) {
                 Debug.WriteLine(ex);    
@@ -246,10 +284,17 @@ namespace TFYP.Model
                     {
                         throw new Exception("second tile was already filled!");
                     }
+                    else if(CityRegistry.StadiumCount == Constants.MaxStadiumCount)
+                    {
+                        throw new Exception("Stadium count limit reached");
+                    }
+
 
                     CityRegistry.AddFacility(new Stadium(t, zone));
                     Statistics.Budget.UpdateBalance(-Constants.StadiumBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.StadiumMaintenanceFee);
+                    CityRegistry.IncStadiumCount();
+
                     Stadium stad;
 
                     t.Add(points[0].ToVector2());
@@ -269,7 +314,7 @@ namespace TFYP.Model
                     break;
 
                 case EBuildable.PoliceStation:
-                    if(!map[_x, _y].Type.Equals(EBuildable.None))
+                    if(!map[_x, _y].Type.Equals(EBuildable.None) || CityRegistry.PoliceCount == Constants.MaxPoliceCount)
                     {
                         break;
                     }
@@ -278,10 +323,11 @@ namespace TFYP.Model
                     Statistics.Budget.UpdateBalance(-Constants.PoliceStationBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.PoliceStationMaintenanceFee);
                     map[_x, _y] = s;
+                    CityRegistry.IncPoliceCount();
                     break;
 
                 case EBuildable.Residential:
-                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    if (!map[_x, _y].Type.Equals(EBuildable.None) || CheckResidentialCount() == Constants.MaxResidentialCount)
                     {
                         break;
                     }
@@ -295,7 +341,7 @@ namespace TFYP.Model
                     break;
 
                 case EBuildable.Service:
-                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    if (!map[_x, _y].Type.Equals(EBuildable.None) || CheckServiceCount() == Constants.MaxServiceCount)
                     {
                         break;
                     }
@@ -308,7 +354,7 @@ namespace TFYP.Model
                     break;
 
                 case EBuildable.Industrial:
-                    if (!map[_x, _y].Type.Equals(EBuildable.None))
+                    if (!map[_x, _y].Type.Equals(EBuildable.None) || CheckIndustrialCount() == Constants.MaxIndustrialCount)
                     {
                         break;
                     }
@@ -321,7 +367,7 @@ namespace TFYP.Model
                     break;
 
                 case EBuildable.Road:
-                    if (map[_x, _y].Type.Equals(EBuildable.None))
+                    if (map[_x, _y].Type.Equals(EBuildable.None) && CityRegistry.RoadCount < Constants.MaxRoadCount)
                     {
                         Road r = new Road(t, EBuildable.Road);
                         map[_x, _y] = r;
@@ -329,6 +375,7 @@ namespace TFYP.Model
                         this.Roads = this.Roads.Distinct().ToList();
                         Statistics.Budget.UpdateBalance(-Constants.RoadBuildCost, GameTime);
                         CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.RoadMaintenanceFee);
+                        CityRegistry.IncRoadCount();
                     }
                     break;
                     
@@ -342,7 +389,7 @@ namespace TFYP.Model
 
 
 
-                    if (!AreFree(pts))
+                    if (!AreFree(pts) || CityRegistry.UniversityCount == Constants.MaxUniversityCount)
                     {
                         throw new Exception("second tile was already filled!");
                     }
@@ -351,6 +398,8 @@ namespace TFYP.Model
 
                     Statistics.Budget.UpdateBalance(-Constants.UniversityBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.UniversityMaintenanceFee);
+                    CityRegistry.IncUniversityCount();
+
                     University uni;
 
                     t.Add(pts[0].ToVector2());
@@ -375,14 +424,14 @@ namespace TFYP.Model
                     else
                         points[0] = GetCoordAt(0b_1000, points[1]);
 
-                    if (!AreFree(points))
+                    if (!AreFree(points) || CityRegistry.SchoolCount == Constants.MaxSchoolCount)
                     {
                         throw new Exception("second tile was already filled!");
                     }
                     CityRegistry.AddFacility(new School(t));
                     Statistics.Budget.UpdateBalance(-Constants.SchoolBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.SchoolMaintenanceFee);
-
+                    CityRegistry.IncSchoolCount();
                     t.Add(points[0].ToVector2());
 
                     School tmp = new School(t);
@@ -435,6 +484,7 @@ namespace TFYP.Model
             var obj = map[_x, _y];
             if (obj.Type.Equals(EBuildable.Road))
             {
+                CityRegistry.DecRoadCount();
                 this.RemoveRoad(_x, _y);
                 //CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.RoadMaintenanceCost);
                 //Statistics.Budget.UpdateBalance(Constants.RoadReimbursement, GameTime);
@@ -447,6 +497,23 @@ namespace TFYP.Model
             }
             else if (!(obj.Type.Equals(EBuildable.None)))
             {
+                if (obj.Type.Equals(EBuildable.University))
+                {
+                    CityRegistry.DecUniversityCount();
+                }
+                else if (obj.Type.Equals(EBuildable.School))
+                {
+                    CityRegistry.DecSchoolCount();
+                }
+                else if(obj.Type.Equals(EBuildable.PoliceStation))
+                {
+                    CityRegistry.DecPoliceCount();
+                }
+                else if(obj.Type.Equals(EBuildable.Stadium))
+                {
+                    CityRegistry.DecStadiumCount();
+                }
+
                 RemoveFacility(_x, _y);
                 CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.FacilityMaintenanceCost);
                 Statistics.Budget.UpdateBalance(Constants.FacilityReimbursement, GameTime);
