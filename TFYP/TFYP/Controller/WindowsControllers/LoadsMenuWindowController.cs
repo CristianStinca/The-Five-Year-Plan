@@ -24,10 +24,13 @@ namespace TFYP.Controller.WindowsControllers
             }
             else
             {
-                throw new TypeLoadException("SettingsWindowController (converting Window to SettingsWindow)");
+                throw new TypeLoadException("LoadsWindowController (converting Window to LoadsWindow)");
             }
 
             _window.UIToMainMenuButtonPressed += ToMenuWindow;
+            _window.UILoadMenuSlot1ButtonPressed += () => Debug.WriteLine("Load_Save_1");
+            _window.UILoadMenuSlot2ButtonPressed += () => Debug.WriteLine("Load_Save_2");
+            _window.UILoadMenuSlot3ButtonPressed += () => Debug.WriteLine("Load_Save_3");
         }
     }
 }

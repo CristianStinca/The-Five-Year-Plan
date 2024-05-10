@@ -22,9 +22,9 @@ namespace TFYP.View.Windows
         Button slot3;
         Button back_btn;
 
-        public event UIButtonPressedHandler UISavesMenuSlot1ButtonPressed;
-        public event UIButtonPressedHandler UISavesMenuSlot2ButtonPressed;
-        public event UIButtonPressedHandler UISavesMenuSlot3ButtonPressed;
+        public event UIButtonPressedHandler UILoadMenuSlot1ButtonPressed;
+        public event UIButtonPressedHandler UILoadMenuSlot2ButtonPressed;
+        public event UIButtonPressedHandler UILoadMenuSlot3ButtonPressed;
         public event UIButtonPressedHandler UIToMainMenuButtonPressed;
 
         #endregion
@@ -43,13 +43,13 @@ namespace TFYP.View.Windows
             RenderableVerticalList menuListButtons = new(20, 0, 0);
 
             slot1 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Slot1_Button")));
-            slot1.ButtonPressed += (string name) => UISavesMenuSlot1ButtonPressed.Invoke();
+            slot1.ButtonPressed += (string name) => UILoadMenuSlot1ButtonPressed.Invoke();
             menuListButtons.AddElement(slot1);
             slot2 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Slot2_Button")));
-            slot2.ButtonPressed += (string name) => UISavesMenuSlot2ButtonPressed.Invoke();
+            slot2.ButtonPressed += (string name) => UILoadMenuSlot2ButtonPressed.Invoke();
             menuListButtons.AddElement(slot2);
             slot3 = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/Slot3_Button")));
-            slot3.ButtonPressed += (string name) => UISavesMenuSlot3ButtonPressed.Invoke();
+            slot3.ButtonPressed += (string name) => UILoadMenuSlot3ButtonPressed.Invoke();
             menuListButtons.AddElement(slot3);
 
             menuList.AddElement(menuListButtons);

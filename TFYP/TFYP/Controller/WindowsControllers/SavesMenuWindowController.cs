@@ -28,9 +28,9 @@ namespace TFYP.Controller.WindowsControllers
             }
 
             _window.UIToMainMenuButtonPressed += ToMenuWindow;
-            _window.UISavesMenuSlot1ButtonPressed += () => Debug.WriteLine("Load_Save_1");
-            _window.UISavesMenuSlot2ButtonPressed += () => Debug.WriteLine("Load_Save_2");
-            _window.UISavesMenuSlot3ButtonPressed += () => Debug.WriteLine("Load_Save_3");
+            _window.UISavesMenuSlot1ButtonPressed += () => Debug.WriteLine("Save_Save_1");
+            _window.UISavesMenuSlot2ButtonPressed += () => Debug.WriteLine("Save_Save_2");
+            _window.UISavesMenuSlot3ButtonPressed += () => Debug.WriteLine("Save_Save_3");
         }
     }
 }
