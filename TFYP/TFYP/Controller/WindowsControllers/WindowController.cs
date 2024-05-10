@@ -18,6 +18,7 @@ namespace TFYP.Controller.WindowsControllers
         public static event ChangeWindowHandler OnChangeToMenuWindow;
         public static event ChangeWindowHandler OnChangeToSettingsWindow;
         public static event ChangeWindowHandler OnChangeToLoadsWindow;
+        public static event ChangeWindowHandler OnChangeToSavesWindow;
 
         public delegate void ExitHandler();
         public static event ExitHandler ExitPressed;
@@ -51,6 +52,11 @@ namespace TFYP.Controller.WindowsControllers
         public static void ToLoadsWindow()
         {
             OnChangeToLoadsWindow.Invoke();
+        }
+
+        public static void ToSavesWindow()
+        {
+            OnChangeToSavesWindow.Invoke();
         }
 
         public virtual void Update(GameTime gameTime)

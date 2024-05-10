@@ -609,7 +609,7 @@ namespace TFYP.Controller.WindowsControllers
 
             // TODO: from menu go back to game
             _gw_view.UIMenuNewGameButtonPressed += ToGameWindow;
-            _gw_view.UIMenuSaveGameButtonPressed += ToLoadsWindow;
+            _gw_view.UIMenuSaveGameButtonPressed += ToSavesWindow;
             _gw_view.UIMenuLoadGameButtonPressed += ToLoadsWindow;
             _gw_view.UIMenuOpenSettingsButtonPressed += ToSettingsWindow;
             _gw_view.UIMenuExitButtonPressed += () => base.OnExitPressed();

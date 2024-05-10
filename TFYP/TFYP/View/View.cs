@@ -47,6 +47,11 @@ namespace TFYP.View
         {
             this.CurrentWindow = new SavesMenuWindow(_UIElements, _inputHandler);
         }
+        
+        public void ChangeToLoadsMenuWindow()
+        {
+            this.CurrentWindow = new LoadsMenuWindow(_UIElements, _inputHandler);
+        }
 
         public void ChangeToSettingsWindow()
         {
