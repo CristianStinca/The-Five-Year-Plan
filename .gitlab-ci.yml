@@ -2,6 +2,13 @@ stages:
   - build
   - test
 
+variables:
+  MONOGAME_VERSION: "3.8.0.1641"
+
+before_script:
+  - dotnet tool install --global dotnet-mgcb --version $MONOGAME_VERSION
+  - export PATH="$PATH:/root/.dotnet/tools"
+
 build_job:
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:latest
