@@ -16,8 +16,8 @@ namespace TFYP.Model.Common
 {
     public class CitizenLifecycle
     {
-        public static int StartingNrCitizens = 25;
-        public static int ImmigrantsCount = 10;
+        public static int StartingNrCitizens = Constants.StartingPopulation;
+        public static int ImmigrantsCount = Constants.ComingPopulation;
 
         // Getting an available random Residential zone randomly
         public static Zone GetLivingPlace(GameModel gm)

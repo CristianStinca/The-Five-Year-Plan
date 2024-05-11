@@ -30,13 +30,13 @@ namespace TFYP.Model.Zones
     public class Zone : Buildable
     {
 
-        public float Health {  get; private set; } // Health will be probably changed later, so far it is for the disaster and is representing percentage (1-100)
+        public float Health {  get; set; } // Health will be probably changed later, so far it is for the disaster and is representing percentage (1-100)
         // health will help us to calculate the cost of the damage which will be OneTimeCost * (Health/100)
         // Tracking the citizens within the zone
         private bool canStartBuilding;
         public List<Citizen> citizens = new List<Citizen>();
 
-        public ZoneLevel Level { get; private set; }
+        public ZoneLevel Level { get; set; }
         public bool IsConnected { get; private set; }
         public List<Zone> conncetedZone= new List<Zone>();
         private List<Road> outGoing = new List<Road>();

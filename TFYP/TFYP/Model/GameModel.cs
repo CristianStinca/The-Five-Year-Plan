@@ -26,11 +26,11 @@ namespace TFYP.Model
         private static int _mapH, _mapW;
         public Buildable[,] map;
 
-        public DateTime GameTime { get; private set; }
+        public DateTime GameTime { get; set; }
 
         public DateTime CreationDate { get; private set; } // DateTime built-in in c#
         public Statistics Statistics { get; private set; }
-        public CityRegistry CityRegistry { get; private set; }
+        public CityRegistry CityRegistry { get; set; }
         public List<Road> Roads { get; private set; }
 
         public int MaxDistance { get; private set; }
@@ -457,21 +457,7 @@ namespace TFYP.Model
                 }
             }
         }
-        public void ApplyDisasterToZone(Disaster disaster, Zone zone)
-        {
-            // Check if the zone is within the effect radius of the disaster
-            // If so, apply the disaster effects to the zone and its citizens
-        }
-        // Example method to trigger a disaster
-        public void TriggerDisaster(Disaster disaster)
-        {
-            
-        }
-        // we might also need a method to update the game world after the disaster effects
-        public void UpdateAfterDisaster()
-        {
-            // update game world state here, like repairing buildings, updating citizen satisfaction, and so on
-        }
+        
         /// <summary>
         /// removing the tile fomr the map making it Ebuildable.None
         /// it's the outer function calling inner fucntions when needed like remove Zone or remove road
@@ -530,7 +516,7 @@ namespace TFYP.Model
         /// </summary>
         /// <param name="_x"></param>
         /// <param name="_y"></param>
-        private void RemoveZone(int _x, int _y) {
+        public void RemoveZone(int _x, int _y) {
 
             foreach (var zone in this.CityRegistry.Zones)
             {
@@ -564,7 +550,7 @@ namespace TFYP.Model
         /// </summary>
         /// <param name="_x"></param>
         /// <param name="_y"></param>
-        private void RemoveRoad(int _x, int _y) {
+        public void RemoveRoad(int _x, int _y) {
             var obj= map[_x, _y];
             map[_x, _y] = new Buildable(new List<Vector2> { new Vector2(_x, _y) }, EBuildable.None);
             this.Roads.ForEach(x => x.checkForZones());
@@ -709,7 +695,7 @@ namespace TFYP.Model
             return stadiums;
         }
 
-        private void initialPopulationOfZones()
+        public void initialPopulationOfZones()
         {
             List<Zone> allResidentialZones = new List<Zone>();
             foreach (var residentialZone in this.CityRegistry.Zones.Where(z => z.Type == EBuildable.Residential))
@@ -728,7 +714,7 @@ namespace TFYP.Model
 
 
 
-        private int CitizenshipManipulation()
+        public int CitizenshipManipulation()
         {
             int citizensArrivedOnThisDay = 0;
 
@@ -777,18 +763,19 @@ namespace TFYP.Model
             return citizensLeftOnThisDay;
         }
 
-        private void CitizenshipEducationUpdate()
+        public void CitizenshipEducationUpdate()
         {
             foreach (Citizen citizen in CityRegistry.GetAllCitizens())
             {
                 if (citizen.EducationLevel == EducationLevel.Primary)
                 {
                     citizen.EducationLevel = (CitizenLifecycle.GetEducationLevel(this, citizen.LivingPlace));
+
                 }
             }
         }
 
-        private void UpdateCityBalance()
+        public void UpdateCityBalance()
         {
             double revenue = Statistics.Budget.ComputeRevenue(this);
             double spend = Statistics.Budget.MaintenanceFeeForEverything;
@@ -877,7 +864,7 @@ namespace TFYP.Model
         }
 
         //zones that haven't been used will be converted to general
-        private void ConvertUnusedZonesToGeneral()
+        public void ConvertUnusedZonesToGeneral()
         {
             List<Zone> deactivatableZones = new List<Zone>();
             foreach (var zone in CityRegistry.Zones)
