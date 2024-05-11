@@ -6,8 +6,8 @@ build_job:
   stage: build
   image: mcr.microsoft.com/dotnet/sdk:latest
   script:
-    - dotnet restore
-    - dotnet build --no-restore
+    - dotnet restore TFYP/TFYP.csproj
+    - dotnet build TFYP/TFYP.csproj --no-restore -c Release
   only:
     - master
 
@@ -15,7 +15,7 @@ test_job:
   stage: test
   image: mcr.microsoft.com/dotnet/sdk:latest
   script:
-    - dotnet restore
-    - dotnet test --no-restore --verbosity normal
+    - dotnet restore TFYP/TFYP.csproj
+    - dotnet test TFYP/TFYP.csproj --no-restore --verbosity normal
   only:
     - master
