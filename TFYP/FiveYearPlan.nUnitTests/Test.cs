@@ -367,6 +367,57 @@ namespace FiveYearPlan.nUnitTests
             Assert.IsTrue(isUpgraded, "Zone should be upgraded to the next level.");
         }
 
+        [Test]
+        public void InitialGameSetup_CorrectlyInitializesMapAndResources()
+        {
+            // Act
+            var initialMap = _gameModel.map;
+            var initialBudget = _gameModel.Statistics.Budget.Balance;
+
+            // Assert
+            Assert.IsNotNull(initialMap, "Map should be initialized.");
+            Assert.That(initialBudget, Is.EqualTo(10000), "Initial budget should be set correctly.");
+            Assert.That(_gameModel.GetAllZones().Count(), Is.EqualTo(0), "Initial zone count should be zero.");
+        }
+
+
+        
+
+        [Test]
+        public void AddZone_InitializesZoneWithDefaultValues()
+        {
+            // Arrange
+            int x = 7, y = 7;
+            EBuildable zoneType = EBuildable.Industrial;
+
+            // Act
+            _gameModel.AddZone(x, y, zoneType, false);
+            Zone zone = (Zone)_gameModel.map[x, y];
+
+            // Assert
+            Assert.That(zone.Level, Is.EqualTo(ZoneLevel.One), "Newly added zone should have initial level set to One.");
+            Assert.That(zone.MaintenanceCost, Is.EqualTo(Constants.IndustrialZoneMaintenanceCost), "Maintenance cost should be set to the default value for Industrial zones.");
+        }
+
+        
+
+        [Test]
+        public void CitySatisfaction_UpdatesAfterPopulationChange()
+        {
+            // Arrange
+            _gameModel.UpdateCityState(); // Initial update to stabilize conditions
+            var initialSatisfaction = _gameModel.Statistics.Satisfaction;
+
+            // Act
+            // Simulating a condition that would change population dynamics
+            _gameModel.CitizenshipManipulation();
+            _gameModel.UpdateCitySatisfaction();
+
+            // Assert
+            Assert.That(_gameModel.Statistics.Satisfaction, Is.Not.EqualTo(initialSatisfaction), "City satisfaction should update after population changes.");
+        }
+
+
 
 
     }

@@ -850,7 +850,7 @@ namespace TFYP.Model
             return stillBuilding;
         }
 
-        private void UpdateZoneBuildingStatus()
+        public void UpdateZoneBuildingStatus()
         {
             foreach (Zone zone in GetZonesThatAreStillBuilding())
             {
