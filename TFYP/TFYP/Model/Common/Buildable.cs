@@ -9,22 +9,33 @@ using System.Threading.Tasks;
 using TFYP.Model.Facilities;
 using TFYP.Model.City;
 using TFYP.Model.Zones;
+using ProtoBuf;
 
 namespace TFYP.Model.Common
 {
+    [ProtoContract]
+    [Serializable]
     public class Buildable
     {
-
+        [ProtoMember(1)]
         public List<Vector2> Coor { get; set; }
+        [ProtoMember(2)]
         public EBuildable Type { get; set; }
+        [ProtoMember(3)]
         public int ConstructionCost { get; set; }
+        [ProtoMember(4)]
         public int InfluenceRadius { get; set; }
+        [ProtoMember(5)]
         public int Capacity { get; set; }
-        
+        [ProtoMember(6)]
         public List<Citizen> citizens;
+        [ProtoMember(7)]
         public int MaintenanceCost { get; set; }
 
-
+        public Buildable() {
+            Coor = new List<Vector2>();
+            citizens = new List<Citizen>();
+        }
         // Main constructor
         public Buildable(List<Vector2> _coor, EBuildable _type, int constructionCost = 0, int maintenanceCost = 0, int influenceRadius = 0, int capacity = 0, int timeToBuild = 0)
         {

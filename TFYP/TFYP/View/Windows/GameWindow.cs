@@ -188,6 +188,7 @@ namespace TFYP.View.Windows
         public void SendGameMap(ISprite[,] _map)
         {
             this.mapRend.Clear();
+            
 
             for (int i = 0; i < _map.GetLength(0); i++)
             {

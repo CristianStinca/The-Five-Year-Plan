@@ -8,12 +8,17 @@ using System.Threading.Tasks;
 using TFYP.Model.Common;
 using TFYP.Model.City;
 using TFYP.Model.Zones;
+using ProtoBuf;
 
 namespace TFYP.Model.Facilities
 {
+    [ProtoContract]
+    [Serializable]
     public class PoliceStation : Facility
     {
-        public int SafetyIncrease { get; private set; } = 10; // safety impact
+        [ProtoMember(1)]
+        public int SafetyIncrease { get; set; } = 10; // safety impact
+        public PoliceStation() { }
 
         public PoliceStation(List<Vector2> _coor, EBuildable _type) : base(_coor, _type)
         {

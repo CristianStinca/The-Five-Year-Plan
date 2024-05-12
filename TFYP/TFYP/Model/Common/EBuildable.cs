@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using TFYP.Model.Facilities;
 using TFYP.Model.City;
 using TFYP.Model.Zones;
+using ProtoBuf;
 
 namespace TFYP.Model.Common
 {
+    [ProtoContract]
     public enum EBuildable
     {
         None,

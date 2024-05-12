@@ -8,20 +8,35 @@ using TFYP.Model.Facilities;
 using TFYP.Model.Zones;
 using TFYP.Model.Common;
 using Microsoft.Xna.Framework;
+using ProtoBuf;
 
 namespace TFYP.Model.City
 {
+    [ProtoContract]
+    [Serializable]
     public class CityRegistry
     {
-        
-        public Statistics Statistics { get; private set; }
-        public List<Zone> Zones { get; private set; }
-        public List<Facility> Facilities { get; private set; }
-        public int SchoolCount { get; private set; }
-        public int UniversityCount { get; private set; }
-        public int PoliceCount { get; private set; }
-        public int StadiumCount { get; private set; }
-        public int RoadCount { get; private set; }
+        [ProtoMember(1)]
+        public Statistics Statistics { get;  set; }
+        [ProtoMember(2)]
+        public List<Zone> Zones { get;  set; }
+        [ProtoMember(3)]
+        public List<Facility> Facilities { get;  set; }
+        [ProtoMember(4)]
+        public int SchoolCount { get;  set; }
+        [ProtoMember(5)]
+        public int UniversityCount { get;  set; }
+        [ProtoMember(6)]
+        public int PoliceCount { get; set; }
+        [ProtoMember(7)]
+        public int StadiumCount { get; set; }
+        [ProtoMember(8)]
+        public int RoadCount { get;  set; }
+
+        public CityRegistry() {
+            //Zones = new List<Zone>();
+            //Facilities = new List<Facility>();
+        }
         public CityRegistry(Statistics statistics)
         {
             Statistics = statistics;

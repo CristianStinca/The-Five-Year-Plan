@@ -7,14 +7,19 @@ using System.Threading.Tasks;
 using TFYP.Model.Facilities;
 using TFYP.Model.Common;
 using TFYP.Model.Zones;
+using ProtoBuf;
 
 namespace TFYP.Model.City
 {
+    [ProtoContract]
+    [Serializable]
     public class Statistics
     {
-        public int Satisfaction { get; private set; }
-        public Budget Budget { get; private set; }
-
+        [ProtoMember(1)]
+        public int Satisfaction { get;  set; }
+        [ProtoMember(1)]
+        public Budget Budget { get;  set; }
+        public Statistics() { }
         public Statistics(Budget budget)
         {
             Budget = budget;

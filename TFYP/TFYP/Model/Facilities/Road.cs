@@ -9,14 +9,20 @@ using TFYP.Model.Common;
 using TFYP.Model.City;
 using TFYP.Model.Zones;
 using System.Drawing;
+using ProtoBuf;
 
 namespace TFYP.Model.Facilities
 {
+    [ProtoContract]
+    [Serializable]
+
     public class Road : Facility
     {
-        public bool IsConnected {  get; private set; }
-
+        [ProtoMember(1)]
+        public bool IsConnected {  get;  set; }
+        [ProtoMember(2)]
         public List<Buildable> connected;
+        public Road() { }
         public Road(List<Vector2> _coor, EBuildable _type) : base(_coor, _type)
         {
             IsConnected = false;

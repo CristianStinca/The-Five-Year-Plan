@@ -1,0 +1,143 @@
+{
+  "GameTime": "1923-01-02T00:00:00",
+  "CreationDate": "1923-01-01T00:00:00",
+  "Statistics": {
+    "Satisfaction": 88,
+    "Budget": {
+      "Balance": 2500,
+      "CurrentTax": 100,
+      "CurrentTaxRate": 0.4,
+      "MaintenanceFeeForEverything": 8500,
+      "DateOfStartingLoan": "0001-01-01T00:00:00"
+    }
+  },
+  "CityRegistry": {
+    "Statistics": {
+      "Satisfaction": 88,
+      "Budget": {
+        "Balance": 2500,
+        "CurrentTax": 100,
+        "CurrentTaxRate": 0.4,
+        "MaintenanceFeeForEverything": 8500,
+        "DateOfStartingLoan": "0001-01-01T00:00:00"
+      }
+    },
+    "Zones": [
+      {
+        "Health": 100,
+        "Level": 0,
+        "IsConnected": false,
+        "DayOfCreation": "1923-01-01T00:00:00",
+        "DayOfBuildStart": "0001-01-01T00:00:00",
+        "TimeToBuild": 10,
+        "Status": 0,
+        "isInitiallyPopulated": false,
+        "Satisfaction": 65,
+        "NCitizensInZone": 0,
+        "Coor": [
+          {},
+          {},
+          {}
+        ],
+        "Type": 5,
+        "ConstructionCost": 1000,
+        "InfluenceRadius": 0,
+        "Capacity": 50,
+        "MaintenanceCost": 1000
+      },
+      {
+        "Health": 100,
+        "Level": 0,
+        "IsConnected": false,
+        "DayOfCreation": "1923-01-01T00:00:00",
+        "DayOfBuildStart": "0001-01-01T00:00:00",
+        "TimeToBuild": 10,
+        "Status": 0,
+        "isInitiallyPopulated": false,
+        "Satisfaction": 65,
+        "NCitizensInZone": 0,
+        "Coor": [
+          {},
+          {},
+          {}
+        ],
+        "Type": 5,
+        "ConstructionCost": 1000,
+        "InfluenceRadius": 0,
+        "Capacity": 50,
+        "MaintenanceCost": 1000
+      },
+      {
+        "Health": 100,
+        "Level": 0,
+        "IsConnected": false,
+        "DayOfCreation": "1923-01-01T00:00:00",
+        "DayOfBuildStart": "0001-01-01T00:00:00",
+        "TimeToBuild": 10,
+        "Status": 0,
+        "isInitiallyPopulated": false,
+        "Satisfaction": 65,
+        "NCitizensInZone": 0,
+        "Coor": [
+          {},
+          {},
+          {}
+        ],
+        "Type": 5,
+        "ConstructionCost": 1000,
+        "InfluenceRadius": 0,
+        "Capacity": 50,
+        "MaintenanceCost": 1000
+      }
+    ],
+    "Facilities": [
+      {
+        "CurrentCapacity": 0,
+        "Coor": [
+          {}
+        ],
+        "Type": 4,
+        "ConstructionCost": 1000,
+        "InfluenceRadius": 10,
+        "Capacity": 25,
+        "MaintenanceCost": 2000
+      },
+      {
+        "CurrentCapacity": 0,
+        "Coor": [
+          {},
+          {},
+          {},
+          {}
+        ],
+        "Type": 3,
+        "ConstructionCost": 3000,
+        "InfluenceRadius": 0,
+        "Capacity": 25,
+        "MaintenanceCost": 3000
+      }
+    ],
+    "SchoolCount": 0,
+    "UniversityCount": 1,
+    "PoliceCount": 1,
+    "StadiumCount": 0,
+    "RoadCount": 1
+  },
+  "Roads": [
+    {
+      "IsConnected": false,
+      "CurrentCapacity": 0,
+      "Coor": [
+        {}
+      ],
+      "Type": 9,
+      "ConstructionCost": 500,
+      "InfluenceRadius": 0,
+      "Capacity": 0,
+      "MaintenanceCost": 500
+    }
+  ],
+  "MaxDistance": 40,
+  "MaxTax": 1000,
+  "latestDisaster": null
+}

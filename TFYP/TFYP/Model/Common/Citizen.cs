@@ -8,16 +8,18 @@ using TFYP.Model.City;
 using TFYP.Model.Zones;
 using TFYP.Utils;
 using System.Diagnostics;
+using ProtoBuf;
 
 namespace TFYP.Model.Common
 {
+    [ProtoContract]
     public enum EducationLevel
     {
         Primary,
         School,
         University
     }
-
+    [ProtoContract]
     public static class EducationExtensions
     {
         public static int GetEducationValue(this EducationLevel level)
@@ -36,25 +38,36 @@ namespace TFYP.Model.Common
         }
     }
 
-
+    [ProtoContract]
+    [Serializable]
     public class Citizen
     {
-
-        public string FirstName { get; private set; }
-        public string LastName { get; private set; }
-        public Zone WorkPlace { get; private set; }
-        public Zone LivingPlace { get; private set; }
-        public int Age { get; private set; }
-        public bool IsWorking { get; private set; }
+        [ProtoMember(1)]
+        public string FirstName { get; set; }
+        [ProtoMember(2)]
+        public string LastName { get; set; }
+        [ProtoMember(3)]
+        public Zone WorkPlace { get; set; }
+        [ProtoMember(4)]
+        public Zone LivingPlace { get;   set; }
+        [ProtoMember(5)]
+        public int Age { get; set; }
+        [ProtoMember(6)]
+        public bool IsWorking { get; set; }
+        [ProtoMember(7)]
         public EducationLevel EducationLevel { get; set; }
-        public float TaxPaidThisYear { get; private set; }
-        public int Satisfaction { get; private set; }
-        public bool IsActive { get; private set; } = true;
+        [ProtoMember(8)]
+        public float TaxPaidThisYear { get; set; }
+        [ProtoMember(9)]
+        public int Satisfaction { get; set; }
+        [ProtoMember(10)]
+        public bool IsActive { get;     set; } = true;
+        [ProtoMember(11)]
+        public static Random random = new Random();
+        [ProtoMember(12)]
+        public static RandomName nameGenerator = new RandomName(random);
 
-        private static Random random = new Random();
-        private static RandomName nameGenerator = new RandomName(random);
-
-
+        public Citizen() { }
         public Citizen(Zone livingPlace, Zone workPlace, EducationLevel educationLevel)
         {
             EducationLevel = educationLevel;

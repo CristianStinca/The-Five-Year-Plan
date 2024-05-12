@@ -11,19 +11,29 @@ using TFYP.Model.Zones;
 using System.Security.Policy;
 using Microsoft.Xna.Framework;
 using System.Diagnostics;
+using ProtoBuf;
 
 namespace TFYP.Model.Disasters 
 {
+    [ProtoContract]
+    [Serializable]
     public class Disaster
     {
+        [ProtoMember(1)]
         public string Name { get; set; }
-        public float EffectRadius { get; private set; }
+        [ProtoMember(2)]
+        public float EffectRadius { get;  set; }
+        [ProtoMember(3)]
         public Vector2 Location { get; set; }
+        [ProtoMember(4)]
         public DisasterType Type { get; set; }
+        [ProtoMember(5)]
         public List<Zone> affectedZones = new List<Zone>();
-        private DateTime effectAppliedTime;
-        public bool isActive { get; private set; }
 
+        //private DateTime effectAppliedTime;
+        [ProtoMember(6)]
+        public bool isActive { get;  set; }
+        public Disaster() { }
         public Disaster( float effectRadius, Vector2 location)
         {
             EffectRadius = effectRadius;

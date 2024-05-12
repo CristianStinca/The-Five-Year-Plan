@@ -13,29 +13,35 @@ using TFYP.Model.Disasters;
 using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 using System.Globalization;
-
+using System.Text.Json.Serialization;
+using TYFP.Persistence;
+using ProtoBuf;
+using System.IO;
+using System.Text.Json;
+using System.Runtime.CompilerServices;
+using Newtonsoft.Json.Linq;
 
 namespace TFYP.Model
 {
     /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
 
     [Serializable]
-    public class GameModel 
-    {       
-        private static GameModel instance = null;
-        private static int _mapH, _mapW;
+    public class GameModel
+    {
+        public static GameModel instance = null;
+        public static int _mapH=20, _mapW=20;
         public Buildable[,] map;
 
-        public DateTime GameTime { get; private set; }
+        public DateTime GameTime { get;  set; }
 
-        public DateTime CreationDate { get; private set; } // DateTime built-in in c#
-        public Statistics Statistics { get; private set; }
-        public CityRegistry CityRegistry { get; private set; }
-        public List<Road> Roads { get; private set; }
+        public DateTime CreationDate { get; set; } // DateTime built-in in c#
+        public Statistics Statistics { get;  set; }
+        public CityRegistry CityRegistry { get; set; }
+        public List<Road> Roads { get; set; }
 
-        public int MaxDistance { get; private set; }
-        public int MaxTax { get; private set; }
-        public Disaster latestDisaster { get; private set; }
+        public int MaxDistance { get; set; }
+        public int MaxTax { get; set; }
+        public Disaster latestDisaster { get; set; }
         public List<Disaster> currentDisasters = new List<Disaster>();
 
         public event EventHandler GameOver;
@@ -62,6 +68,15 @@ namespace TFYP.Model
             InitializeMap();
         }
 
+        public GameModel() {
+            map = new Buildable[20, 20];
+            InitializeMap();
+
+        }
+        public void ChangeGameModel(GameModel model)
+        {
+            instance = model;
+        }
         private void InitializeMap()
         {
             for (int i = 0; i < map.GetLength(0); i++)
@@ -1084,6 +1099,208 @@ namespace TFYP.Model
         public int Distance(int i1, int j1, int i2, int j2)
         {
             return Math.Max(VerticalDistance(i1, j1, i2, j2), HorizontalDistance(i1, j1, i2, j2));
+        }
+
+        private static string GetSaveFilePath(int slot)
+        {
+            string baseDirectory = @"C:\Users\nikol\Desktop\tfyp\TFYP\TFYP"; // Adjust as necessary
+            string persistenceFolder = Path.Combine(baseDirectory, "Persistence");
+            string filename = $"save{slot}.json";
+
+            if (!Directory.Exists(persistenceFolder))
+            {
+                Directory.CreateDirectory(persistenceFolder);
+            }
+
+            return Path.Combine(persistenceFolder, filename);
+        }
+
+        public static void Save(int slot)
+        {
+            string filePath = GetSaveFilePath(slot);
+            try
+            {
+                string jsonString = JsonSerializer.Serialize(instance, new JsonSerializerOptions { WriteIndented = true });
+                JObject obj = JObject.Parse(jsonString);
+                for (int i = 0; i < instance.CityRegistry.Zones.Count; i++)
+                {
+                    var o = obj["CityRegistry"]["Zones"][i]["Coor"];
+                    string val = "";
+                    foreach (var t in instance.CityRegistry.Zones[i].Coor) {
+                        val += t.X.ToString() + "," + t.Y.ToString()+";";
+                    }
+                    obj["CityRegistry"]["Zones"][i]["Coor"]=val;
+
+
+
+                }
+                for (int i = 0; i < instance.Roads.Count; i++)
+                {
+                    var o = obj["Roads"][i]["Coor"];
+                    string val = "";
+                    foreach (var t in instance.Roads[i].Coor)
+                    {
+                        val += t.X.ToString() + "," + t.Y.ToString() + ";";
+                    }
+                    obj["Roads"][i]["Coor"] = val;
+
+
+
+                }
+                for (int i = 0; i < instance.CityRegistry.Facilities.Count; i++)
+                {
+                    var o = obj["CityRegistry"]["Facilities"][i]["Coor"];
+                    string val = "";
+                    foreach (var t in instance.CityRegistry.Facilities[i].Coor)
+                    {
+                        val += t.X.ToString() + "," + t.Y.ToString() + ";";
+                    }
+                    obj["CityRegistry"]["Facilities"][i]["Coor"] = val;
+
+
+
+                }
+                jsonString = obj.ToString();
+
+
+                File.WriteAllText(filePath, jsonString);
+                Console.WriteLine($"Game saved successfully in slot {slot}.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to save game model in slot {slot}: " + ex.Message);
+            }
+        }
+
+        public static void Read(int slot)
+        {
+            
+            string filePath = GetSaveFilePath(slot);
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    string jsonString = File.ReadAllText(filePath);
+                    JObject obj = JObject.Parse(jsonString);
+                    List<List<Vector2>> l1 = new List<List<Vector2>>();
+                    List<List<Vector2>> l2 = new List<List<Vector2>>();
+                    List<List<Vector2>> l3 = new List<List<Vector2>>();
+                    for (int i = 0; i < obj["CityRegistry"]["Zones"].Count(); i++)
+                    {
+                        var o = obj["CityRegistry"]["Zones"][i]["Coor"];
+                        string s = o.ToString();
+                        string[] m = s.Split(';');
+                        List<Vector2> p = new List<Vector2>();
+                        foreach (var t in m)
+                        {
+                            if (t.Length > 1)
+                            {
+                                p.Add(new Vector2(int.Parse(t.Split(',')[0]), int.Parse(t.Split(',')[1])));
+                            }
+                        }
+                        l1.Add(p);
+
+                        obj["CityRegistry"]["Zones"][i]["Coor"]= JArray.Parse("[]");
+
+
+                    }
+                    
+
+                    for (int i = 0; i < obj["CityRegistry"]["Facilities"].Count(); i++)
+                    {
+                        var o = obj["CityRegistry"]["Facilities"][i]["Coor"];
+                        string s = o.ToString();
+                        string[] m = s.Split(';');
+                        List<Vector2> p = new List<Vector2>();
+                        foreach (var t in m)
+                        {
+                            if (t.Length > 1)
+                            {
+                                p.Add(new Vector2(int.Parse(t.Split(',')[0]), int.Parse(t.Split(',')[1])));
+                            }
+                        }
+                        l2.Add(p);
+
+                        obj["CityRegistry"]["Facilities"][i]["Coor"] = JArray.Parse("[ {} ]");
+
+
+                    }
+                   
+
+                    for (int i = 0; i < obj["Roads"].Count(); i++)
+                    {
+                        var o = obj["Roads"][i]["Coor"];
+                        string s = o.ToString();
+                        string[] m = s.Split(';');
+                        List<Vector2> p = new List<Vector2>();
+                        foreach (var t in m)
+                        {
+                            if (t.Length > 1)
+                            {
+                                p.Add(new Vector2(int.Parse(t.Split(',')[0]), int.Parse(t.Split(',')[1])));
+                            }
+                        }
+                        l3.Add(p);
+
+                        obj["Roads"][i]["Coor"] = JArray.Parse("[]");
+
+
+                    }
+                   
+                  
+
+
+                    jsonString = obj.ToString();
+                    instance = JsonSerializer.Deserialize<GameModel>(jsonString)!;
+                    var ins = GetInstance();
+
+                    for (int i = 0; i < instance.CityRegistry.Zones.Count; i++)
+                    {
+                        instance.CityRegistry.Zones[i].Coor = l1[i];
+                    }
+                    for (int i = 0; i < instance.CityRegistry.Facilities.Count; i++)
+                    {
+                        instance.CityRegistry.Facilities[i].Coor = l2[i];
+                    }
+                    
+                    for (int i = 0; i < instance.Roads.Count; i++)
+                    {
+                        instance.Roads[i].Coor = l3[i];
+                    }
+
+
+
+                    foreach (var z in instance.CityRegistry.Zones)
+                    {
+                        Vector2 v = z.Coor[0];
+                        instance.map[(int)v.X, (int)v.Y] = z;
+                    }
+                    foreach (var r in instance.Roads)
+                    {
+                        Vector2 v = r.Coor[0];
+                        instance.map[(int)v.X, (int)v.Y] = r;
+
+                    }
+                    foreach (var f in instance.CityRegistry.Facilities)
+                    {
+                        Vector2 v = f.Coor[0];
+                        instance.map[(int)v.X, (int)v.Y] = f;
+                    }
+
+
+                    //return JsonSerializer.Deserialize<GameModel>(jsonString);
+                }
+                else
+                {
+                    Console.WriteLine($"No saved game found in slot {slot}.");
+                    //return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while reading the game model from slot {slot}: " + ex.Message);
+                //return null;
+            }
         }
     }
 }

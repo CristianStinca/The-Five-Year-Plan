@@ -5,7 +5,7 @@ namespace TFYP.Model.Facilities
 {
     public abstract class FacilityFactory
     {
-        protected GameModel gameModel;
+        public GameModel gameModel;
 
         protected FacilityFactory(GameModel gameModel)
         {

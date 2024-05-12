@@ -8,16 +8,18 @@ using TFYP.Model.Common;
 using TFYP.Model.City;
 using Microsoft.Xna.Framework;
 using System.Xml.Serialization;
+using ProtoBuf;
 
 namespace TFYP.Model.Zones
 {
+    [ProtoContract]
     public enum ZoneLevel
     {
         One,
         Two,
         Three
     }
-
+    [ProtoContract]
     public enum ZoneStatus
     {
         Pending,
@@ -27,33 +29,41 @@ namespace TFYP.Model.Zones
 
 
     [Serializable]
+    [ProtoContract]
     public class Zone : Buildable
     {
-
-        public float Health {  get; private set; } // Health will be probably changed later, so far it is for the disaster and is representing percentage (1-100)
+        [ProtoMember(1)]
+        public float Health {  get; set; } // Health will be probably changed later, so far it is for the disaster and is representing percentage (1-100)
         // health will help us to calculate the cost of the damage which will be OneTimeCost * (Health/100)
         // Tracking the citizens within the zone
-        private bool canStartBuilding;
+        [ProtoMember(2)]
+        public bool canStartBuilding;
+        [ProtoMember(3)]
         public List<Citizen> citizens = new List<Citizen>();
-
-        public ZoneLevel Level { get; private set; }
-        public bool IsConnected { get; private set; }
+        [ProtoMember(4)]
+        public ZoneLevel Level { get; set; }
+        [ProtoMember(5)]
+        public bool IsConnected { get; set; }
+        [ProtoMember(6)]
         public List<Zone> conncetedZone= new List<Zone>();
-        private List<Road> outGoing = new List<Road>();
+        [ProtoMember(7)]
+        public List<Road> outGoing = new List<Road>();
 
-
+        [ProtoMember(8)]
         public DateTime DayOfCreation { get; set; }
-
-        public DateTime DayOfBuildStart { get; private set; }
+        [ProtoMember(9)]
+        public DateTime DayOfBuildStart { get; set; }
+        [ProtoMember(10)]
         public int TimeToBuild { get; set; }
-
+        [ProtoMember(11)]
         public ZoneStatus Status { get; set; }
-
+        [ProtoMember(12)]
         public bool isInitiallyPopulated { get; set; }
-        public int Satisfaction { get; private set; }
+        [ProtoMember(13)]
+        public int Satisfaction { get; set; }
 
 
-        
+        public Zone() { }
 
         public int averageCitizensSatisfaction()
         {

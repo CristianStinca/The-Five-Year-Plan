@@ -8,12 +8,17 @@ using System.Threading.Tasks;
 using TFYP.Model.Common;
 using TFYP.Model.City;
 using TFYP.Model.Zones;
+using ProtoBuf;
 
 namespace TFYP.Model.Facilities
 {
+    [ProtoContract]
+    [Serializable]
     public class Stadium : Facility
     {
-        public int HappinessBoost { get; private set; } = 5; // this will be changed later
+        [ProtoMember(1)]
+        public int HappinessBoost { get;  set; } = 5; // this will be changed later
+        public Stadium() { }
         public Stadium(List<Vector2> _coor, EBuildable _type) : base(_coor, _type)
         {
             //Capacity = Constants.;

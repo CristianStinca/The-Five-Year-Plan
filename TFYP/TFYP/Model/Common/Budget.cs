@@ -6,16 +6,25 @@ using System.Threading.Tasks;
 using TFYP.Model.Facilities;
 using TFYP.Model.City;
 using TFYP.Model.Zones;
+using ProtoBuf;
 
 namespace TFYP.Model.Common
 {
+    [ProtoContract]
+    [Serializable]
     public class Budget
     {
 
+
+        [ProtoMember(1)]
         public double Balance { get; set; }
+        [ProtoMember(2)]
         public int CurrentTax { get; set; }
+        [ProtoMember(3)]
         public float CurrentTaxRate { get; set; }
+        [ProtoMember(4)]
         public double MaintenanceFeeForEverything { get; set; }
+        [ProtoMember(5)]
         public DateTime DateOfStartingLoan { get; set; }
 
         public Budget()

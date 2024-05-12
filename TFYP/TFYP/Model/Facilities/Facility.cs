@@ -7,13 +7,17 @@ using System.Threading.Tasks;
 using TFYP.Model.Common;
 using TFYP.Model.City;
 using TFYP.Model.Zones;
+using ProtoBuf;
 
 namespace TFYP.Model.Facilities
 {
-    public abstract class Facility : Buildable
+    [ProtoContract]
+    [Serializable]
+    public class Facility : Buildable
     {
+        [ProtoMember(1)]
         public int CurrentCapacity { get; set; }
-
+        public Facility() { }
         public Facility(List<Vector2> _coor, EBuildable _type) : base(_coor, _type)
         {
             CurrentCapacity = 0;

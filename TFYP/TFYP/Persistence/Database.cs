@@ -1,69 +1,62 @@
 using System;
 using System.IO;
-using System.Text.Json;
+using ProtoBuf;
 using TFYP.Model;
-using TFYP.Model.Facilities;
 using TFYP.Model.Common;
-using TFYP.Model.City;
-using TFYP.Model.Zones;
 
-namespace YourGameNamespace.Persistence
+namespace TYFP.Persistence
 {
     public static class Database
     {
-        /// TO DO:
-        /// var gameModel = new Gamemodel{ we will populate game model with current state }
-        /// to save --> Database.Save(gameModel);
-        /// to load --> var gameModel = Database.Read();
-        /// 
-        /// 
-
-
-        private const string DefaultFilename = "data.json";
-
-        public static void Save(GameModel gameModel, string filename = "data.json")
+        private static string GetSaveFilePath(int slot)
         {
-            try
+            string baseDirectory = @"C:\Users\nikol\Desktop\tfyp\TFYP\TFYP";
+            string persistenceFolder = Path.Combine(baseDirectory, "Persistence");
+            string filename = $"save{slot}.bin"; // Change extension to .bin for binary files
+
+            if (!Directory.Exists(persistenceFolder))
             {
-                string jsonString = JsonSerializer.Serialize(gameModel, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText(filename, jsonString);
-                //Console.WriteLine($"Serialized data is saved in {filename}");
+                Directory.CreateDirectory(persistenceFolder);
             }
-            catch (IOException ex)
-            {
-                Console.WriteLine("An error occurred while saving the game model.");
-                Console.WriteLine(ex.Message);
-            }
+
+            string fullPath = Path.Combine(persistenceFolder, filename);
+            return fullPath;
         }
 
-        public static GameModel Read(string filename = "data.json")
+        public static void Save(GameModel gameModel, int slot)
         {
+            string filePath = GetSaveFilePath(slot);
             try
             {
-                string jsonString = File.ReadAllText(filename);
-                GameModel gameModel = JsonSerializer.Deserialize<GameModel>(jsonString);
-                //Console.WriteLine($"Serialized data is read from {filename}");
-                return gameModel;
+                using (var file = File.Create(filePath))
+                {
+                    Serializer.Serialize(file, gameModel);
+                    Console.WriteLine($"Game saved successfully in slot {slot}.");
+                }
             }
-            catch (FileNotFoundException)
+            catch (Exception ex)
             {
-                Console.WriteLine($"File {filename} not found.");
-                return null;
+                Console.WriteLine($"Failed to save game model in slot {slot}: " + ex.Message);
             }
-            catch (IOException ex)
+        }
+        public static GameModel Read(int slot)
+        {
+            string filePath = GetSaveFilePath(slot);
+            try
             {
-                Console.WriteLine("An error occurred while reading the game model.");
-                Console.WriteLine(ex.Message);
-                return null;
+                using (var file = File.OpenRead(filePath))
+                {
+                    var gameModel = Serializer.Deserialize<GameModel>(file);
+                    Console.WriteLine($"Game loaded successfully from slot {slot}.");
+                    return gameModel;
+                }
             }
-            catch (JsonException ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("An error occurred while deserializing the game model.");
-                Console.WriteLine(ex.Message);
+                Console.WriteLine($"An error occurred while reading the game model from slot {slot}: " + ex.Message);
                 return null;
             }
         }
-
         
     }
 }

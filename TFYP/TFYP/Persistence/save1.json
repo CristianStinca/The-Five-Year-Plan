@@ -1,0 +1,110 @@
+{
+  "GameTime": "1923-01-05T00:00:00",
+  "CreationDate": "1923-01-01T00:00:00",
+  "Statistics": {
+    "Satisfaction": 100,
+    "Budget": {
+      "Balance": -4000,
+      "CurrentTax": 100,
+      "CurrentTaxRate": 0.4,
+      "MaintenanceFeeForEverything": 4000,
+      "DateOfStartingLoan": "1923-01-05T00:00:00"
+    }
+  },
+  "CityRegistry": {
+    "Statistics": {
+      "Satisfaction": 0,
+      "Budget": {
+        "Balance": 8000,
+        "CurrentTax": 100,
+        "CurrentTaxRate": 0.4,
+        "MaintenanceFeeForEverything": 18500,
+        "DateOfStartingLoan": "0001-01-01T00:00:00"
+      }
+    },
+    "Zones": [],
+    "Facilities": [
+      {
+        "CurrentCapacity": 0,
+        "Coor": "10,8;",
+        "Type": 4,
+        "ConstructionCost": 1000,
+        "InfluenceRadius": 10,
+        "Capacity": 25,
+        "MaintenanceCost": 2000
+      },
+      {
+        "CurrentCapacity": 0,
+        "Coor": "9,8;",
+        "Type": 4,
+        "ConstructionCost": 1000,
+        "InfluenceRadius": 10,
+        "Capacity": 25,
+        "MaintenanceCost": 2000
+      },
+      {
+        "CurrentCapacity": 0,
+        "Coor": "12,9;10,9;11,8;11,9;",
+        "Type": 3,
+        "ConstructionCost": 3000,
+        "InfluenceRadius": 0,
+        "Capacity": 25,
+        "MaintenanceCost": 3000
+      },
+      {
+        "CurrentCapacity": 0,
+        "Coor": "6,11;5,11;",
+        "Type": 2,
+        "ConstructionCost": 2000,
+        "InfluenceRadius": 0,
+        "Capacity": 25,
+        "MaintenanceCost": 2500
+      },
+      {
+        "CurrentCapacity": 0,
+        "Coor": "7,11;6,12;",
+        "Type": 2,
+        "ConstructionCost": 2000,
+        "InfluenceRadius": 0,
+        "Capacity": 25,
+        "MaintenanceCost": 2500
+      },
+      {
+        "CurrentCapacity": 0,
+        "Coor": "8,12;7,12;",
+        "Type": 2,
+        "ConstructionCost": 2000,
+        "InfluenceRadius": 0,
+        "Capacity": 25,
+        "MaintenanceCost": 2500
+      },
+      {
+        "CurrentCapacity": 0,
+        "Coor": "7,7;5,7;6,7;6,8;",
+        "Type": 1,
+        "ConstructionCost": 1500,
+        "InfluenceRadius": 10,
+        "Capacity": 0,
+        "MaintenanceCost": 2000
+      },
+      {
+        "CurrentCapacity": 0,
+        "Coor": "8,9;6,9;7,8;7,9;",
+        "Type": 1,
+        "ConstructionCost": 1500,
+        "InfluenceRadius": 10,
+        "Capacity": 0,
+        "MaintenanceCost": 2000
+      }
+    ],
+    "SchoolCount": 3,
+    "UniversityCount": 1,
+    "PoliceCount": 2,
+    "StadiumCount": 2,
+    "RoadCount": 0
+  },
+  "Roads": [],
+  "MaxDistance": 40,
+  "MaxTax": 1000,
+  "latestDisaster": null
+}
