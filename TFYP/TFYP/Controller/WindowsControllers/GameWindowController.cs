@@ -53,6 +53,8 @@ namespace TFYP.Controller.WindowsControllers
         private Color hover_tint = Color.LightGray;
         private bool rotate = true;
 
+        private TimeOnly time;
+
         public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
             : base(inputHandler, _view, _uiTextures)
         {
@@ -153,6 +155,14 @@ namespace TFYP.Controller.WindowsControllers
                     //update the model every 5 seconds on normal speed
                     _gameModel.UpdateCityState();
                 }
+
+                double div = elapsedTime / 3.4222222223;
+                if (div > 1439)
+                    div = 1439;
+
+                int hour = (int)Math.Floor(div / 60);
+                int minute = (int)(div % 60);
+                time = new TimeOnly(hour, minute);
             }
 
             if (_gw_view.is_tile_info_active && _selectedZone != null)
@@ -387,52 +397,34 @@ namespace TFYP.Controller.WindowsControllers
                 {
                     case DisasterType.GodzillaAttack:
                         texture = Globals.Content.Load<Texture2D>("Disaster/godzila_with_fire");
-                        disasters.Add(new Sprite(
-                            texture,
-                            new Vector2(
-                                deviation + (disaster.Location.Y * TILE_W * SCALE),
-                                (disaster.Location.X * TILE_H * SCALE / 2) - ((texture.Height - TILE_H) * SCALE)
-                            ),
-                            SCALE
-                        ));
                         break;
 
                     case DisasterType.Fire:
                         texture = Globals.Content.Load<Texture2D>("Disaster/fire");
-                        disasters.Add(new Sprite(
-                            texture,
-                            new Vector2(
-                                deviation + (disaster.Location.Y * TILE_W * SCALE),
-                                (disaster.Location.X * TILE_H * SCALE / 2) - ((texture.Height - TILE_H) * SCALE)
-                            ),
-                            SCALE
-                        ));
                         break;
 
                     case DisasterType.Flood:
                         texture = Globals.Content.Load<Texture2D>("Disaster/flood");
-                        disasters.Add(new Sprite(
-                            texture,
-                            new Vector2(
-                                deviation + (disaster.Location.Y * TILE_W * SCALE),
-                                (disaster.Location.X * TILE_H * SCALE / 2) - ((texture.Height - TILE_H) * SCALE)
-                            ),
-                            SCALE
-                        ));
                         break;
 
                     case DisasterType.Earthquake:
                         texture = Globals.Content.Load<Texture2D>("Disaster/earthquake");
-                        disasters.Add(new Sprite(
-                            texture,
-                            new Vector2(
-                                deviation + (disaster.Location.Y * TILE_W * SCALE),
-                                (disaster.Location.X * TILE_H * SCALE / 2) - ((texture.Height - TILE_H) * SCALE)
-                            ),
-                            SCALE
-                        ));
                         break;
+
+                    default:
+                        texture = Globals.Content.Load<Texture2D>("Disaster/godzila_with_fire");
+                        break;
+
                 }
+
+                disasters.Add(new Sprite(
+                    texture,
+                    new Vector2(
+                        deviation + (disaster.Location.Y * TILE_W * SCALE),
+                        (disaster.Location.X * TILE_H * SCALE / 2) - ((texture.Height - TILE_H) * SCALE)
+                    ),
+                    SCALE
+                ));
             }
 
             _gw_view.SendDisasters(disasters.ToArray());
@@ -453,7 +445,10 @@ namespace TFYP.Controller.WindowsControllers
                     {
                         //OnExitPressed();
                         if (_menu_is_active)
+                        {
                             _gw_view.CleanMenu();
+                            stop = false;
+                        }
                         else
                         {
                             _gw_view.DrawMenu();
@@ -573,7 +568,8 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.PrintStats(
                 Tuple.Create("City budget: " + _gameModel.Statistics.Budget.Balance, EPrintInfo.Title),
                 Tuple.Create("City satisfaction: " + _gameModel.Statistics.Satisfaction, EPrintInfo.Title),
-                Tuple.Create("Date: " + _gameModel.GameTime, EPrintInfo.Title)
+                Tuple.Create("Date: " + _gameModel.GameTime.ToString("MMMM dd, yyyy"), EPrintInfo.Title),
+                Tuple.Create("Time: " + time, EPrintInfo.Title)
                 );
         }
 
