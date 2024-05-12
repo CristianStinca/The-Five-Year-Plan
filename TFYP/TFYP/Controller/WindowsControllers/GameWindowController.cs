@@ -22,6 +22,9 @@ using static TFYP.View.Windows.Window;
 using MonoGame.Extended.Timers;
 using TFYP.Model.Disasters;
 using MonoGame.Extended.Content;
+using System.IO;
+using System.Reflection;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace TFYP.Controller.WindowsControllers
 {
@@ -53,19 +56,11 @@ namespace TFYP.Controller.WindowsControllers
         public GameWindowController(InputHandler inputHandler, View.View _view, IUIElements _uiTextures, GameModel _gameModel)
             : base(inputHandler, _view, _uiTextures)
         {
-            _view.ChangeToGameWindow();
             this._gameModel = _gameModel;
 
             _activeZone = null;
 
-            if (base._view.CurrentWindow.GetType().Name.CompareTo(typeof(View.Windows.GameWindow).Name) == 0)
-            {
-                _gw_view = (View.Windows.GameWindow)base._view.CurrentWindow;
-            }
-            else
-            {
-                throw new TypeLoadException("GameWindowController (set_map)");
-            }
+            SyncView(_view.ChangeToGameWindow, out _gw_view);
 
             LinkViewEvents();
             _gw_view.TileButtonPressedInWindow += ClickInButton;
@@ -77,7 +72,22 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.SetFocusCoord(_initCoord - _focusCoord);
 
             _gameModel.GameOver += GameEndHandler;
-            //GameEndHandler(null, null);
+        }
+
+        override public void SetFocus()
+        {
+            base.SetFocus();
+            SyncView(_view.ChangeToGameWindow, out _gw_view);
+            _gameModel = GameModel.GetInstance();
+            speed = 1; stop = false;
+            _menu_is_active = false;
+            _gw_view.CleanMenu();
+        }
+
+        public override void LoseFocus()
+        {
+            base.LoseFocus();
+            stop = true;
         }
 
         /// <summary>
@@ -609,7 +619,7 @@ namespace TFYP.Controller.WindowsControllers
             _gw_view.UISpeedX3Pressed += () => { speed = 3; stop = false; Debug.WriteLine("Speed X3."); };
 
             // TODO: from menu go back to game
-            _gw_view.UIMenuNewGameButtonPressed += ToGameWindow;
+            _gw_view.UIMenuNewGameButtonPressed += () => { GameModel.CleanGameModel(); ToGameWindow(); };
             _gw_view.UIMenuSaveGameButtonPressed += ToSavesWindow;
             _gw_view.UIMenuLoadGameButtonPressed += ToLoadsWindow;
             _gw_view.UIMenuOpenSettingsButtonPressed += ToSettingsWindow;

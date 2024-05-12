@@ -21,41 +21,47 @@ namespace TFYP.View
 
         protected InputHandler _inputHandler;
 
+        private GameWindow gameWindow { get; set; }
+        private MenuWindow menuWindow { get; set; }
+        private SavesMenuWindow savesMenuWindow { get; set; }
+        private LoadsMenuWindow loadsMenuWindow { get; set; }
+        private SettingsWindow settingsWindow { get; set; }
+
         public View(IUIElements UIElements, InputHandler inputHandler) 
         {
             this._UIElements = UIElements;
             this._inputHandler = inputHandler;
+            
+            gameWindow = new GameWindow(_UIElements, _inputHandler);
+            menuWindow = new MenuWindow(_UIElements, _inputHandler);
+            savesMenuWindow = new SavesMenuWindow(_UIElements, _inputHandler);
+            loadsMenuWindow = new LoadsMenuWindow(_UIElements, _inputHandler);
+            settingsWindow = new SettingsWindow(_UIElements, _inputHandler);
         }
 
-        /// <summary>
-        /// Changes the current window to GameWindow.
-        /// </summary>
         public void ChangeToGameWindow()
         {
-            this.CurrentWindow = new GameWindow(_UIElements, _inputHandler);
+            this.CurrentWindow = gameWindow;
         }
 
-        /// <summary>
-        /// Changes the current window to MenuWindow.
-        /// </summary>
         public void ChangeToMenuWindow()
         {
-            this.CurrentWindow = new MenuWindow(_UIElements, _inputHandler);
+            this.CurrentWindow = menuWindow;
         }
         
         public void ChangeToSavesMenuWindow()
         {
-            this.CurrentWindow = new SavesMenuWindow(_UIElements, _inputHandler);
+            this.CurrentWindow = savesMenuWindow;
         }
         
         public void ChangeToLoadsMenuWindow()
         {
-            this.CurrentWindow = new LoadsMenuWindow(_UIElements, _inputHandler);
+            this.CurrentWindow = loadsMenuWindow;
         }
 
         public void ChangeToSettingsWindow()
         {
-            this.CurrentWindow = new SettingsWindow(_UIElements, _inputHandler);
+            this.CurrentWindow = settingsWindow;
         }
 
         public void Update()

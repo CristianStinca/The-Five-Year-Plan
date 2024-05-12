@@ -20,20 +20,17 @@ namespace TFYP.Controller.WindowsControllers
         public MenuWindowController(InputHandler _inputHandler, View.View _view, IUIElements _uiTextures)
             : base(_inputHandler, _view, _uiTextures)
         {
-            _view.ChangeToMenuWindow();
-
-            if (base._view.CurrentWindow.GetType().Name.CompareTo(typeof(View.Windows.MenuWindow).Name) == 0)
-            {
-                _window = (View.Windows.MenuWindow)base._view.CurrentWindow;
-            }
-            else
-            {
-                throw new TypeLoadException("MenuWindowController (converting Window to MenuWindow)");
-            }
+            SyncView(_view.ChangeToMenuWindow, out _window);
 
             _window.UIMenuNewGameButtonPressed += ToGameWindow;
             _window.UIMenuLoadGameButtonPressed += ToLoadsWindow;
             _window.UIMenuOpenSettingsButtonPressed += ToSettingsWindow;
+        }
+
+        override public void SetFocus()
+        {
+            base.SetFocus();
+            SyncView(_view.ChangeToMenuWindow, out _window);
         }
     }
 }

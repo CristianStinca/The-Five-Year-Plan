@@ -33,7 +33,7 @@ namespace TFYP.Model.Facilities
         }
         public void checkForZones() {
             GameModel gm = GameModel.GetInstance();
-            connected.Clear();
+            connected = new List<Buildable>(); // clear();
             if ((int)this.Coor[0].X % 2 == 0)
             {
                 connected.Add(gm.map[(int)this.Coor[0].X - 1, (int)Coor[0].Y - 1]);

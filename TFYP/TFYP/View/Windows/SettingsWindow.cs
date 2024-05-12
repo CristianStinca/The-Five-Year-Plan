@@ -19,7 +19,7 @@ namespace TFYP.View.Windows
 
         Button back_btn;
 
-        public event UIButtonPressedHandler UIToMainMenuButtonPressed;
+        public event UIButtonPressedHandler UIBackButtonPressed;
 
         #endregion
 
@@ -48,7 +48,7 @@ namespace TFYP.View.Windows
             ElementsInWindow.AddRange(mainContainer.ToIRenderable());
 
             back_btn = AddButton(new Sprite(Globals.Content.Load<Texture2D>("Menu/back_Button"), new Vector2(25, 25)));
-            back_btn.ButtonPressed += (string name) => UIToMainMenuButtonPressed.Invoke();
+            back_btn.ButtonPressed += (string name) => UIBackButtonPressed.Invoke();
 
             ElementsInWindow.Add(back_btn.ToIRenderable());
         }

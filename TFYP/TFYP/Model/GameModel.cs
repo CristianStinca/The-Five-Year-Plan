@@ -14,12 +14,13 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.Json.Serialization;
-using TYFP.Persistence;
+//using TYFP.Persistence;
 using ProtoBuf;
 using System.IO;
 using System.Text.Json;
 using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
+using System.Reflection;
 
 namespace TFYP.Model
 {
@@ -100,8 +101,14 @@ namespace TFYP.Model
         {
             if (instance == null)
             {
-                instance = new GameModel(20, 20);
+                instance = new GameModel(MAP_H, MAP_W);
             }
+            return instance;
+        }
+
+        public static GameModel CleanGameModel()
+        {
+            instance = new GameModel(MAP_H, MAP_W);
             return instance;
         }
 
@@ -1090,7 +1097,7 @@ namespace TFYP.Model
 
         private static string GetSaveFilePath(int slot)
         {
-            string baseDirectory = @"C:\Users\nikol\Desktop\tfyp\TFYP\TFYP"; // Adjust as necessary
+            string baseDirectory = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), @"..\..\..\")); //@"C:\Users\nikol\Desktop\tfyp\TFYP\TFYP"; // Adjust as necessary
             string persistenceFolder = Path.Combine(baseDirectory, "Persistence");
             string filename = $"save{slot}.json";
 
@@ -1105,6 +1112,7 @@ namespace TFYP.Model
         public static void Save(int slot)
         {
             string filePath = GetSaveFilePath(slot);
+            Debug.WriteLine($"saving to {filePath}");
             try
             {
                 string jsonString = JsonSerializer.Serialize(instance, new JsonSerializerOptions { WriteIndented = true });
@@ -1151,18 +1159,18 @@ namespace TFYP.Model
 
 
                 File.WriteAllText(filePath, jsonString);
-                Console.WriteLine($"Game saved successfully in slot {slot}.");
+                Debug.WriteLine($"Game saved successfully in slot {slot}.");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to save game model in slot {slot}: " + ex.Message);
+                Debug.WriteLine($"Failed to save game model in slot {slot}: " + ex.Message);
             }
         }
 
         public static void Read(int slot)
         {
-            
             string filePath = GetSaveFilePath(slot);
+            Debug.WriteLine($"loading from {filePath}");
             try
             {
                 if (File.Exists(filePath))
@@ -1266,7 +1274,6 @@ namespace TFYP.Model
                     {
                         Vector2 v = r.Coor[0];
                         instance.map[(int)v.X, (int)v.Y] = r;
-
                     }
                     foreach (var f in instance.CityRegistry.Facilities)
                     {
@@ -1279,13 +1286,13 @@ namespace TFYP.Model
                 }
                 else
                 {
-                    Console.WriteLine($"No saved game found in slot {slot}.");
+                    Debug.WriteLine($"No saved game found in slot {slot}.");
                     //return null;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred while reading the game model from slot {slot}: " + ex.Message);
+                Debug.WriteLine($"An error occurred while reading the game model from slot {slot}: " + ex.Message);
                 //return null;
             }
         }
