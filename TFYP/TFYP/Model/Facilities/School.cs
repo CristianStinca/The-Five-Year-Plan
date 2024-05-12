@@ -18,7 +18,6 @@ namespace TFYP.Model.Facilities
             ConstructionCost = Constants.SchoolBuildCost;
             GraduationTime = Constants.SchoolGraduationTime;
         }
-        
 
     }
 }

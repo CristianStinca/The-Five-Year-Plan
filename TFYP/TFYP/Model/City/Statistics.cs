@@ -63,24 +63,24 @@ namespace TFYP.Model.City
 
         public int CitizensWithSecondaryEducation(CityRegistry cityRegistry)
         {
-            int CitizensWithSecondaryEducation = 0;
+            List <Citizen> CitizensWithSecondaryEducation = new List <Citizen>();   
             foreach (Citizen citizen in cityRegistry.GetAllCitizens())
             {
                 if (citizen.EducationLevel == EducationLevel.School)
-                    CitizensWithSecondaryEducation++;
+                    CitizensWithSecondaryEducation.Add(citizen);
             }
-            return CitizensWithSecondaryEducation;
+            return CitizensWithSecondaryEducation.Count();
         }
 
         public int CitizensWithHigherEducation(CityRegistry cityRegistry)
         {
-            int CitizensWithHigherEducation = 0;
+            List<Citizen> CitizensWithHigherEducation = new List<Citizen>();
             foreach (Citizen citizen in cityRegistry.GetAllCitizens())
             {
                 if (citizen.EducationLevel == EducationLevel.University)
-                    CitizensWithHigherEducation++;
+                    CitizensWithHigherEducation.Add(citizen); 
             }
-            return CitizensWithHigherEducation;
+            return CitizensWithHigherEducation.Count();
         }
 
     }

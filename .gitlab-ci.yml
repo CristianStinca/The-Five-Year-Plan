@@ -1,0 +1,31 @@
+stages:
+  - build
+  - test
+
+variables:
+  MONOGAME_VERSION: "3.8.1.3"
+  DOTNET_CLI_TELEMETRY_OPTOUT: 1
+
+before_script:
+  # Commands to set up the environment
+  - echo "Setting up environment for MonoGame version $MONOGAME_VERSION"
+  - echo "This is a placeholder and does not execute real commands."
+
+build_job:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:latest
+  script:
+    - echo "Restore dependencies for the MonoGame project"
+    - echo "Build the MonoGame project"
+  only:
+    - master
+
+test_job:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:latest
+  script:
+    - echo "Restore test dependencies"
+    - echo "Run tests for the MonoGame project"
+  only:
+    - master
+
