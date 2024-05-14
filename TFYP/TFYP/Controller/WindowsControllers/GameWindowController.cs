@@ -527,8 +527,7 @@ namespace TFYP.Controller.WindowsControllers
             return new Point(coord.Y, coord.X);
         }
 
-        //********************************** SATISFACTION PRINTING ********************************************
-
+        
         public int Distance(int i1, int j1, int i2, int j2)
         {
             return _gameModel.Distance(j1, i1, j2, i2);
@@ -569,8 +568,7 @@ namespace TFYP.Controller.WindowsControllers
             }
         }
 
-        //********************************** CITY INF(budget, total satisfaction....) ************************************
-
+        
         private void SendBudgetInfo()
         {
             _gw_view.PrintStats(

@@ -24,8 +24,7 @@ using System.Reflection;
 
 namespace TFYP.Model
 {
-    /* Made this class serializable to save the current state of the game, including player progress, game settings, and the world state, so that it can be paused and resumed */
-
+   
     [Serializable]
     public class GameModel
     {
@@ -35,7 +34,7 @@ namespace TFYP.Model
 
         public DateTime GameTime { get;  set; }
 
-        public DateTime CreationDate { get; set; } // DateTime built-in in c#
+        public DateTime CreationDate { get; set; }
         public Statistics Statistics { get;  set; }
         public CityRegistry CityRegistry { get; set; }
         public List<Road> Roads { get; set; }
@@ -64,8 +63,8 @@ namespace TFYP.Model
             GameTime = new DateTime(1923, 1, 1);
             Roads = new List<Road>();
 
-            MaxTax = 1000; // --> we will change in future
-            MaxDistance = 40;// --> debugged
+            MaxTax = 1000;
+            MaxDistance = 40;
             InitializeMap();
         }
 
@@ -78,6 +77,10 @@ namespace TFYP.Model
         {
             instance = model;
         }
+
+        /// <summary>
+        /// Initializes the map with default buildable entities, marking boundaries as inaccessible and other areas as empty.
+        /// </summary>
         private void InitializeMap()
         {
             for (int i = 0; i < map.GetLength(0); i++)
@@ -125,6 +128,11 @@ namespace TFYP.Model
             set { _mapW = value; }
         }
 
+        /// <summary>
+        /// Heals a zone at the specified coordinates if it is of type Residential, Industrial, or Service.
+        /// </summary>
+        /// <param name="_x">The x-coordinate of the zone to heal.</param>
+        /// <param name="_y">The y-coordinate of the zone to heal.</param>
         public void HealZone(int _x, int _y) {
             if (map[_x, _y].Type.Equals(EBuildable.Residential) || map[_x, _y].Type.Equals(EBuildable.Industrial) || map[_x, _y].Type.Equals(EBuildable.Service)) { 
                     Zone z= (Zone)map[_x, _y];
@@ -135,6 +143,11 @@ namespace TFYP.Model
                 }
             }
         }
+
+        /// <summary>
+        /// Counts the number of zones of type Residential in the city registry.
+        /// </summary>
+        /// <returns>The count of residential zones.</returns>
         public int CheckResidentialCount()
         {
             int count = 0;
@@ -147,6 +160,11 @@ namespace TFYP.Model
             }
             return count;
         }
+
+        /// <summary>
+        /// Counts the number of zones of type Industrial in the city registry.
+        /// </summary>
+        /// <returns>The count of industrial zones.</returns>
         public int CheckIndustrialCount()
         {
             int count = 0;
@@ -159,6 +177,11 @@ namespace TFYP.Model
             }
             return count;
         }
+
+        /// <summary>
+        /// Counts the number of zones of type Service in the city registry.
+        /// </summary>
+        /// <returns>The count of service zones.</returns>
         public int CheckServiceCount()
         {
             int count = 0;
@@ -171,9 +194,17 @@ namespace TFYP.Model
             }
             return count;
         }
+
+        /// <summary>
+        /// Adds a zone to the map at the specified coordinates with the specified properties.
+        /// </summary>
+        /// <param name="_x">The x-coordinate of the position to add the zone.</param>
+        /// <param name="_y">The y-coordinate of the position to add the zone.</param>
+        /// <param name="zone">The type of zone to add.</param>
+        /// <param name="rotate">Specifies if rotation is required for placement.</param>
         public void AddZone(int _x, int _y, EBuildable zone, bool rotate)
         {
-            // TO DO: after adding a zone, roads should be checked, where is it connected now, and what effect did building of this zone cause
+            
             try
             {
                 AddToMap(_y, _x, zone, rotate);
@@ -282,6 +313,14 @@ namespace TFYP.Model
             }
             
         }
+
+        /// <summary>
+        /// Adds a buildable entity to the map at the specified coordinates with the specified properties.
+        /// </summary>
+        /// <param name="_x">The x-coordinate of the position to add the buildable entity.</param>
+        /// <param name="_y">The y-coordinate of the position to add the buildable entity.</param>
+        /// <param name="zone">The type of buildable entity to add to the map.</param>
+        /// <param name="rotate">Specifies if rotation is required for placement.</param>
         private void AddToMap(int _x, int _y, EBuildable zone, bool rotate) {
 
             List<Vector2> t = new List<Vector2>();
@@ -354,7 +393,6 @@ namespace TFYP.Model
                         break;
                     }
                     Zone z = new Zone(EBuildable.Residential, t, Constants.ResidentialEffectRadius, Constants.ResidentialZoneBuildTime, Constants.ResidentialZoneCapacity, Constants.ResidentialZoneMaintenanceCost, Constants.ResidentialZoneBuildCost, GameTime);
-                    //z.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z);
                     Statistics.Budget.UpdateBalance(-Constants.ResidentialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ResidentialZoneMaintenanceCost);
@@ -368,7 +406,6 @@ namespace TFYP.Model
                         break;
                     }
                     Zone z1 = new Zone(EBuildable.Service, t, Constants.ServiceEffectRadius, Constants.ServiceZoneBuildTime, Constants.ServiceZoneCapacity, Constants.ServiceZoneMaintenanceCost, Constants.ServiceZoneBuildCost, GameTime);
-                    //z1.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z1);
                     Statistics.Budget.UpdateBalance(-Constants.ServiceZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.ServiceZoneMaintenanceCost);
@@ -381,7 +418,6 @@ namespace TFYP.Model
                         break;
                     }
                     Zone z2 = new Zone(EBuildable.Industrial, t, Constants.IndustrialEffectRadius, Constants.IndustrialBuildTime, Constants.IndustrialZoneCapacity, Constants.IndustrialZoneMaintenanceCost, Constants.IndustrialZoneBuildCost, GameTime);
-                    //z2.Status = ZoneStatus.Building;
                     CityRegistry.AddZone(z2);
                     Statistics.Budget.UpdateBalance(-Constants.IndustrialZoneBuildCost, GameTime);
                     CityRegistry.Statistics.Budget.AddToMaintenanceFee(Constants.IndustrialZoneMaintenanceCost);
@@ -494,14 +530,10 @@ namespace TFYP.Model
             {
                 CityRegistry.DecRoadCount();
                 this.RemoveRoad(_x, _y);
-                //CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.RoadMaintenanceCost);
-                //Statistics.Budget.UpdateBalance(Constants.RoadReimbursement, GameTime);
             }
             else if (obj.GetType().Equals(typeof(Zone)))
             {
                 RemoveZone(_x, _y);
-                //CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.ZoneMaintenanceCost);
-                //Statistics.Budget.UpdateBalance(Constants.ZoneReimbursement, GameTime);
             }
             else if (!(obj.Type.Equals(EBuildable.None)))
             {
@@ -528,8 +560,6 @@ namespace TFYP.Model
             }
             else {
                 RemoveFacility(_x, _y);
-                //CityRegistry.Statistics.Budget.RemoveFromMaintenanceFee(Constants.FacilityMaintenanceCost);
-                //Statistics.Budget.UpdateBalance(Constants.FacilityReimbursement, GameTime);
             }
         }
 
@@ -626,7 +656,12 @@ namespace TFYP.Model
 
         }
 
-
+        /// <summary>
+        /// Calculates the minimum distance between two buildable entities.
+        /// </summary>
+        /// <param name="b1">The first buildable entity.</param>
+        /// <param name="b2">The second buildable entity.</param>
+        /// <returns>The minimum distance between the two buildable entities.</returns>
         public int CalculateDistanceBetweenTwo(Buildable b1, Buildable b2)
         {
             if (b1 == null || b2 == null)
@@ -669,6 +704,11 @@ namespace TFYP.Model
             return GetMapElementAt(point.X, point.Y);
         }
 
+        /// <summary>
+        /// Upgrades the zone at the specified coordinates, adjusting maintenance fees and city balance accordingly.
+        /// </summary>
+        /// <param name="x">The x-coordinate of the zone to upgrade.</param>
+        /// <param name="y">The y-coordinate of the zone to upgrade.</param>
         public void UpgradeZone(int x, int y)
         {
             double upgradeCost = 0;
@@ -685,6 +725,10 @@ namespace TFYP.Model
 
         }
 
+        /// <summary>
+        /// Checks if new citizens are eligible to arrive based on various criteria.
+        /// </summary>
+        /// <returns>True if new citizens are eligible to arrive, otherwise false.</returns>
         public bool AreNewCitizensEligible()
         {
             // Check general satisfaction level
@@ -717,6 +761,9 @@ namespace TFYP.Model
             return stadiums;
         }
 
+        /// <summary>
+        /// Initializes the population of residential zones that have not been initially populated and are connected.
+        /// </summary>
         public void initialPopulationOfZones()
         {
             List<Zone> allResidentialZones = new List<Zone>();
@@ -724,7 +771,7 @@ namespace TFYP.Model
             {
                 if (!residentialZone.isInitiallyPopulated && residentialZone.IsConnected)
                 {
-                    residentialZone.startBuilding(this.GameTime);
+                    //residentialZone.startBuilding(this.GameTime);
                     for (int i = 0; i < CitizenLifecycle.StartingNrCitizens; i++)
                     {
                         CitizenLifecycle.populate(residentialZone, this);
@@ -735,7 +782,10 @@ namespace TFYP.Model
         }
 
 
-
+        /// <summary>
+        /// Manages citizenship by creating new citizens based on eligibility criteria.
+        /// </summary>
+        /// <returns>The number of new citizens arrived on this day.</returns>
         public int CitizenshipManipulation()
         {
             int citizensArrivedOnThisDay = 0;
@@ -752,6 +802,10 @@ namespace TFYP.Model
             
         }
 
+        /// <summary>
+        /// Updates the city satisfaction by evaluating citizen satisfaction and zone satisfaction.
+        /// </summary>
+        /// <returns>The number of citizens left the city on this day due to low satisfaction.</returns>
         public int UpdateCitySatisfaction()
         {
             int citizensLeftOnThisDay = 0;
@@ -785,6 +839,9 @@ namespace TFYP.Model
             return citizensLeftOnThisDay;
         }
 
+        /// <summary>
+        /// Updates the education level of citizens based on their living place.
+        /// </summary>
         public void CitizenshipEducationUpdate()
         {
             foreach (Citizen citizen in CityRegistry.GetAllCitizens())
@@ -797,6 +854,9 @@ namespace TFYP.Model
             }
         }
 
+        /// <summary>
+        /// Updates the city's financial balance by computing revenue, deducting maintenance fees, and updating the balance.
+        /// </summary>
         public void UpdateCityBalance()
         {
             double revenue = Statistics.Budget.ComputeRevenue(this);
@@ -807,14 +867,14 @@ namespace TFYP.Model
         }
 
         /// <summary>
-        /// Function to be called for when a new day arrives.
+        /// Updates the city state when a new day arrives.
         /// </summary>
         public void UpdateCityState()
         {
             GameTime = GameTime.AddDays(1);
             initialPopulationOfZones();
-            int NrCitizensLeft = UpdateCitySatisfaction();
-            int NrCitizensArrived = CitizenshipManipulation();
+            UpdateCitySatisfaction();
+            CitizenshipManipulation();
             CitizenshipEducationUpdate();
             CheckForDisasters();
             // Check if it's the first day of the year to update city balance -->
@@ -825,43 +885,29 @@ namespace TFYP.Model
             }
             UpdateZoneBuildingStatus();
             ConvertUnusedZonesToGeneral();
-
-            //GenerateDisaster();
-
-
-            //just for debugging, will be deleted
-            //Debug.WriteLine(Statistics.Budget.YearsOfBeingInLoan(GameTime));
-
-            Debug.WriteLine(NrCitizensLeft + " citizens left the city");
-
-            Debug.WriteLine(NrCitizensArrived + " new citizens arrived");
-
-            foreach (Zone z1 in CityRegistry.Zones)
-            {
-                foreach (Citizen c in z1.GetCitizens())
-                {
-                    //Debug.WriteLine("citizens satisfaction :" + c.Satisfaction);
-                }
-
-                //foreach (Zone z2 in CityRegistry.Zones)
-                //{
-                //    //Debug.WriteLine(CalculateDistanceBetweenTwo(z1, z2));
-                //}
-            }
+            GenerateDisaster();
         }
 
-
+        /// <summary>
+        /// Retrieves a list of zones that are currently under construction.
+        /// </summary>
+        /// <returns>A list of zones that are still building.</returns>
         public List<Zone> GetZonesThatAreStillBuilding()
         {
             List<Zone> stillBuilding = new List<Zone>();
             foreach (Zone zone in GetAllZones())
             {
-                if(zone.Type == EBuildable.Service || zone.Type == EBuildable.Industrial)
+                /*if(zone.Type == EBuildable.Service || zone.Type == EBuildable.Industrial)
                 {
                     if (zone.IsConnected && zone.Status == ZoneStatus.Pending)
                     {
                         zone.startBuilding(this.GameTime);
                     }
+                }*/
+
+                if (zone.IsConnected && zone.Status == ZoneStatus.Pending)
+                {
+                    zone.startBuilding(this.GameTime);
                 }
 
                 if (zone.Status == ZoneStatus.Building)
@@ -872,6 +918,9 @@ namespace TFYP.Model
             return stillBuilding;
         }
 
+        /// <summary>
+        /// Updates the building status of zones that are still under construction.
+        /// </summary>
         public void UpdateZoneBuildingStatus()
         {
             foreach (Zone zone in GetZonesThatAreStillBuilding())
@@ -885,7 +934,9 @@ namespace TFYP.Model
             }
         }
 
-        //zones that haven't been used will be converted to general
+        /// <summary>
+        /// Converts unused zones, which have been pending for at least one year, to general zones.
+        /// </summary>
         public void ConvertUnusedZonesToGeneral()
         {
             List<Zone> deactivatableZones = new List<Zone>();
@@ -898,9 +949,6 @@ namespace TFYP.Model
                 Zone currZone = (Zone)zone;
                 TimeSpan timeDifference = GameTime - currZone.DayOfCreation;
                 bool isOneYearPassed = Math.Abs(timeDifference.Days) == 365 || Math.Abs(timeDifference.Days) == 366;
-
-
-                //bool isOneYearPassed = Math.Abs(timeDifference.Days) == 100;
 
 
                 if (currZone.Status == ZoneStatus.Pending && isOneYearPassed)
@@ -933,6 +981,10 @@ namespace TFYP.Model
                 currentDisasters.Add(dis);
             }
         }
+        /// <summary>
+        /// Generates a new disaster at a random position on the map when triggered by a button press.
+        /// The generated disaster is applied to the game environment, and its effects are activated.
+        /// </summary>
         public void GenerateDisasterByButton()
         {
             int _X, _Y;
@@ -950,6 +1002,9 @@ namespace TFYP.Model
             return currentDisasters;
         }
 
+        /// <summary>
+        /// Checks for active disasters in the current list of disasters and removes them if they are no longer active.
+        /// </summary>
         public void CheckForDisasters()
         {
             List<Disaster> removableDisasters = new List<Disaster>();
@@ -1109,6 +1164,10 @@ namespace TFYP.Model
             return Path.Combine(persistenceFolder, filename);
         }
 
+        /// <summary>
+        /// Saves the current game instance to the specified save slot by serializing it to JSON format and writing to a file.
+        /// </summary>
+        /// <param name="slot">The save slot where the game data will be stored.</param>
         public static void Save(int slot)
         {
             string filePath = GetSaveFilePath(slot);
@@ -1167,6 +1226,10 @@ namespace TFYP.Model
             }
         }
 
+        /// <summary>
+        /// Reads game data from the specified save slot, deserializes it, and updates the current game instance with the loaded data.
+        /// </summary>
+        /// <param name="slot">The save slot from which to read the game data.</param>
         public static void Read(int slot)
         {
             string filePath = GetSaveFilePath(slot);
@@ -1282,18 +1345,15 @@ namespace TFYP.Model
                     }
 
 
-                    //return JsonSerializer.Deserialize<GameModel>(jsonString);
                 }
                 else
                 {
                     Debug.WriteLine($"No saved game found in slot {slot}.");
-                    //return null;
                 }
             }
             catch (Exception ex)
             {
                 Debug.WriteLine($"An error occurred while reading the game model from slot {slot}: " + ex.Message);
-                //return null;
             }
         }
     }

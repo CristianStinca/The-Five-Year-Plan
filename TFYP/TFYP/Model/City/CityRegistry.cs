@@ -33,10 +33,6 @@ namespace TFYP.Model.City
         [ProtoMember(8)]
         public int RoadCount { get;  set; }
 
-        public CityRegistry() {
-            //Zones = new List<Zone>();
-            //Facilities = new List<Facility>();
-        }
         public CityRegistry(Statistics statistics)
         {
             Statistics = statistics;
@@ -117,8 +113,12 @@ namespace TFYP.Model.City
             Facilities.Remove(facility);
         }
 
-        
-        // citizens
+
+        /// <summary>
+        /// Retrieves all active citizens residing in residential zones.
+        /// </summary>
+        /// <returns>A list containing all active citizens.</returns>
+
         public List<Citizen> GetAllCitizens()
         {
             List<Citizen> allCitizens = new List<Citizen>();
@@ -137,17 +137,28 @@ namespace TFYP.Model.City
 
             return allCitizens;
         }
-        
 
-        // budget
-        public void SetBalance(double amount, DateTime time) // adds value (if negative, subtracts) from the balance
+        /// <summary>
+        /// Sets the balance of the city's budget to the specified amount at the given time.
+        /// </summary>
+        /// <param name="amount">The new balance amount.</param>
+        /// <param name="time">The time at which the balance is set.</param>
+
+        public void SetBalance(double amount, DateTime time) 
         {
             Statistics.Budget.UpdateBalance(amount, time);
         }
 
 
 
-        //These 2 methods are to check for conditions, if new citizens are eligible to move in city
+        //Next two methods are to check for conditions, if new citizens are eligible to move in city
+
+        /// <summary>
+        /// Checks if there are free workplaces near residential zones within a specified search radius.
+        /// </summary>
+        /// <param name="gm">The GameModel instance.</param>
+        /// <returns>True if there are free workplaces near residential zones within the search radius; otherwise, false.</returns>
+
 
         public bool GetFreeWorkplacesNearResidentialZones(GameModel gm)
         {
@@ -169,7 +180,12 @@ namespace TFYP.Model.City
         }
 
 
-        // Method to check the absence of industrial buildings near residential zones
+
+        /// <summary>
+        /// Checks whether there are industrial buildings near residential zones within a certain proximity radius.
+        /// </summary>
+        /// <param name="gm">The GameModel instance.</param>
+        /// <returns>True if there are no industrial buildings near residential zones within the specified proximity radius; otherwise, false.</returns>
         public bool NoIndustriesNearResidentialZones(GameModel gm)
         {
             int industryProximityRadius = (int)(gm.MaxDistance / 5); 

@@ -30,7 +30,6 @@ namespace TFYP.Model.Disasters
         [ProtoMember(5)]
         public List<Zone> affectedZones = new List<Zone>();
 
-        //private DateTime effectAppliedTime;
         [ProtoMember(6)]
         public bool isActive { get;  set; }
         public Disaster() { }
@@ -42,11 +41,14 @@ namespace TFYP.Model.Disasters
             isActive = true;
         }
 
+        /// <summary>
+        /// Applies the effects of the disaster to the zones within its effect radius in the game model.
+        /// </summary>
+        /// <param name="gameModel">The game model containing the zones.</param>
         public async void ApplyEffects(GameModel gameModel)
         {
             foreach(var zone in gameModel.CityRegistry.Zones)
             {
-                // Check if the zone is within the effect radius of the disaster
                 if (IsWithinEffectRadius(zone, gameModel))
                 {
                     affectedZones.Add(zone);
@@ -54,46 +56,35 @@ namespace TFYP.Model.Disasters
                     {
                         case DisasterType.Fire:
                             DamageBuildings(zone, 50); // 50% damage to buildings/zones
-                            AffectPopulation(zone, -10); // reduce population happiness by 10
                             break;
                         case DisasterType.Flood:
                             DamageBuildings(zone, 30); // 30% damage to buildings/zones
-                            AffectPopulation(zone, -5); // reduce population happiness by 5
                             break;
                         case DisasterType.Earthquake:
                             DamageBuildings(zone, 70); // 70% damage to buildings/zones
-                            AffectPopulation(zone, -15); // reduce population happiness by 15
                             break;
                         case DisasterType.GodzillaAttack:
                             DestroyBuildings(zone); // destroy buildings/zones
-                            AffectPopulation(zone, -20); // reduce population happiness by 20
                             break;
                     }
                 }
                 
-                
-
-                
             }
-            await Task.Delay(11000);  // Wait for 11 seconds
-            //affectedZones.Clear();  // Clear the list after 10 seconds
+            await Task.Delay(11000);  
             isActive = false;
-            //foreach (var citizen in gameModel.Citizens)
-            //{
-            //    if (IsWithinDisasterRadius(citizen.Location))
-            //    {
-            //        // Decrease health/satisfaction
-            //    }
-            //}
-
-            // Affect the city's economy
-            //gameModel.Budget.AdjustForDisaster(recoveryCosts, lostIncome);
         }
+
+        /// <summary>
+        /// Checks if the zone is within the effect radius of the disaster.
+        /// </summary>
+        /// <param name="zone">The zone to check.</param>
+        /// <param name="gameModel">The game model containing distance calculation.</param>
+        /// <returns>True if the zone is within the effect radius, otherwise false.</returns>
 
         private bool IsWithinEffectRadius(Zone zone, GameModel gameModel)
         {
             foreach (var i in zone.Coor) {
-                float distance = gameModel.Distance(this.Location, i); //Vector2.Distance(this.Location, i);
+                float distance = gameModel.Distance(this.Location, i);
                 if (distance <= this.EffectRadius)
                 {
                     return true;
@@ -102,11 +93,21 @@ namespace TFYP.Model.Disasters
             return false;
         }
 
+        /// <summary>
+        /// Randomly selects a type of disaster.
+        /// </summary>
+        /// <returns>The selected type of disaster.</returns>
         private DisasterType SelectType() {
             Random random = new Random();
             int selection = random.Next(4);
             return (DisasterType)selection;   
         }
+
+        /// <summary>
+        /// Inflicts damage on buildings within the specified zone.
+        /// </summary>
+        /// <param name="zone">The zone where buildings are to be damaged.</param>
+        /// <param name="damage">The amount of damage to inflict on the buildings.</param>
 
         private void DamageBuildings(Zone zone, float damage)
         {
@@ -125,20 +126,12 @@ namespace TFYP.Model.Disasters
 
         private void DestroyBuildings(Zone zone)
         {
-            zone.SetHealth(0); // HP is 0 so zone is destroyed
+            zone.SetHealth(0); 
         }
 
-        private void AffectPopulation(Zone zone, int happinessChange)
-        {
-            //foreach (var citizen in zone.Citizens)
-            //{
-            //    citizen.Happiness += happinessChange;
-            //}
-        }
 
     }
 
-    // Add/Change types
     public enum DisasterType
     {
         Fire=0,
@@ -148,31 +141,6 @@ namespace TFYP.Model.Disasters
     }
 
 
-    /*TO DO: we need to add this method in game model or controller to trigger disasters at random or under certain conditions
-     
-     
-     public void TriggerRandomDisaster(GameModel gameModel)
-    {
-        // Example: Randomly decide to trigger a disaster
-        var random = new Random();
-        if (random.NextDouble() < 0.1) // 10% chance to trigger a disaster
-        {
-            // Randomly generate disaster parameters - TYPE AND LOCATION
-            var disasterType = ..
-            var location = ...
-            var EfectedRadius = ...
-
-            var disaster = new Disaster("Generic Disaster", "A disaster has occurred!", location, radius, disasterType);
-
-            // THIS FUNCTION SHOULD BE IMPLEMENTED
-            disaster.ApplyEffects(gameModel);
-
-            Console.WriteLine($"A {disasterType} disaster occurred at ({location.X}, {location.Y}) with radius {EffectRadius}.");
-        }
-    }
-     
-    
-     */
 
 
 }

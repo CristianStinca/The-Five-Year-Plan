@@ -20,7 +20,12 @@ namespace TFYP.Model.Common
         public static int StartingNrCitizens = Constants.StartingPopulation;
         public static int ImmigrantsCount = Constants.ComingPopulation;
 
-        // Getting an available random Residential zone randomly
+        /// <summary>
+        /// Retrieves an available random Residential zone from the given game model.
+        /// </summary>
+        /// <param name="gm">The game model instance.</param>
+        /// <returns>An available random Residential zone, or null if none are available.</returns>
+
         public static Zone GetLivingPlace(GameModel gm)
         {
             List<Zone> availableResidentialZones = new List<Zone>();
@@ -35,7 +40,13 @@ namespace TFYP.Model.Common
             return availableResidentialZones.Count > 0 ? availableResidentialZones[rand.Next(availableResidentialZones.Count)] : null;
         }
 
-        // Getting the closest working place (zone) from the available ones.
+        /// <summary>
+        /// Retrieves the closest working place (zone) from the available ones connected to the given living place.
+        /// </summary>
+        /// <param name="livingPlace">The living place zone.</param>
+        /// <param name="gm">The game model instance.</param>
+        /// <returns>The closest working place (zone), or null if none are found.</returns>
+
         public static Zone GetClosestWorkingPlace(Zone livingPlace, GameModel gm)
         {
             Zone closestZone = null;
@@ -58,6 +69,12 @@ namespace TFYP.Model.Common
             return closestZone;
         }
 
+        /// <summary>
+        /// Retrieves a list of available schools from the game model.
+        /// </summary>
+        /// <param name="gm">The game model instance.</param>
+        /// <returns>A list of available schools.</returns>
+
         public static List<School> GetAvailableSchools(GameModel gm)
         {
             List<School> availableSchools = new List<School>();
@@ -69,6 +86,12 @@ namespace TFYP.Model.Common
 
             return availableSchools;
         }
+
+        /// <summary>
+        /// Retrieves a list of available universities from the game model.
+        /// </summary>
+        /// <param name="gm">The game model instance.</param>
+        /// <returns>A list of available universities.</returns>
 
         public static List<University> GetAvailableUniversities(GameModel gm)
         {
@@ -82,10 +105,23 @@ namespace TFYP.Model.Common
             return availableUniversities;
         }
 
+        /// <summary>
+        /// Checks if there are enough places for secondary education based on available schools.
+        /// </summary>
+        /// <param name="gm">The game model instance.</param>
+        /// <param name="availableSchools">The list of available schools.</param>
+        /// <returns>True if there are enough places for secondary education; otherwise, false.</returns>
+
         private static bool AreEnoughPlacesSecondaryEducation(GameModel gm, List<School> availableSchools)
         {
             return gm.Statistics.CitizensWithSecondaryEducation(gm.CityRegistry) < GetCapacitySchools(availableSchools);
         }
+
+        /// <summary>
+        /// Calculates the total capacity of all schools in the given list.
+        /// </summary>
+        /// <param name="schools">The list of schools.</param>
+        /// <returns>The total capacity of all schools.</returns>
 
         private static int GetCapacitySchools(List<School> schools)
         {
@@ -93,11 +129,23 @@ namespace TFYP.Model.Common
         }
 
 
+        /// <summary>
+        /// Checks if there are enough places for higher education in the city.
+        /// </summary>
+        /// <param name="gm">The game model containing city data.</param>
+        /// <param name="availableUniversities">The list of available universities.</param>
+        /// <returns>True if there are enough places for higher education; otherwise, false.</returns>
 
         private static bool AreEnoughPlacesHigherEducation(GameModel gm, List<University> availableUniversities)
         {
             return gm.Statistics.CitizensWithHigherEducation(gm.CityRegistry) < GetCapacityUniversities(availableUniversities);
         }
+
+        /// <summary>
+        /// Calculates the total capacity of all available universities.
+        /// </summary>
+        /// <param name="universities">The list of available universities.</param>
+        /// <returns>The total capacity of all available universities.</returns>
 
         private static int GetCapacityUniversities(List<University> universities)
         {
@@ -105,8 +153,13 @@ namespace TFYP.Model.Common
         }
 
 
+        /// <summary>
+        /// Returns a random available level of education based on the availability of schools and universities.
+        /// </summary>
+        /// <param name="gm">The GameModel instance.</param>
+        /// <param name="livingPlace">The living place (zone) of the citizen.</param>
+        /// <returns>A randomly selected available level of education.</returns>
 
-        // Returns a random available level of education.
         public static EducationLevel GetEducationLevel(GameModel gm, Zone livingPlace)
         {
             Random rand = new Random();
@@ -135,14 +188,24 @@ namespace TFYP.Model.Common
         }
 
 
-        // Returns a young citizen, assigns it to a random residential zone and to the closest workPlace
+        /// <summary>
+        /// Creates a young citizen, assigns it to a random residential zone, and assigns it to the closest workplace.
+        /// </summary>
+        /// <param name="gm">The GameModel instance.</param>
+
         public static void CreateYoungCitizen(GameModel gm)
         {
             Zone livingPlace = GetLivingPlace(gm);
             populate(livingPlace, gm);
         }
 
-        // initial population
+
+        /// <summary>
+        /// Populates the given residential zone with a citizen and assigns them to the closest available workplace.
+        /// </summary>
+        /// <param name="livingPlace">The residential zone to populate.</param>
+        /// <param name="gm">The GameModel instance.</param>
+
         public static void populate(Zone livingPlace, GameModel gm)
         {
             Zone workPlace = null;

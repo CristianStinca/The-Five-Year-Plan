@@ -33,9 +33,7 @@ namespace TFYP.Model.Zones
     public class Zone : Buildable
     {
         [ProtoMember(1)]
-        public float Health {  get; set; } // Health will be probably changed later, so far it is for the disaster and is representing percentage (1-100)
-        // health will help us to calculate the cost of the damage which will be OneTimeCost * (Health/100)
-        // Tracking the citizens within the zone
+        public float Health {  get; set; } 
         [ProtoMember(2)]
         public bool canStartBuilding;
         [ProtoMember(3)]
@@ -65,6 +63,10 @@ namespace TFYP.Model.Zones
 
         public Zone() { }
 
+        /// <summary>
+        /// Calculates the average satisfaction level of all citizens in the city.
+        /// </summary>
+        /// <returns>The average satisfaction level of citizens.</returns>
         public int averageCitizensSatisfaction()
         {
             int totalCitizenSatisfaction = citizens.Sum(citizen => citizen.Satisfaction);
@@ -72,14 +74,13 @@ namespace TFYP.Model.Zones
 
             if (citizenCount == 0)
             {
-                return 0;  // Return 0 or some default value if there are no citizens
+                return 0;  
             }
 
             int averageCitizenSatisfaction = totalCitizenSatisfaction / citizenCount;
             return averageCitizenSatisfaction;
         }
 
-        // when timer has gone through the days needed it will call this function to register that building is done
         public void finishBuilding()
         {
             Status = ZoneStatus.Done;
@@ -89,12 +90,7 @@ namespace TFYP.Model.Zones
         {
             get { return citizens.Count(c => c.IsActive); } 
         }
-        //public void DeactivateCitizens()
-        //{
-        //    Random rnd = new Random();
-        //    int ind = rnd.Next(citizens.Count());
-        //    citizens.Remove(citizens[ind]);
-        //}
+
         public Zone(EBuildable type, List<Vector2> coor, int influenceRadius, int timeToBuild, int capacity, int maintenanceCost, int buildCost, DateTime dayOfCreation)
             : base(coor, type, buildCost, maintenanceCost, influenceRadius, capacity, timeToBuild)
         {
@@ -108,7 +104,10 @@ namespace TFYP.Model.Zones
             DayOfCreation = dayOfCreation;
         }
 
-
+        /// <summary>
+        /// Checks adjacent tiles for roads and adds them to the list of outgoing roads.
+        /// </summary>
+        /// <param name="CoorL">List of coordinates to check.</param>
         public void checkOutGoing() {
             GameModel gm = GameModel.GetInstance();
             outGoing.Clear();
@@ -162,8 +161,7 @@ namespace TFYP.Model.Zones
         public List<Road> GetOutgoing() {
             return this.outGoing;
         }
-        //TO DO: Need to implement method for finding paths and set Connected for every zone
-
+        
         
 
 
@@ -172,6 +170,11 @@ namespace TFYP.Model.Zones
             return Capacity > NCitizensInZone;
         }
 
+        /// <summary>
+        /// Calculates the total income generated from active citizens based on taxes.
+        /// </summary>
+        /// <param name="budget">The budget instance used for tax calculations.</param>
+        /// <returns>The total income generated from active citizens.</returns> 
         public float GetIncome(Budget budget)
         {
             return citizens.Where(c => c.IsActive).Sum(c => c.TaxAmount(budget));
@@ -180,8 +183,6 @@ namespace TFYP.Model.Zones
 
         public void SetHealth(float health)
         {
-            // this will be called in disasters at first and will decrease the HP of the zone
-            // then will be increased again to 100% after user repairs it, so RepairZone function is needed
             if(health < 0) health = 0;
             Health = health;
         }
@@ -190,29 +191,21 @@ namespace TFYP.Model.Zones
             return citizens;
         }
 
+        /// <summary>
+        /// Starts the construction process of the zone, setting its status to building and recording the start date.
+        /// </summary>
+        /// <param name="buildingStartDate">The date when the construction begins.</param>
         public override void startBuilding(DateTime buildingStartDate) {
             this.canStartBuilding = true;
             Status = ZoneStatus.Building;
             DayOfBuildStart = buildingStartDate;
         }
 
-        public override bool checkToBuild()
-        {
-            return this.canStartBuilding;
-        }
-
-        public override void stopBuilding() {
-            this.canStartBuilding = false;
-        }
-
-
-        // Method to calculate effects based on distance
-        private double CalculateDistanceEffect(double maxEffect, double distance, double decayRate)
-        {
-            // Effect diminishes as distance increases, decayRate controls how quickly the effect diminishes
-            return Math.Max(0, maxEffect - (distance * decayRate));
-        }
-        
+        /// <summary>
+        /// Calculates and returns the satisfaction level of the zone based on its proximity to police stations, stadiums, and industrial zones.
+        /// </summary>
+        /// <param name="gm">The GameModel instance containing information about the game world.</param>
+        /// <returns>The satisfaction level of the zone.</returns>
 
         public int GetZoneSatisfaction(GameModel gm)
         {
@@ -275,9 +268,7 @@ namespace TFYP.Model.Zones
 
             Satisfaction = (Satisfaction + policeEffect + stadiumEffect + industrialEffect) / 4;
 
-            return Satisfaction;
-
-            //return Math.Clamp(totalSatisfaction, 0, 100);
+            return Math.Clamp(Satisfaction, 0, 100);
         }
 
 
@@ -292,6 +283,12 @@ namespace TFYP.Model.Zones
             citizens.Remove(citizen);
         }
 
+        /// <summary>
+        /// Upgrades the zone to the next level, increasing its maintenance cost, capacity, and influence radius (if applicable).
+        /// </summary>
+        /// <returns>The cost of upgrading the zone.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when attempting to upgrade a zone already at the maximum level.</exception>
+        
         public double UpgradeZone()
         {
             double upgradeCost = 0;

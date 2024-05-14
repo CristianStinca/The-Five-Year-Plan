@@ -25,6 +25,12 @@ namespace TFYP.Model.City
             Budget = budget;
         }
 
+        /// <summary>
+        /// Calculates the overall satisfaction level of the city based on zone satisfaction, citizen satisfaction, and financial health.
+        /// </summary>
+        /// <param name="gm">The GameModel object representing the city.</param>
+        /// <param name="NrCitizensLeft">The number of citizens left in the city.</param>
+        /// <returns>The overall satisfaction level of the city, clamped between 0 and 100.</returns>
 
         public int CalculateCitySatisfaction(GameModel gm, int NrCitizensLeft)
         {
@@ -50,16 +56,17 @@ namespace TFYP.Model.City
             
             Satisfaction = (averageZoneSatisfaction + averageCitizenSatisfaction + financialHealthEffect) / 3 - NrCitizensLeft;
 
-            return Satisfaction;
-            //Satisfaction = Math.Clamp(citySatisfaction, 0, 100);
-        }
 
-        public int GetPopulationCount(CityRegistry cityRegistry)
-        {
-            return cityRegistry.GetAllCitizens().Count();
+            return Math.Clamp(Satisfaction, 0, 100);
         }
 
 
+
+        /// <summary>
+        /// Counts the number of citizens with secondary education in the city.
+        /// </summary>
+        /// <param name="cityRegistry">The CityRegistry object containing information about the city.</param>
+        /// <returns>The number of citizens with secondary education.</returns>
 
         public int CitizensWithSecondaryEducation(CityRegistry cityRegistry)
         {
@@ -71,6 +78,11 @@ namespace TFYP.Model.City
             }
             return CitizensWithSecondaryEducation.Count();
         }
+        /// <summary>
+        /// Counts the number of citizens with higher education in the city.
+        /// </summary>
+        /// <param name="cityRegistry">The CityRegistry object containing information about the city.</param>
+        /// <returns>The number of citizens with higher education.</returns>
 
         public int CitizensWithHigherEducation(CityRegistry cityRegistry)
         {

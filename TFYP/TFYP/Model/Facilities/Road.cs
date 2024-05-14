@@ -29,11 +29,13 @@ namespace TFYP.Model.Facilities
             MaintenanceCost = Constants.RoadMaintenanceFee;
             ConstructionCost = Constants.RoadBuildCost;
             connected=new List<Buildable>();
-            // ConstructionTime = Constants.; // Must be added in Constants.cs
         }
+        /// <summary>
+        /// Checks for neighboring zones connected to this zone and adds them to the list of connected zones.
+        /// </summary>
         public void checkForZones() {
             GameModel gm = GameModel.GetInstance();
-            connected = new List<Buildable>(); // clear();
+            connected = new List<Buildable>(); 
             if ((int)this.Coor[0].X % 2 == 0)
             {
                 connected.Add(gm.map[(int)this.Coor[0].X - 1, (int)Coor[0].Y - 1]);
@@ -53,7 +55,11 @@ namespace TFYP.Model.Facilities
         { 
             return this.connected.Exists(x => x.Coor.Contains(elem.Coor[0]));
         }
-
+        /// <summary>
+        /// Checks if there is a connection between this buildable and a destination buildable through roads.
+        /// </summary>
+        /// <param name="dest">The destination buildable to check for connection.</param>
+        /// <returns>True if a connection exists, otherwise false.</returns>
         public bool connection(Buildable dest) {
             HashSet<Buildable> visited = new HashSet<Buildable>();
             Queue<Road> queue = new Queue<Road>();

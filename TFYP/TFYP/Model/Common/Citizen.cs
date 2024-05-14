@@ -84,17 +84,9 @@ namespace TFYP.Model.Common
         }
 
 
-        public void SetWorking(Zone workPlace)
-        {
-            WorkPlace = workPlace;
-            IsWorking = true;
-            workPlace.AddCitizen(this);
-        }
-
-        public void IncAge()
-        {
-            Age++;
-        }
+        /// <summary>
+        /// Simulates the citizen leaving the city by setting IsActive to false and removing the citizen from their living and work places.
+        /// </summary>
 
         public void LeaveCity()
         {
@@ -111,6 +103,11 @@ namespace TFYP.Model.Common
 
         }
 
+        /// <summary>
+        /// Calculates the satisfaction level of a citizen based on education, living place, work place, and distance to work.
+        /// </summary>
+        /// <param name="gm">The GameModel instance containing city information.</param>
+        /// <param name="budget">The Budget instance containing financial information.</param>
 
         public void CalculateSatisfaction(GameModel gm, Budget budget)
         {
@@ -123,21 +120,23 @@ namespace TFYP.Model.Common
 
             Satisfaction = (educationSatisfaction + livingPlaceSatisfaction + workPlaceSatisfaction + distanceSatisfaction) / 4;
 
-            // Ensure satisfaction is within 0-100 range
-            //Satisfaction = Math.Clamp(Satisfaction, 0, 100);
+            Satisfaction = Math.Clamp(Satisfaction, 0, 100);
         }
 
 
-        // Method to calculate how much tax should a citizen pay tax based on current factors
+        /// <summary>
+        /// Calculates the amount of tax a citizen should pay based on the current tax rate and education level.
+        /// </summary>
+        /// <param name="budget">The Budget instance containing tax rate information.</param>
+        /// <returns>The amount of tax to be paid by the citizen.</returns>
+
         public float TaxAmount(Budget budget)
         {
-            // Calculating tax based on current tax rate, and an additional value based on education
-
+            // Calculating tax based on current tax rate, and an additional value based on 
             float tax = (float)((budget.CurrentTax * budget.CurrentTaxRate) + (budget.CurrentTaxRate+1)*EducationLevel.GetEducationValue());
-            TaxPaidThisYear = tax; // Assuming tax is paid annually
+            TaxPaidThisYear = tax; // Tax is paid annually
             return tax;
 
-            //taxRate is base in beginning for city and then after time it should be updated in Budges class!!
         }
 
 

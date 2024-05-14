@@ -51,10 +51,6 @@ namespace TFYP.Model.Common
 
         public virtual void startBuilding(DateTime buildingStartDate) { }
 
-        public virtual void stopBuilding() { }
-
-        public virtual bool checkToBuild() { return true; }
-
         public virtual void AddOutgoingRoad(Road r)
         {
 
