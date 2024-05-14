@@ -60,7 +60,7 @@ namespace TFYP.View.Windows
         public bool is_tile_info_bttn_active = false;
         public bool is_budget_active = false;
 
-        private bool is2D = false;
+        public bool is2D = false;
 
         #region UIButtons
 
@@ -563,7 +563,7 @@ namespace TFYP.View.Windows
         {
             if (is2D)
             {
-                Debug.WriteLine("Switched to 2.5D");
+                Debug.WriteLine($"Switched to 2.5D");
                 // run all the map and switch the textures
             }
             else
