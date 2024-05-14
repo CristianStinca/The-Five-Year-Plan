@@ -11,6 +11,7 @@ namespace TFYP.View.Renders
     internal interface ISprite : IRenderable
     {
         Texture2D Texture { get; set; }
+        Texture2D AltTexture { get; set; }
         Color Tint { get; set; }
         float Scale { get; set; }
     }

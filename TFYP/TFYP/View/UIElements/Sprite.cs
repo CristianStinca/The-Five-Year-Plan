@@ -19,6 +19,7 @@ namespace TFYP.View.UIElements
         }
 
         public virtual Texture2D Texture { get; set; }
+        public virtual Texture2D AltTexture { get; set; }
 
         public Color Tint { get; set; }
 
@@ -38,21 +39,29 @@ namespace TFYP.View.UIElements
             Tint = Color.White;
         }
 
-        public Sprite(Texture2D texture) : this(texture, new Vector2(0, 0), 1f)
+        public Sprite(Texture2D texture) : this(texture, new Vector2(0, 0), 1f) { }
+        public Sprite(Texture2D texture, Vector2 position) : this(texture, position, 1f) { }
+        public Sprite(Texture2D texture, float scale) : this(texture, Vector2.Zero, scale) { }
+
+        public Sprite(Texture2D[] texture, Vector2 position, float scale) : this(texture[0], position, scale)
         {
+            AltTexture = texture[1];
         }
 
-        public Sprite(Texture2D texture, Vector2 position) : this(texture, position, 1f)
-        {
-        }
-
-        public Sprite(Texture2D texture, float scale) : this(texture, Vector2.Zero, scale)
-        {
-        }
+        public Sprite(Texture2D[] texture) : this(texture, new Vector2(0, 0), 1f) { }
+        public Sprite(Texture2D[] texture, Vector2 position) : this(texture, position, 1f) { }
+        public Sprite(Texture2D[] texture, float scale) : this(texture, Vector2.Zero, scale) { }
 
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public void SwitchTextures()
+        {
+            Texture2D temp = this.Texture;
+            this.Texture = this.AltTexture;
+            this.AltTexture = temp;
         }
     }
 }

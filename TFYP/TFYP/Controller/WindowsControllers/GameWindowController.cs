@@ -362,11 +362,17 @@ namespace TFYP.Controller.WindowsControllers
 
                     float deviation = (i % 2 == 1) ? (TILE_W * SCALE / 2f) : 0f;
 
+                    Texture2D[] temp;
+                    if (_gw_view.is2D)
+                        temp = new[] { sprite.AltTexture, sprite.Texture };
+                    else
+                        temp = new[] { sprite.Texture, sprite.AltTexture };
+
                     Sprite out_sprite = new Sprite(
-                        sprite.Texture,
+                        temp,
                         new Vector2(
                             deviation + (j * TILE_W * SCALE) - (left_deviation * TILE_W * SCALE),
-                            (i * TILE_H * SCALE / 2) - ((sprite.Texture.Height - TILE_H) * SCALE)
+                            (i * TILE_H * SCALE / 2) - ((temp[0].Height - TILE_H) * SCALE)
                         ),
                         SCALE
                     );
@@ -416,6 +422,8 @@ namespace TFYP.Controller.WindowsControllers
                         break;
 
                 }
+
+
 
                 disasters.Add(new Sprite(
                     texture,

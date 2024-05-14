@@ -68,35 +68,35 @@ namespace TFYP.View.UIElements
             _emptyTiles.Add(CreateSprite("Grasses/grass5"));
 
             //StadiumTile = CreateSprite("Tiles/stadium_tile");
-            StadiumTile = CreateSprite("StadiumParts/stadium_full");
-            SchoolTile = CreateSprite("Tiles/school_double");
-            SchoolTile_r = CreateSprite("Tiles/school_double_rotated");
-            UniTile = CreateSprite("Tiles/university_quadruple");
-            PoliceTile = CreateSprite("Tiles/police_station");
-            ResidentialTile = CreateSprite("Zones/residential_empty");
-            ResidentialTile11 = CreateSprite("Zones/residential11");
-            ResidentialTile12 = CreateSprite("Zones/residential12");
-            ResidentialTile13 = CreateSprite("Zones/residential13");
-            ResidentialTile2 = CreateSprite("Zones/residential2");
-            ResidentialTile3 = CreateSprite("Zones/residential3");
-            IndustrialTile = CreateSprite("Zones/industrial_empty");
-            IndustrialTile11 = CreateSprite("Zones/industrial11");
-            IndustrialTile12 = CreateSprite("Zones/industrial12");
-            IndustrialTile13 = CreateSprite("Zones/industrial13");
-            IndustrialTile2 = CreateSprite("Zones/industrial2");
-            IndustrialTile3 = CreateSprite("Zones/industrial3");
-            ServiceTile = CreateSprite("Zones/service_empty");
-            ServiceTile11 = CreateSprite("Zones/service11");
-            ServiceTile12 = CreateSprite("Zones/service12");
-            ServiceTile13 = CreateSprite("Zones/service13");
-            ServiceTile2 = CreateSprite("Zones/service2");
-            ServiceTile3 = CreateSprite("Zones/service3");
+            StadiumTile = CreateSprite("StadiumParts/stadium_full", "2D/stadium2d");
+            SchoolTile = CreateSprite("Tiles/school_double", "2D/school2d");
+            SchoolTile_r = CreateSprite("Tiles/school_double_rotated", "2D/school2d_r");
+            UniTile = CreateSprite("Tiles/university_quadruple", "2D/university2d");
+            PoliceTile = CreateSprite("Tiles/police_station", "2D/police2d");
+            ResidentialTile = CreateSprite("Zones/residential_empty", "2D/residential2d");
+            ResidentialTile11 = CreateSprite("Zones/residential11", "2D/residential2d");
+            ResidentialTile12 = CreateSprite("Zones/residential12", "2D/residential2d");
+            ResidentialTile13 = CreateSprite("Zones/residential13", "2D/residential2d");
+            ResidentialTile2 = CreateSprite("Zones/residential2", "2D/residential2d");
+            ResidentialTile3 = CreateSprite("Zones/residential3", "2D/residential2d");
+            IndustrialTile = CreateSprite("Zones/industrial_empty", "2D/industrial2d");
+            IndustrialTile11 = CreateSprite("Zones/industrial11", "2D/industrial2d");
+            IndustrialTile12 = CreateSprite("Zones/industrial12", "2D/industrial2d");
+            IndustrialTile13 = CreateSprite("Zones/industrial13", "2D/industrial2d");
+            IndustrialTile2 = CreateSprite("Zones/industrial2", "2D/industrial2d");
+            IndustrialTile3 = CreateSprite("Zones/industrial3", "2D/industrial2d");
+            ServiceTile = CreateSprite("Zones/service_empty", "2D/service2d");
+            ServiceTile11 = CreateSprite("Zones/service11", "2D/service2d");
+            ServiceTile12 = CreateSprite("Zones/service12", "2D/service2d");
+            ServiceTile13 = CreateSprite("Zones/service13", "2D/service2d");
+            ServiceTile2 = CreateSprite("Zones/service2", "2D/service2d");
+            ServiceTile3 = CreateSprite("Zones/service3", "2D/service2d");
             DoneResidentialTile = CreateSprite("Tiles/police_station");
             //Inaccessible = CreateSprite("Tiles/innac");
             Inaccessible = CreateSprite("Grasses/grass4");
-            IndustrialTile_b = CreateSprite("Zones/industrial_building");
-            ResidentialTile_b = CreateSprite("Zones/residential_building");
-            ServiceTile_b = CreateSprite("Zones/service_building");
+            IndustrialTile_b = CreateSprite("Zones/industrial_building", "2D/industrial2d");
+            ResidentialTile_b = CreateSprite("Zones/residential_building", "2D/residential2d");
+            ServiceTile_b = CreateSprite("Zones/service_building", "2D/service2d");
 
             RoadTiles[0b_0000] = CreateSprite("Roads/eroad");
             RoadTiles[0b_0001] = CreateSprite("Roads/deadend4");
@@ -157,8 +157,14 @@ namespace TFYP.View.UIElements
         /// <returns>The Sprite object.</returns>
         private static Sprite CreateSprite(string fileName)
         {
-            var texture = Globals.Content.Load<Texture2D>(fileName);
-            Sprite sprite = new Sprite(texture);
+            return CreateSprite(fileName, fileName);
+        }
+        
+        private static Sprite CreateSprite(string fileName1, string fileName2)
+        {
+            var texture1 = Globals.Content.Load<Texture2D>(fileName1);
+            var texture2 = Globals.Content.Load<Texture2D>(fileName2);
+            Sprite sprite = new Sprite(new[] { texture1, texture2 });
             return sprite;
         }
 
