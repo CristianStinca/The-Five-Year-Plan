@@ -1464,6 +1464,42 @@
 /processorParam:TextureFormat=Color
 /build:../Resources/Images/Zones/industrial3.png;Zones/industrial3.png
 
+#begin ../Resources/Images/Zones/residential_damaged.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/residential_damaged.png;Zones/residential_damaged.png
+
+#begin ../Resources/Images/Zones/service_damaged.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/service_damaged.png;Zones/service_damaged.png
+
+#begin ../Resources/Images/Zones/industrial_damaged.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:../Resources/Images/Zones/industrial_damaged.png;Zones/industrial_damaged.png
+
 #begin ../Resources/Images/Zones/residential_building.png
 /importer:TextureImporter
 /processor:TextureProcessor

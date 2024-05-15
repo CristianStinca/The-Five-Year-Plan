@@ -153,10 +153,17 @@ namespace TFYP.Model.Zones
 
 
         public void Heal() {
-            this.Health += 10;
-            Health= Health > 100 ? 100 : Health;
+            if(this.Health < 100)
+            {
+                this.Health += 1;
+            }
+            //Health= Health > 100 ? 100 : Health;
         }
     
+        public bool IsFullyHealed()
+        {
+            return this.Health == 100;
+        }
 
         public List<Road> GetOutgoing() {
             return this.outGoing;

@@ -133,13 +133,33 @@ namespace TFYP.Model
         /// </summary>
         /// <param name="_x">The x-coordinate of the zone to heal.</param>
         /// <param name="_y">The y-coordinate of the zone to heal.</param>
-        public void HealZone(int _x, int _y) {
-            if (map[_x, _y].Type.Equals(EBuildable.Residential) || map[_x, _y].Type.Equals(EBuildable.Industrial) || map[_x, _y].Type.Equals(EBuildable.Service)) { 
-                    Zone z= (Zone)map[_x, _y];
-                if (CityRegistry.Statistics.Budget.Balance >= Constants.HealZone)
+        public void HealZones() {
+            foreach(var zone in CityRegistry.Zones)
+            {
+                if(zone.Health < 100)
                 {
-                    CityRegistry.Statistics.Budget.UpdateBalance(-1*Constants.HealZone, this.GameTime);
-                    z.Heal();
+                    CityRegistry.Statistics.Budget.UpdateBalance(-1 * Constants.HealZone, this.GameTime);
+                    zone.Heal();
+                }
+            }
+            //if (map[_x, _y].Type.Equals(EBuildable.Residential) || map[_x, _y].Type.Equals(EBuildable.Industrial) || map[_x, _y].Type.Equals(EBuildable.Service)) { 
+            //        Zone z= (Zone)map[_x, _y];
+            //    if (CityRegistry.Statistics.Budget.Balance >= Constants.HealZone)
+            //    {
+                    
+            //        z.Heal();
+            //    }
+            //}
+        }
+
+        public void FullyHealedZones()
+        {
+            List<Zone> healedZones = new List<Zone>();
+            foreach(var zone in CityRegistry.Zones)
+            {
+                if (zone.IsFullyHealed())
+                {
+                    healedZones.Add(zone);
                 }
             }
         }
@@ -885,6 +905,7 @@ namespace TFYP.Model
             }
             UpdateZoneBuildingStatus();
             ConvertUnusedZonesToGeneral();
+            HealZones();
             GenerateDisaster();
         }
 
