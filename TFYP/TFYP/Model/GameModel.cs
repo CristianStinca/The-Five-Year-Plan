@@ -893,20 +893,34 @@ namespace TFYP.Model
         {
             GameTime = GameTime.AddDays(1);
             initialPopulationOfZones();
-            UpdateCitySatisfaction();
-            CitizenshipManipulation();
+            int NCitizensLeftCity = UpdateCitySatisfaction();
+            if (NCitizensLeftCity != 0)
+            {
+                Debug.Write("Number of dissatisfied citizens who left City is : " + NCitizensLeftCity + "\n");
+            }
+            int nNewCitizensArrived = CitizenshipManipulation();
+            if(nNewCitizensArrived != 0)
+            {
+                Debug.Write("Number of new citizens arrived in City is: " + nNewCitizensArrived + "\n");
+            }
+            
             CitizenshipEducationUpdate();
             CheckForDisasters();
             // Check if it's the first day of the year to update city balance -->
             // collect taxes from citizens and pay maintainance fees once a year
             if (GameTime.Day == 1 && GameTime.Month == 1)
             {
+                double beforeUpdate = Statistics.Budget.Balance;
                 UpdateCityBalance();
+                double afterUpdate = Statistics.Budget.Balance;
+                Debug.Write("Balance updated, before: " + beforeUpdate + " After: " + afterUpdate);
             }
             UpdateZoneBuildingStatus();
             ConvertUnusedZonesToGeneral();
             HealZones();
             GenerateDisaster();
+
+
         }
 
         /// <summary>

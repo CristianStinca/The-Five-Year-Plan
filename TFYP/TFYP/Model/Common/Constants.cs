@@ -57,8 +57,8 @@ namespace TFYP.Model.Common
         public const int ServiceZoneBuildTime = 10;
         public const int IndustrialBuildTime = 10;
         
-        public const int CitizenLeavingSatisfaction = 10;
-        public const int NewCitizenComingSatisfaction = 85;
+        public const int CitizenLeavingSatisfaction = 30;
+        public const int NewCitizenComingSatisfaction = 60;
         public const int GameOverSatisfaction = 30;
 
         public const int StartingPopulation = 25;

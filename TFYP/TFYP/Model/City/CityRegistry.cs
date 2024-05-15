@@ -162,7 +162,7 @@ namespace TFYP.Model.City
 
         public bool GetFreeWorkplacesNearResidentialZones(GameModel gm)
         {
-            int workplaceSearchRadius = (int)(gm.MaxDistance/2);
+            int workplaceSearchRadius = (int)(gm.MaxDistance/1.2);
 
             foreach (var residentialZone in Zones.Where(z => z.Type == EBuildable.Residential))
             {
@@ -188,7 +188,7 @@ namespace TFYP.Model.City
         /// <returns>True if there are no industrial buildings near residential zones within the specified proximity radius; otherwise, false.</returns>
         public bool NoIndustriesNearResidentialZones(GameModel gm)
         {
-            int industryProximityRadius = (int)(gm.MaxDistance / 5); 
+            int industryProximityRadius = (int)(gm.MaxDistance / 20); 
 
 
             foreach (var residentialZone in Zones.Where(z => z.Type == EBuildable.Residential))
