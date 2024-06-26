@@ -29,7 +29,7 @@ namespace TFYP.Controller
             Globals.Content = this.Content;
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            //Globals.Graphics.IsFullScreen = true;
+            Globals.Graphics.IsFullScreen = true;
 
             Window.Title = "The Five Year Plan";
 
