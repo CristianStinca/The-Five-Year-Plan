@@ -1,4 +1,4 @@
-# Five Year Plan
+# The Five Year Plan
 
 Just a 2D city building game. Inspired by SimCity but in a communist setting.
 
